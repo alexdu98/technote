@@ -1,10 +1,10 @@
 Options +FollowSymlinks
 RewriteEngine on
 
-ErrorDocument 403 /index.php?controleur=main&page=_403&action=get
-ErrorDocument 404 /index.php?controleur=main&page=_404&action=get
+ErrorDocument 403 /index.php?params=main/_403/get
+ErrorDocument 404 /index.php?controleur=main/_404/get
 
-RewriteRule ^admin$ /admin/ [QSA,R=301]
-RewriteRule ^admin/([a-zA-Z0-9_]*)/?([a-zA-Z0-9]*) /index.php?controleur=admin&page=$1&action=$2 [QSA,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 
-RewriteRule ^([a-z-]*)/?$ /index.php?controleur=main&page=$1 [QSA,L]
+RewriteRule ^(.*)$ index.php?params=$1 [L,QSA]

@@ -1,9 +1,14 @@
-		<div id="push"></div>
-	</article>
+				<div id="push"></div>
+			</article>
+		</div>
+	</div>
 	<footer class="container-fluid">
 		<div class="row text-justify">
 			<div class="col-md-4 col-md-offset-4">
-				‹‹ Technote est un site internet réalisé dans le cadre d'un projet de développement web de L3 Informatique. ››
+				<p>
+					Technote est un site internet réalisé dans le cadre d'un projet de développement web de L3 Informatique.
+					Il permet de consulter, déposer, et commenter des technotes qui sont des petits articles techniques.
+				</p>
 			</div>
 		</div>
 		<div class="row">

@@ -16,6 +16,7 @@ abstract class Controleur{
 	}
 
 	/**
+	 * Charge le controleur de $page
 	 * @abstract
 	 * @param string $page
 	 * @param string $action
