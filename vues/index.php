@@ -1,0 +1,17 @@
+<h1>Accueil</h1>
+<section>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+	lorem<br>
+</section>

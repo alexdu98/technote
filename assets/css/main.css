@@ -1,0 +1,77 @@
+html{
+    position: relative;
+    min-height: 100%;
+}
+body{
+    margin-bottom: 150px;
+}
+header{
+    background: #2aabd2;
+    padding: 5px 0;
+    margin-bottom: 5px;
+    box-shadow: 0 1px 5px #777;
+}
+div#logo{
+    background: url('/assets/images/bgh.png');
+    text-align: center;
+}
+nav{
+    background: #2aabd2;
+    box-shadow: 0 0 5px #777;
+}
+.nav-pills>li>a{
+    border-radius: 0px;
+    color: #FFF;
+}
+.nav-pills>li>a:hover{
+    background: rgba(66,195,234,0.5);
+}
+li.active>a{
+    background: #1495BC !important;
+}
+h1{
+    display: block;
+    font-size: 48px;
+    font-family: "Lobster", "cursive";
+    color: #2aabd2;
+    text-shadow: 2px 2px 1px #EEE, 3px 3px 5px #000;
+    text-align: center;
+    margin-bottom: 15px;
+}
+h1:first-letter{
+    color: #333;
+}
+article{
+    margin: 10px 0;
+}
+section{
+    background: #FAFAFA;
+    box-shadow: 0 0 3px #777;
+    border-radius: 5px;
+    padding: 10px;
+}
+footer{
+    position: absolute;
+    bottom: 0;
+    background: #2aabd2;
+    padding: 15px 0;
+    margin-top: 5px;
+    height: 150px;
+    box-shadow: 0 -1px 5px #777;
+    width: 100%;
+}
+footer,#push{
+    height: 150px;
+}
+footer a{
+    color: white;
+}
+#copyright{
+    text-align: center;
+    font-weight: bold;
+    display: block;
+    padding-top: 2px;
+}
+#copyright>a:hover{
+    text-decoration: none;
+}
