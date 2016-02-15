@@ -2,28 +2,35 @@
 
 /**
  * Classe Controleur
- * @author Alexandre CULTY
- * @version 1.0
- * @abstract
  */
-abstract class Controleur{
-
-	static public function construct($controleur){
-		if($controleur == 'admin')
-			return new Admin();
-		else
-			return new Main();
-	}
+class Controleur{
 
 	/**
-	 * Charge le controleur de $page
-	 * @abstract
+	 * Charge le controleur de la page demandé
+	 * @param Admin|Main L'instance du controleur
 	 * @param string $page
 	 * @param string $action
 	 * @param array $param
 	 */
-	abstract public function chargerControleurPage($page, $action, $param);
+	public function chargerControleurPage($controleur, $page, $action, $param){
+		if(method_exists($controleur, $page)){
+			$vueCentrale = $controleur->$page($action, $param);
+			$this->ChargerVues($vueCentrale);
+		}
+		elseif($page == '_403'){
+			$vueCentrale = $this->_403();
+			$this->ChargerVues($vueCentrale);
+		}
+		else{
+			$vueCentrale = $this->_404();
+			$this->ChargerVues($vueCentrale);
+		}
+	}
 
+	/**
+	 * Affiche les vues
+	 * @param $vueCentrale
+	 */
 	public function chargerVues($vueCentrale){
 		include '/vues/header.php';
 		include $vueCentrale;
@@ -31,26 +38,19 @@ abstract class Controleur{
 	}
 
 	/**
-	 * Retourne la vue de la page 404
+	 * Retourne la vue de la page 403
+	 * @return string La vue de la page 403
 	 */
-	protected function _404(){
-		return '/vues/404.php';
+	protected function _403(){
+		return '/vues/403.php';
 	}
 
 	/**
-	 * Renvoi true si $methode est défini pour la première fois dans $classe, false si elle est déjà présente dans parent::
-	 * @param string $classe
-	 * @param string $methode
-	 * @return bool
+	 * Retourne la vue de la page 404
+	 * @return string La vue de la page 404
 	 */
-	protected function isFirstDefinition($classe, $methode){
-		if(method_exists($classe, $methode)){
-			$parent = get_parent_class($classe);
-			if($parent !== false)
-				return !method_exists($parent, $methode);
-			return true;
-		}
-		return false;
+	protected function _404(){
+		return '/vues/404.php';
 	}
 
 }

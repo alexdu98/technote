@@ -1,9 +1,21 @@
 <?php
 
+/**
+ * Classe de connexion à la base de données
+ * Design pattern Singleton pour n'ouvrir qu'une seule connexion
+ */
 class BDD{
 
+	/**
+	 * @var PDO $pdo L'objet PDO
+	 * @static
+	 */
 	static private $pdo = NULL;
 
+	/**
+	 * Obtension du singleton
+	 * @return PDO L'objet PDO
+	 */
 	static public function getInstancePDO(){
 		if(self::$pdo == NULL){
 			try{

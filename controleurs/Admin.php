@@ -1,17 +1,10 @@
 <?php
 
 /**
- * Classe Admin
- * @author Alexandre CULTY
- * @version 1.0
+ * Classe du controleur de l'administration
  */
 class Admin extends Controleur{
 
-	public function chargerControleurPage($page, $action, $param){
 
-	}
 
-	protected function index(){
-
-	}
 }

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Classe Technote
+ * Classe Reponse
  * @author Alexandre CULTY
  * @version 1.0
  */
-class Technote extends TableObject{}
+class Reponse extends TableObject{}

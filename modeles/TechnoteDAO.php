@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Classe TechnoteDAO
- * @author Alexandre CULTY
- * @version 1.0
+ * Classe pour l'accès à la table Technote
  */
 class TechnoteDAO extends DAO{
 
@@ -21,37 +19,39 @@ class TechnoteDAO extends DAO{
 		$req = $this->pdo->prepare('SELECT * FROM technote');
 		$req->execute();
 		foreach($req->fetchAll() as $obj){
-			$res[] = new Technote(array(
-				'id_technote' => $obj->id_technote,
-				'titre' => $obj->titre,
-				'date_creation' => $obj->date_creation,
-				'contenu' => $obj->contenu,
-				'id_auteur' => $obj->id_auteur,
-				'date_modification' => $obj->date_modification,
-				'id_modificateur' => $obj->id_modificateur
-			));
+			$ligne = array();
+			foreach($obj as $nomChamp => $valeur){
+				$ligne[$nomChamp] = $valeur;
+			}
+			$res[] = new Technote($ligne);
 		}
 		return $res;
 	}
 
 	public function save($technote){
 		if($technote->id_technote == DAO::UNKNOWN_ID){
-			$res = $this->pdo->exec("INSERT INTO technote(titre, date_creation, contenu, id_auteur) VALUES(
-				'$technote->titre',
-				NOW(),
-				'$technote->contenu',
-				'$technote->id_auteur'
-			)");
+			$champs = $valeurs = '';
+			foreach($technote as $nomChamp => $valeur){
+				$champs .= $nomChamp . ', ';
+				$valeurs .= "'$valeur', ";
+			}
+			$champs = substr($champs, 0, -2);
+			$valeurs = substr($valeurs, 0, -2);
+			$req = 'INSERT INTO technote(' . $champs .') VALUES(' . $valeurs .')';
+			$res = $this->pdo->exec($req);
 			$technote->id_technote = $this->pdo->lastInsertId();
 			return $res;
 		}
 		else{
-			return $this->pdo->exec("UPDATE technote set
-				titre = '$technote->titre',
-				contenu = '$technote->contenu',
-				date_modification = NOW(),
-				id_modificateur = '$technote->id_modificateur'
-			WHERE id_technote = '$technote->id_technote'");
+			$id_technote = $technote->id_technote;
+			unset($technote->id_technote);
+			$newValeurs = '';
+			foreach($technote as $nomChamp => $valeur){
+				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+			}
+			$newValeurs = substr($newValeurs, 0, -2);
+			$req = "UPDATE technote SET $newValeurs WHERE id_technote = '$id_technote'";
+			return $this->pdo->exec($req);
 		}
 	}
 

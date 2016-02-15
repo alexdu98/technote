@@ -2,7 +2,7 @@ Options +FollowSymlinks
 RewriteEngine on
 
 ErrorDocument 403 /index.php?params=main/_403/get
-ErrorDocument 404 /index.php?controleur=main/_404/get
+ErrorDocument 404 /index.php?params=main/_404/get
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

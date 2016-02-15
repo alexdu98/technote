@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Classe MembreDAO
- * @author Alexandre CULTY
- * @version 1.0
+ * Classe pour l'accès à la table Membre
  */
 class MembreDAO extends DAO{
 
@@ -21,43 +19,39 @@ class MembreDAO extends DAO{
 		$req = $this->pdo->prepare('SELECT * FROM membre');
 		$req->execute();
 		foreach($req->fetchAll() as $obj){
-			$res[] = new Membre(array(
-				'id_membre' => $obj->id_membre,
-				'pseudo' => $obj->pseudo,
-				'email' => $obj->email,
-				'password' => $obj->password,
-				'date_inscription' => $obj->date_inscription,
-				'date_connexion' => $obj->date_connexion,
-				'id_groupe' => $obj->id_groupe,
-				'cle_reset_pass' => $obj->cle_reset_pass,
-				'bloquer' => $obj->bloquer
-			));
+			$ligne = array();
+			foreach($obj as $nomChamp => $valeur){
+				$ligne[$nomChamp] = $valeur;
+			}
+			$res[] = new Membre($ligne);
 		}
 		return $res;
 	}
 
 	public function save($membre){
 		if($membre->id_membre == DAO::UNKNOWN_ID){
-			$res = $this->pdo->exec("INSERT INTO membre(pseudo, email, password, date_inscription, id_groupe, bloquer) VALUES(
-				'$membre->pseudo',
-				'$membre->email',
-				'$membre->password',
-				NOW(),
-				'$membre->id_groupe',
-				'$membre->bloquer'
-			)");
+			$champs = $valeurs = '';
+			foreach($membre as $nomChamp => $valeur){
+				$champs .= $nomChamp . ', ';
+				$valeurs .= "'$valeur', ";
+			}
+			$champs = substr($champs, 0, -2);
+			$valeurs = substr($valeurs, 0, -2);
+			$req = 'INSERT INTO membre(' . $champs .') VALUES(' . $valeurs .')';
+			$res = $this->pdo->exec($req);
 			$membre->id_membre = $this->pdo->lastInsertId();
 			return $res;
 		}
 		else{
-			return $this->pdo->exec("UPDATE membre set
-				pseudo = '$membre->pseudo',
-				email = '$membre->email',
-				password = '$membre->password',
-				id_groupe = '$membre->id_groupe',
-				cle_reset_pass = '$membre->ce_reset_pass',
-				bloquer = '$membre->bloquer',
-			WHERE id_membre = '$membre->id_membre'");
+			$id_membre = $membre->id_membre;
+			unset($membre->id_membre);
+			$newValeurs = '';
+			foreach($membre as $nomChamp => $valeur){
+				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+			}
+			$newValeurs = substr($newValeurs, 0, -2);
+			$req = "UPDATE membre SET $newValeurs WHERE id_membre = '$id_membre'";
+			return $this->pdo->exec($req);
 		}
 	}
 

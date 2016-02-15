@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Classe VisiteDAO
- * @author Alexandre CULTY
- * @version 1.0
+ * Classe pour l'accès à la table Visite
  */
 class VisiteDAO extends DAO{
 
@@ -21,23 +19,39 @@ class VisiteDAO extends DAO{
 		$req = $this->pdo->prepare('SELECT * FROM visite');
 		$req->execute();
 		foreach($req->fetchAll() as $obj){
-			$res[] = new Visite(array(
-				'id_visite' => $obj->id_visite,
-				'ip' => $obj->ip,
-				'date_visite' => $obj->date_visite
-			));
+			$ligne = array();
+			foreach($obj as $nomChamp => $valeur){
+				$ligne[$nomChamp] = $valeur;
+			}
+			$res[] = new Visite($ligne);
 		}
 		return $res;
 	}
 
 	public function save($visite){
 		if($visite->id_visite == DAO::UNKNOWN_ID){
-			$res = $this->pdo->exec("INSERT INTO visite(ip, date_visite) VALUES('$visite->ip', NOW())");
+			$champs = $valeurs = '';
+			foreach($visite as $nomChamp => $valeur){
+				$champs .= $nomChamp . ', ';
+				$valeurs .= "'$valeur', ";
+			}
+			$champs = substr($champs, 0, -2);
+			$valeurs = substr($valeurs, 0, -2);
+			$req = 'INSERT INTO visite(' . $champs .') VALUES(' . $valeurs .')';
+			$res = $this->pdo->exec($req);
 			$visite->id_visite = $this->pdo->lastInsertId();
 			return $res;
 		}
 		else{
-			return $this->pdo->exec("UPDATE visite set ip = '$visite->ip', date_visite = NOW() WHERE id_visite = '$visite->id_visite'");
+			$id_visite = $visite->id_visite;
+			unset($visite->id_visite);
+			$newValeurs = '';
+			foreach($visite as $nomChamp => $valeur){
+				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+			}
+			$newValeurs = substr($newValeurs, 0, -2);
+			$req = "UPDATE visite SET $newValeurs WHERE id_visite = '$id_visite'";
+			return $this->pdo->exec($req);
 		}
 	}
 

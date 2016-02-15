@@ -57,8 +57,8 @@ else{
 // Supprime la variable des paramètres de l'URL
 unset($_GET['params']);
 
-// Charge le controleur
-$controleur = Controleur::construct($controleur);
+// Charge le controleur Admin ou Main
+$controleur = new $controleur();
 
-// Charger le controleur de la page demandé
-$controleur->chargerControleurPage($page, $action, $_GET);
+// Charge le controleur de la page demandé
+$controleur->chargerControleurPage($controleur, $page, $action, $_GET);
