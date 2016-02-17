@@ -14,24 +14,24 @@ class Controleur{
 	 */
 	public function chargerControleurPage($controleur, $page, $action, $param){
 		if(method_exists($controleur, $page)){
-			$vueCentrale = $controleur->$page($action, $param);
-			$this->ChargerVues($vueCentrale);
+			$controleur->$page($action, $param);
 		}
 		elseif($page == '_403'){
 			$vueCentrale = $this->_403();
-			$this->ChargerVues($vueCentrale);
+			$this->ChargerVues($vueCentrale, array());
 		}
 		else{
 			$vueCentrale = $this->_404();
-			$this->ChargerVues($vueCentrale);
+			$this->ChargerVues($vueCentrale, array());
 		}
 	}
 
 	/**
 	 * Affiche les vues
-	 * @param $vueCentrale
+	 * @param string $vueCentrale La vue à charger
+	 * @param array $vars Le tableau des variables dont la vue à besoin
 	 */
-	public function chargerVues($vueCentrale){
+	public function chargerVues($vueCentrale, array $vars){
 		include '/vues/header.php';
 		include $vueCentrale;
 		include '/vues/footer.php';

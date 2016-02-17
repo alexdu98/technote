@@ -13,7 +13,7 @@ class Main extends Controleur{
 			case 'del':
 			default:
 				$tn = $technoteDAO->getAll();
-				return '/vues/accueil.php';
+			parent::chargerVues('/vues/accueil.php', array());
 		}
 	}
 
@@ -21,7 +21,21 @@ class Main extends Controleur{
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'add':
-				return '/vues/inscription.php';
+				if(!empty($_POST)){
+					if(($res = Membre::checkAdd($_POST))){
+						$membre = new Membre(array(
+							'id_membre' => DAO::UNKNOWN_ID,
+							'pseudo' => $_POST['pseudo'],
+							'email' => $_POST['email'],
+							'password' => $_POST['password'],
+							'id_groupe' => 1,
+							'bloquer' => 0
+						));
+						$membreDAO->save($membre);
+					}
+
+				}
+				parent::chargerVues('/vues/inscription.php', array());
 			case 'edit':
 			case 'del':
 			default:
