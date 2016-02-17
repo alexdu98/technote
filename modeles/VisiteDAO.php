@@ -92,11 +92,11 @@ class VisiteDAO extends DAO{
 		$req->execute(array(
 			'ip' => $ip
 		));
-		if(($res = $req->fetch(PDO::FETCH_ASSOC)) === false){
+		if(($res = $req->fetch()) === false){
 			return false;
 		}
 		else{
-			return new Visite($res);
+			return new Visite(get_object_vars($res));
 		}
 	}
 

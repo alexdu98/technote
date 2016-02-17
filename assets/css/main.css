@@ -30,6 +30,13 @@ input[type="checkbox"]{
     width: 17px;
     vertical-align: bottom;
 }
+.badLogin{
+    color: #a94442;
+    font-weight: bold;
+    background: rgba(255,255,255,0.7);
+    padding: 5px 10px;
+    border-radius: 5px;
+}
 div#logo{
     background: url('/assets/images/bgh.png');
     text-align: center;

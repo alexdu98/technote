@@ -15,33 +15,42 @@
 			<header class="container-fluid">
 				<div class="row">
 					<div class="col-md-5 col-md-offset-6">
-						<form method="POST" class="form-inline text-right">
-							<div class="form-group">
-								<div class="input-group">
-									<span class="input-group-addon"><img src="/assets/images/pseudo.png" alt="Pseudo"></span>
-									<input type="text" class="form-control" placeholder="Pseudo" required>
+						<form action="/connexion" method="POST" class="form-inline text-right">
+							<div class="col-md-12">
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon"><img src="/assets/images/pseudo.png" alt="Pseudo"></span>
+										<input type="text" name="pseudo" class="form-control" placeholder="Pseudo" required>
+									</div>
 								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon"><img src="/assets/images/MDP.png" alt="Mot de passe"></span>
+										<input type="password" name="password" class="form-control" placeholder="Mot de passe" required>
+									</div>
+								</div>
+								<input type="submit" class="btn btn-default" value="Connexion"><br>
 							</div>
-							<div class="form-group">
-								<div class="input-group">
-									<span class="input-group-addon"><img src="/assets/images/MDP.png" alt="Mot de passe"></span>
-									<input type="password" class="form-control" placeholder="Mot de passe" required>
-								</div>
-							</div>
-							<input type="submit" class="btn btn-default" value="Connexion"><br>
-							<div class="text-right">
-								<div class="col-md-9 text-right">
-									• <a href="/membre/add">S'inscrire</a>
-									• <a href="/membre/edit">Mot de passe oublié</a> •
-								</div>
-								<div class="col-md-3">
-									<div class="checkbox">
-										<label>
-											<input type="checkbox"> Resté connecté
-										</label>
+							<div class="col-md-12">
+								<div class="text-right">
+									<div class="col-md-9 text-right">
+										• <a href="/membre/add">S'inscrire</a>
+										• <a href="/membre/edit">Mot de passe oublié</a> •
+									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox"> Resté connecté
+											</label>
+										</div>
 									</div>
 								</div>
 							</div>
+							<?php if(!empty($v_res) && $v_res['success'] === false): ?>
+								<div class="col-md-12 text-center">
+									<span class="badLogin"><?= $v_res['msg']; ?></span>
+								</div>
+							<?php endif; ?>
 						</form>
 					</div>
 				</div>

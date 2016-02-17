@@ -59,4 +59,18 @@ class MembreDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM membre WHERE id_membre = '$membre->id_membre'");
 	}
 
+	public function checkUser($pseudo, $pass){
+		$req = $this->pdo->prepare('SELECT * FROM membre WHERE pseudo = :pseudo');
+		$req->execute(array(
+			'pseudo' => $pseudo
+		));
+		if(($res = $req->fetch())){
+			if(password_verify($pass, $res->password)){
+				unset($res->password, $res->cle_reset_pass);
+				return new Membre(get_object_vars($res));
+			}
+		}
+		return false;
+	}
+
 }

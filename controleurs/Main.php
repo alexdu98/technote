@@ -60,4 +60,17 @@ class Main extends Controleur{
 		}
 	}
 
+	public function connexion($action, $param){
+		$vars = array();
+		if(!empty($_POST)){
+			$membreDAO = new MembreDAO(BDD::getInstancePDO());
+			if(($res = $membreDAO->checkUser($_POST['pseudo'], $_POST['password'])) !== false){
+				var_dump($res);
+			}
+			else
+				$vars['res'] = array('success' => false, 'msg' => 'Couple login / mot de passe invalide');
+			parent::chargerVues('/vues/accueil.php', $vars);
+		}
+	}
+
 }
