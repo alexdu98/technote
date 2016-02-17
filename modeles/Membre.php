@@ -3,12 +3,12 @@
 class Membre extends TableObject{
 
 	static public function checkAdd($param){
-		if(($res = self::checkPseudo($param['pseudo'])))
-			if(($res = self::checkEmail($param['email'])))
-				if(($res = self::checkPass($param['password'], $param['passwordConfirm'])))
-					if(($res = self::checkConditions($param['conditions']))){
+		if(($res = self::checkPseudo($param['pseudo'])) === true)
+			if(($res = self::checkEmail($param['email'])) === true)
+				if(($res = self::checkPass($param['password'], $param['passwordConfirm'])) === true)
+					if(($res = self::checkConditions($param['conditions'])) === true){
 						$captcha = new Captcha();
-						if(($res = $captcha->check($param['g-recaptcha-response'])))
+						if(($res = $captcha->check($param['g-recaptcha-response'])) === true)
 							return true;
 					}
 		return $res;

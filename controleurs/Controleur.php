@@ -32,6 +32,7 @@ class Controleur{
 	 * @param array $vars Le tableau des variables dont la vue à besoin
 	 */
 	public function chargerVues($vueCentrale, array $vars){
+		extract($vars, EXTR_PREFIX_ALL, 'v'); // Toutes les variables $var pour la vue deviennent $v_var
 		include '/vues/header.php';
 		include $vueCentrale;
 		include '/vues/footer.php';

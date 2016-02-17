@@ -7,7 +7,10 @@ class Captcha{
 	public function check($captcha){
 		$res = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . self::$secret . "&response=" . $captcha . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
 		$res = json_decode($res);
-		return $res->success;
+		if($res->success === true)
+			return $res->success;
+		else
+			return 'Problème avec le captcha';
 	}
 
 }
