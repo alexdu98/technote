@@ -5,7 +5,7 @@
  * Les champs sont créés définitivement par le constructeur
  * Implémente Iterator pour pouvoir faire des foreach sur les objets
  */
-class TableObject implements Iterator{
+class TableObject extends Modele implements Iterator{
 
 	/**
 	 * @var array $fields Les champs de la table avec leur valeur
