@@ -1,8 +1,5 @@
 <?php
 
-// Démarre une session
-session_start();
-
 // Charge le fichier de configuration
 require('config.php');
 
@@ -10,12 +7,16 @@ require('config.php');
 require('Autoloader.php');
 Autoloader::Autoload();
 
+// Démarre une session
+session_start();
+
 // Connecte le client s'il possède un cookie
-$visiteDAO = new VisiteDAO(BDD::getInstancePDO());
-if(!isset($_SESSION[NOM_SESSION_CONNEXION]))
-	$visiteDAO->connectWithCookie();
+$tokenDAO = new TokenDAO(BDD::getInstancePDO());
+if(!isset($_SESSION['connecte']))
+	$_SESSION['connecte'] = $tokenDAO->checkToken();
 
 // Enregistre la visite si c'est la premiere de cette heure
+$visiteDAO = new VisiteDAO(BDD::getInstancePDO());
 $visite = new Visite(array('id_visite' => DAO::UNKNOWN_ID, 'ip' => $_SERVER['REMOTE_ADDR']));
 $visiteDAO->checkVisite($visite);
 

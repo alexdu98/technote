@@ -50,7 +50,7 @@ class ReponseDAO extends DAO{
 				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
-			$req = "UPDATE visite SET $newValeurs WHERE id_reponse = '$id_reponse'";
+			$req = "UPDATE reponse SET $newValeurs WHERE id_reponse = '$id_reponse'";
 			return $this->pdo->exec($req);
 		}
 	}

@@ -15,43 +15,47 @@
 			<header class="container-fluid">
 				<div class="row">
 					<div class="col-md-5 col-md-offset-6">
-						<form action="/connexion" method="POST" class="form-inline text-right">
-							<div class="col-md-12">
-								<div class="form-group">
-									<div class="input-group">
-										<span class="input-group-addon"><img src="/assets/images/pseudo.png" alt="Pseudo"></span>
-										<input type="text" name="pseudo" class="form-control" placeholder="Pseudo" required>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="input-group">
-										<span class="input-group-addon"><img src="/assets/images/MDP.png" alt="Mot de passe"></span>
-										<input type="password" name="password" class="form-control" placeholder="Mot de passe" required>
-									</div>
-								</div>
-								<input type="submit" class="btn btn-default" value="Connexion"><br>
+						<?php if($_SESSION['connecte']): ?>
+							<div class="text-right">
+								<a href="/membre"><?= ucfirst($_SESSION['user']->pseudo); ?></a> • <a href="/deconnexion">Déconnexion</a>
 							</div>
-							<div class="col-md-12">
-								<div class="text-right">
-									<div class="col-md-9 text-right">
+						<?php else: ?>
+							<form action="/connexion" method="POST" class="form-inline text-right">
+								<div class="col-md-12">
+									<div class="form-group">
+										<div class="input-group">
+											<span class="input-group-addon"><img src="/assets/images/pseudo.png" alt="Pseudo"></span>
+											<input type="text" name="pseudo" class="form-control" placeholder="Pseudo" required>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="input-group">
+											<span class="input-group-addon"><img src="/assets/images/MDP.png" alt="Mot de passe"></span>
+											<input type="password" name="password" class="form-control" placeholder="Mot de passe" required>
+										</div>
+									</div>
+									<input type="submit" class="btn btn-default" value="Connexion"><br>
+								</div>
+								<div class="col-md-12 text-right conteneurLiensCo">
+									<div class="col-md-9 text-right liensCo">
 										• <a href="/membre/add">S'inscrire</a>
 										• <a href="/membre/edit">Mot de passe oublié</a> •
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-3 liensCo">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox"> Resté connecté
+												<input type="checkbox" name="autoConnexion"> Resté connecté
 											</label>
 										</div>
 									</div>
 								</div>
-							</div>
-							<?php if(!empty($v_res) && $v_res['success'] === false): ?>
-								<div class="col-md-12 text-center">
-									<span class="badLogin"><?= $v_res['msg']; ?></span>
-								</div>
-							<?php endif; ?>
-						</form>
+								<?php if(!empty($v_res) && $v_res['success'] === false): ?>
+									<div class="col-md-12 text-center">
+										<div class="badLogin"><?= $v_res['msg']; ?></div>
+									</div>
+								<?php endif; ?>
+							</form>
+						<?php endif; ?>
 					</div>
 				</div>
 			</header>
@@ -62,7 +66,7 @@
 				<div class="col-md-8 col-md-offset-2">
 					<ul class="nav nav-pills nav-justified">
 						<li class="active"><a href="/">Accueil</a></li>
-						<li><a href="#">Profile</a></li>
+						<li><a href="/membre">Profile</a></li>
 						<li><a href="#">Messages</a></li>
 					</ul>
 				</div>

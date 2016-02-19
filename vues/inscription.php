@@ -37,7 +37,7 @@
 				<div class="col-sm-offset-2 col-sm-10">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" name="conditions" required> J'ai lu et j'accepte les conditions d'utilisation
+							<input type="checkbox" name="conditions" required> J'ai lu et j'accepte les <a href="/conditions" target="_blank">conditions d'utilisation</a>
 						</label>
 					</div>
 				</div>

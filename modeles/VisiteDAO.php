@@ -59,21 +59,7 @@ class VisiteDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM visite WHERE id_visite = '$visite->id_visite'");
 	}
 
-	public function connectWithCookie(){
-		if(!empty($_COOKIE[NOM_COOKIE_CONNEXION])){
-			$req = $this->pdo->prepare('SELECT M.id_membre, pseudo, email, bloquer, G.libelle FROM token T JOIN membre M ON M.id_membre=T.id_membre JOIN groupe G ON G.id_groupe=M.id_groupe WHERE cle = :token');
-			$req->execute(array(
-				'token' => $_COOKIE[NOM_COOKIE_CONNEXION]
-			));
-			if($res = $req->fetch()){
-				if($res->bloquer === false){
-					$_SESSION[NOM_SESSION_CONNEXION] = $res;
-				}
-			}
-		}
-		$_SESSION[NOM_SESSION_CONNEXION] = false;
-		setcookie(NOM_COOKIE_CONNEXION,'', time());
-	}
+
 
 	public function checkVisite($visite){
 		$lastVisite = $this->getLastVisite($visite->ip);

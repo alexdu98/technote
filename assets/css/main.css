@@ -30,6 +30,17 @@ input[type="checkbox"]{
     width: 17px;
     vertical-align: bottom;
 }
+.conteneurLiensCo{
+    display: table;
+}
+.liensCo{
+    display: table-cell;
+    float: none;
+    vertical-align: bottom;
+}
+.liensCo label{
+    color: #FFF;
+}
 .badLogin{
     color: #a94442;
     font-weight: bold;
@@ -53,7 +64,7 @@ nav{
 .nav-pills>li>a:hover{
     background: rgba(66,195,234,0.6);
 }
-li.active>a{
+nav li.active>a{
     background: #1495BC !important;
 }
 h1{

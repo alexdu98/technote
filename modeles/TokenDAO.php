@@ -43,12 +43,36 @@ class TokenDAO extends DAO{
 			return $res;
 		}
 		else{
-			return $this->pdo->exec("UPDATE token set ip = '$token->ip', date_visite = NOW() WHERE id_token = '$token->id_token'");
+			$id_token = $token->id_token;
+			unset($token->id_token);
+			$newValeurs = '';
+			foreach($token as $nomChamp => $valeur){
+				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+			}
+			$newValeurs = substr($newValeurs, 0, -2);
+			$req = "UPDATE token SET $newValeurs WHERE id_token = '$id_token'";
+			return $this->pdo->exec($req);
 		}
 	}
 
 	public function delete($token){
 		return $this->pdo->exec("DELETE FROM token WHERE id_token = '$token->id_token'");
+	}
+
+	public function checkToken(){
+		if(!empty($_COOKIE['token'])){
+			$req = $this->pdo->prepare('SELECT M.id_membre, pseudo, email, bloquer, G.libelle FROM token T JOIN membre M ON M.id_membre=T.id_membre JOIN groupe G ON G.id_groupe=M.id_groupe WHERE cle = :token');
+			$req->execute(array(
+				'token' => $_COOKIE['token']
+			));
+			if($res = $req->fetch()){
+				$_SESSION['connecte'] = true;
+				$_SESSION['user'] = $res;
+				return true;
+			}
+		}
+		setcookie('token','', time());
+		return false;
 	}
 
 }
