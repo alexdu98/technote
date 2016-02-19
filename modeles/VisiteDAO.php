@@ -32,9 +32,15 @@ class VisiteDAO extends DAO{
 		if($visite->id_visite == DAO::UNKNOWN_ID){
 			$champs = $valeurs = '';
 			foreach($visite as $nomChamp => $valeur){
-				$champs .= $nomChamp . ', ';
-				$valeurs .= "'$valeur', ";
+				if($nomChamp != "id_visite"){
+					// on doit pas ajouter le champ id_visite
+					// car c'est un AUTOINCREMENT
+					$champs .= $nomChamp . ', ';
+					$valeurs .= "'$valeur', ";
+				}
 			}
+			
+			// substr pour enlever le dernier espace et virgule
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
 			$req = 'INSERT INTO visite(' . $champs .') VALUES(' . $valeurs .')';
@@ -62,9 +68,17 @@ class VisiteDAO extends DAO{
 
 
 	public function checkVisite($visite){
+		/*
+		 * @param : Un objet de la classe Visite.
+		 * 
+		 * @action : Sauvegarde la visite dans la BDD, si
+		 * celle-ci remonte a plus d'une heure.
+		 */
 		$lastVisite = $this->getLastVisite($visite->ip);
 		$timeStamp1Heure = time() - NB_SEC_ENTRE_2_VISITES;
+		
 		if($lastVisite === false){
+			// Si c'est la premiere fois que le client vient sur le site
 			$lastVisite = new stdClass();
 			$lastVisite->date_visite = 1;
 		}
