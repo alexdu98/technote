@@ -66,6 +66,7 @@
 				<div class="col-md-8 col-md-offset-2">
 					<ul class="nav nav-pills nav-justified">
 						<li class="active"><a href="/">Accueil</a></li>
+						<li><a href="/technotes">Technotes</a></li>
 						<li><a href="/membre">Profile</a></li>
 						<li><a href="#">Messages</a></li>
 					</ul>
