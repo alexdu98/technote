@@ -7,6 +7,7 @@ class Main extends Controleur{
 
 	public function accueil($action, $param){
 		$vars = array();
+		$vars["accueil"] = 1; // Pour rendre actif l'onglet de la barre de menu 
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
@@ -26,6 +27,7 @@ class Main extends Controleur{
 
 	public function membre($action, $param){
 		$vars = array();
+		$vars["membre"] = 1; // Pour rendre actif l'onglet de la barre de menu
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
@@ -70,6 +72,41 @@ class Main extends Controleur{
 			default:
 				parent::chargerVues('/vues/404.php', $vars);
 		}
+	}
+	
+	public function technotes($action, $param) {
+		$vars = array();
+		$vars["technotes"] = 1; // Pour rendre actif l'onglet de la barre de menu
+		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+		
+		switch($action){
+			case 'get':
+				$nbTechnotes = 6;
+				$nav = isset($_GET["nav"]) ? $_GET["nav"] : $nav = 1;
+				$debut = ($nav - 1) * 6;
+				$tn = $technoteDAO->getNTechnotes($debut, $nbTechnotes);
+				
+				$cpt = 1;
+				foreach($tn as $row){
+					
+					foreach($row as $motClef => $valeur){
+						$vars['technote$cpt'][$motClef] = $valeur;
+					}
+					$cpt += 1;
+				}
+				
+				parent::chargerVues('/vues/technotes.php', $vars);
+				break;
+			case 'add':
+				break;
+			case 'edit':
+				break;
+			case 'del':
+				break;
+			default:
+				parent::chargerVues('/vues/404.php', $vars);
+		}
+		
 	}
 
 	public function connexion($action, $param){

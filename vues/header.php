@@ -65,10 +65,10 @@
 			<nav class="col-md-12">
 				<div class="col-md-8 col-md-offset-2">
 					<ul class="nav nav-pills nav-justified">
-						<li class="active"><a href="/">Accueil</a></li>
-						<li><a href="/technotes">Technotes</a></li>
-						<li><a href="/membre">Profile</a></li>
-						<li><a href="#">Messages</a></li>
+						<li class="<?php if(isset($v_accueil)) echo "active";?>"><a href="/">Accueil</a></li>
+						<li class="<?php if(isset($v_technotes)) echo "active";?>"><a href="/technotes">Technotes</a></li>
+						<li class="<?php if(isset($v_profile)) echo "active";?>"><a href="/membre">Profile</a></li>
+						<li class="<?php if(isset($v_messages)) echo "active";?>"><a href="#">Messages</a></li>
 					</ul>
 				</div>
 			</nav>
