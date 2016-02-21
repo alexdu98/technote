@@ -89,10 +89,11 @@ class Main extends Controleur{
 				$cpt = 1;
 				foreach($tn as $row){
 					
-					foreach($row as $motClef => $valeur){
-						$vars['technote$cpt'][$motClef] = $valeur;
+					foreach($row->getFields() as $motClef => $valeur){
+						$vars['technote'.$cpt][$motClef] = $valeur;
 					}
 					$cpt += 1;
+					
 				}
 				
 				parent::chargerVues('/vues/technotes.php', $vars);

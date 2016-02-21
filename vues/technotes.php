@@ -4,9 +4,11 @@
 		<?php if(isset($v_technote1)) : ?>	
 		<div class="col-md-4">
 			<div class="panel panel-default">
-				<div class="panel-heading"></div>
+				<div class="panel-heading">
+					<h3 class="panel-title"><?php echo $v_technote1['titre']; ?></h3>
+				</div>
 				<div class="panel-body">
-					Technote Content
+					<?php echo $v_technote1['contenu']; ?>
 				</div>	
 			</div>
 		</div>
@@ -16,23 +18,23 @@
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Technote 2</h3>
+					<h3 class="panel-title"><?php echo $v_technote2['titre']; ?></h3>
 				</div>
 				<div class="panel-body">
-					technote Content
+					<?php echo $v_technote2['contenu']; ?>
 				</div>
 			</div>
 		</div>
 		<?php endif; ?>
-		
+				
 		<?php if(isset($v_technote3)) : ?>
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Technote 2</h3>
+					<h3 class="panel-title"><?php echo $v_technote3['titre']; ?></h3>
 				</div>
 				<div class="panel-body">
-					technote Content
+					<?php echo $v_technote3['contenu']; ?>
 				</div>
 			</div>
 		</div>
@@ -42,10 +44,10 @@
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Technote 2</h3>
+					<h3 class="panel-title"><?php echo $v_technote4['titre']; ?></h3>
 				</div>
 				<div class="panel-body">
-					technote Content
+					<?php echo $v_technote4['contenu']; ?>
 				</div>
 			</div>
 		</div>
@@ -55,23 +57,23 @@
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Technote 2</h3>
+					<h3 class="panel-title"><?php echo $v_technote5['titre']; ?></h3>
 				</div>
 				<div class="panel-body">
-					technote Content
+					<?php echo $v_technote5['contenu']; ?>
 				</div>
 			</div>
 		</div>
-		<?php endif; ?>	
-
+		<?php endif; ?>
+		
 		<?php if(isset($v_technote6)) : ?>
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Technote 2</h3>
+					<h3 class="panel-title"><?php echo $v_technote6['titre']; ?></h3>
 				</div>
 				<div class="panel-body">
-					technote Content
+					<?php echo $v_technote6['contenu']; ?>
 				</div>
 			</div>
 		</div>
