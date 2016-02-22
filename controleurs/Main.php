@@ -77,26 +77,31 @@ class Main extends Controleur{
 	public function technotes($action, $param) {
 		$vars = array();
 		$vars["technotes"] = 1; // Pour rendre actif l'onglet de la barre de menu
-		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());		
 		
 		switch($action){
 			case 'get':
-				$nbTechnotes = 6;
-				$nav = isset($_GET["nav"]) ? $_GET["nav"] : $nav = 1;
-				$debut = ($nav - 1) * 6;
-				$tn = $technoteDAO->getNTechnotes($debut, $nbTechnotes);
-				
-				$cpt = 1;
-				foreach($tn as $row){
-					
-					foreach($row->getFields() as $motClef => $valeur){
-						$vars['technote'.$cpt][$motClef] = $valeur;
-					}
-					$cpt += 1;
+				// Si on veut consulter une technote en particulier
+				if(isset($_GET['id_technote'])){
 					
 				}
-				
-				parent::chargerVues('/vues/technotes.php', $vars);
+				else {
+					$nbTechnotes = 6;
+					$nav = isset($_GET["nav"]) ? $_GET["nav"] : $nav = 1;
+					$debut = ($nav - 1) * 6;
+					$tn = $technoteDAO->getNTechnotes($debut, $nbTechnotes);
+					
+					$cpt = 1;
+					foreach($tn as $row){
+						
+						foreach($row->getFields() as $motClef => $valeur){
+							$vars['technote'.$cpt][$motClef] = $valeur;
+						}
+						$cpt += 1;
+						
+					}
+					$this->chargerVues('/vues/technotes.php', $vars);
+				}
 				break;
 			case 'add':
 				break;
