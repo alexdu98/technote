@@ -18,7 +18,7 @@ class Vue{
 		// $connect : booléen. Vrai si l'usr est connecté, faux sinon.
 		if ($connect) {
 			/* Il y a deux headers, un pour membre connecte et l'autre pour non-connecte */
-			$this->fileContent = file_get_contents("vues/header-connect.html");
+			$this->fileContent = file_get_contents("vues/header-connected.html");
 			$this->fileContent .= file_get_contents("vues/$fichier");
 			
 			/* Là ce serait Membre et MembreDAO a la place d'Utilisateurs*/
@@ -26,10 +26,12 @@ class Vue{
 			$this->configurerTab( $usr->getInfo() );
 
 		} else {
-			$this->fileContent = file_get_contents("vues/header-no-connect.html");
+			$this->fileContent = file_get_contents("vues/header-not-connected.html");
 			$this->fileContent .= file_get_contents("vues/$fichier");
 		}
+		
 		$this->fileContent .=  file_get_contents("vues/footer.html");
+		$this->configurer('annee', date('Y'));
 	}
 
 	public function configurer($motClef, $valeur){

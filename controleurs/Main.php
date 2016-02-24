@@ -11,7 +11,10 @@ class Main extends Controleur{
 		switch($action){
 			case 'get':
 				$tn = $technoteDAO->getAll();
-				parent::chargerVues('/vues/accueil.php', $vars);
+				$vue = new Vue('accueil.html', $_SESSION['connecte']);
+				$vue->configurer('displayError', 'none');
+				$vue->configurer('errorMessage', '');
+				$vue->afficher();
 				break;
 			case 'add':
 				break;
