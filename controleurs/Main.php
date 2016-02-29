@@ -11,7 +11,8 @@ class Main extends Controleur{
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
-				$tn = $technoteDAO->getAll();
+				$tn = $technoteDAO->getNTechnotes(0, 3);
+				$vars['tn'] = $tn;
 				$this->vue->chargerVue('accueil_' . $action, $vars);
 				break;
 			case 'add':
@@ -27,7 +28,7 @@ class Main extends Controleur{
 
 	public function membre($action, $param){
 		$vars = array();
-		$vars["membre"] = 1; // Pour rendre actif l'onglet de la barre de menu
+		$vars["profile"] = 1; // Pour rendre actif l'onglet de la barre de menu
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
@@ -90,16 +91,7 @@ class Main extends Controleur{
 					$nav = isset($_GET["nav"]) ? $_GET["nav"] : $nav = 1;
 					$debut = ($nav - 1) * 6;
 					$tn = $technoteDAO->getNTechnotes($debut, $nbTechnotes);
-					
-					$cpt = 1;
-					foreach($tn as $row){
-						
-						foreach($row->getFields() as $motClef => $valeur){
-							$vars['technote'.$cpt][$motClef] = $valeur;
-						}
-						$cpt += 1;
-						
-					}
+					$vars['tn'] = $tn;
 					$this->vue->chargerVue('technotes_' . $action, $vars);
 				}
 				break;
