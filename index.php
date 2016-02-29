@@ -42,6 +42,8 @@ if($controleur == 'admin'){
 	}
 }
 else{
+	// Si $controleur == main, alors $url[0]
+	// represente la page (et non le type de connexion)
 	if(empty($url[0])){
 		$page = 'accueil';
 		$action = 'get';

@@ -27,6 +27,26 @@ class TechnoteDAO extends DAO{
 		}
 		return $res;
 	}
+	
+	public function getNTechnotes($offset, $limit){
+		$res = array();
+		
+		$req = $this->pdo->prepare('SELECT * FROM technote LIMIT :limit OFFSET :offset');
+		$req->bindValue(':limit', $limit, PDO::PARAM_INT);
+		$req->bindValue(':offset', $offset, PDO::PARAM_INT);
+		
+		$req->execute();
+		
+		foreach($req->fetchAll() as $obj){
+			$ligne = array();
+			foreach($obj as $nomChamp => $valeur){
+				$ligne[$nomChamp] = $valeur;
+			}
+			$res[] = new Technote($ligne);
+		}
+		return $res;
+		
+	}
 
 	public function save($technote){
 		if($technote->id_technote == DAO::UNKNOWN_ID){
