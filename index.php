@@ -58,7 +58,7 @@ else{
 // Supprime la variable des paramètres de l'URL
 unset($_GET['params']);
 
-// Charge le controleur Admin ou Main
+// Charge le controleur
 $controleur = new $controleur();
 
 // Charge le controleur de la page demandé

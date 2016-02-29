@@ -18,7 +18,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">LocalStorage dans un navigateur</div>
 			<div class="panel-body">
-				<div class="col-md-12">
+				<div class="col-md-12 text-center">
 					<img src="http://news360x.fr/wp-content/uploads/2015/12/Internet1.jpg" alt="test" class="img-thumbnail img-technote">
 				</div>
 				<div class="col-md-12 text-justify">
@@ -32,7 +32,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Les sessions PHP</div>
 			<div class="panel-body">
-				<div class="col-md-12">
+				<div class="col-md-12 text-center">
 					<img src="http://oleaass.com/wp-content/uploads/2014/09/PHP.png" alt="test" class="img-thumbnail img-technote">
 				</div>
 				<div class="col-md-12 text-justify">

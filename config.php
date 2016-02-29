@@ -16,6 +16,7 @@ define('DB_PASS', 'azshara26');
 define('DUREE_COOKIE_AUTOCONNECT_SEC', 60 * 60 * 24 * 7);
 define('DUREE_COOKIE_AUTOCONNECT_JOURS', 7);
 define('SALT_TOKEN', 'j{djW|~QC*');
+define('PRIVATE_KEY_RECAPTCHA', '6LdIRhgTAAAAAMKShVrZyBTvvJP08hHu2la0P_ks');
 
 // STATISTIQUES
 define('NB_SEC_ENTRE_2_VISITES', 60*60);

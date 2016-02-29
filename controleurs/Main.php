@@ -11,19 +11,16 @@ class Main extends Controleur{
 		switch($action){
 			case 'get':
 				$tn = $technoteDAO->getAll();
-				$vue = new Vue('accueil.html', $_SESSION['connecte']);
-				$vue->configurer('displayError', 'none');
-				$vue->configurer('errorMessage', '');
-				$vue->afficher();
+				$this->vue->chargerVue('accueil_' . $action, $vars);
 				break;
 			case 'add':
-				break;
+				//break;
 			case 'edit':
-				break;
-			case 'del':
-				break;
+				//break;
+			case 'drop':
+				//break;
 			default:
-				parent::chargerVues('/vues/404.php', $vars);
+				$this->vue->chargerVue('404', $vars);
 		}
 	}
 
@@ -33,7 +30,7 @@ class Main extends Controleur{
 		switch($action){
 			case 'get':
 				if($_SESSION['connecte']){
-					parent::chargerVues('/vues/membre.php', $vars);
+					$this->vue->chargerVue('membre_' . $action, $vars);
 				}
 				else{
 					header('Location: /');
@@ -59,7 +56,7 @@ class Main extends Controleur{
 						}else
 							$vars['res'] = array('success' => false, 'msg' => $res);
 					}
-					parent::chargerVues('/vues/inscription.php', $vars);
+					$this->vue->chargerVue('membre_' . $action, $vars);
 				}
 				else{
 					header('Location: /');
@@ -67,11 +64,11 @@ class Main extends Controleur{
 				}
 				break;
 			case 'edit':
-				break;
-			case 'del':
-				break;
+				//break;
+			case 'drop':
+				//break;
 			default:
-				parent::chargerVues('/vues/404.php', $vars);
+				$this->vue->chargerVue('404', $vars);
 		}
 	}
 
@@ -103,7 +100,7 @@ class Main extends Controleur{
 			}
 			else
 				$vars['res'] = array('success' => false, 'msg' => 'Couple login / mot de passe invalide');
-			parent::chargerVues('/vues/accueil.php', $vars);
+			$this->vue->chargerVue('accueil_' . $action, $vars);
 		}
 	}
 
