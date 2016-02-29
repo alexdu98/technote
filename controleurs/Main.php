@@ -100,7 +100,7 @@ class Main extends Controleur{
 						$cpt += 1;
 						
 					}
-					$this->vue->chargerVue('technotes' . $action, $vars);
+					$this->vue->chargerVue('technotes_' . $action, $vars);
 				}
 				break;
 			case 'add':
