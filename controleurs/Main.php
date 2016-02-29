@@ -100,7 +100,7 @@ class Main extends Controleur{
 						$cpt += 1;
 						
 					}
-					$this->chargerVues('/vues/technotes.php', $vars);
+					$this->vue->chargerVue('technotes' . $action, $vars);
 				}
 				break;
 			case 'add':
@@ -110,7 +110,7 @@ class Main extends Controleur{
 			case 'del':
 				break;
 			default:
-				parent::chargerVues('/vues/404.php', $vars);
+				$this->vue->chargerVue('404', $vars);
 		}
 		
 	}
