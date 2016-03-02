@@ -51,7 +51,7 @@ class Main extends Controleur{
 				}
 				break;
 			case 'add':
-				if($_SESSION['user']){
+				if(!$_SESSION['user']){
 					if(!empty($_POST)){
 						if(($res = Membre::checkAdd($_POST)) === true){
 							$groupeDAO = new GroupeDAO(BDD::getInstancePDO());
@@ -80,25 +80,44 @@ class Main extends Controleur{
 				}
 				break;
 			case 'edit':
-				if(!empty($_POST)){
-					if(($res = Membre::checkEdit($_POST)) === true){
-						$array = array('id_membre' => $_SESSION['user']->id_membre);
-						if(!empty($_POST['email']))
-							$array['email'] = $_POST['email'];
-						if(!empty($_POST['passwordNew']))
-							$array['password'] = password_hash($_POST['passwordNew'], PASSWORD_BCRYPT, array('cost' => 12));
-						$membre = new Membre($array);
-						if($membreDAO->save($membre)){
-							$_SESSION['user'] = $membreDAO->getOne(array('id_membre' => $_SESSION['user']->id_membre));
-							$vars['res'] = array('success' => true, 'msg' => 'Mise à jour réussie');
+				if($_SESSION['user']){
+					if(!empty($_POST)){
+						if(($res = Membre::checkEdit($_POST)) === true){
+							$array = array('id_membre' => $_SESSION['user']->id_membre);
+							if(!empty($_POST['email']))
+								$array['email'] = $_POST['email'];
+							if(!empty($_POST['passwordNew']))
+								$array['password'] = password_hash($_POST['passwordNew'], PASSWORD_BCRYPT, array('cost' => 12));
+							$membre = new Membre($array);
+							if($membreDAO->save($membre)){
+								$_SESSION['user'] = $membreDAO->getOne(array('id_membre' => $_SESSION['user']->id_membre));
+								$vars['res'] = array('success' => true, 'msg' => 'Mise à jour réussie');
+							}else
+								$vars['res'] = array('success' => false, 'msg' => 'Erreur BDD');
+						}else
+							$vars['res'] = array('success' => false, 'msg' => $res);
+					}
+					$this->vue->chargerVue('membre_' . $action, $vars);
+				}
+				elseif($param['mdp']){
+					if(!empty($_POST)){
+						$captcha = new Captcha();
+						if(($res = $captcha->check($_POST['g-recaptcha-response'])) === true){
+							if(($res = $membreDAO->checkMembreExiste($_POST['pseudoEmail'])) === true){
+								$vars['res'] = array('success' => true, 'msg' => 'Un email vous a été envoyé, merci de suivre les instructions');
+							}
+							else
+								$vars['res'] = array('success' => false, 'msg' => 'Le pseudo ou l\'email n\'existe pas');
 						}
 						else
-							$vars['res'] = array('success' => false, 'msg' => 'Erreur BDD');
+							$vars['res'] = array('success' => false, 'msg' => $res);
 					}
-					else
-						$vars['res'] = array('success' => false, 'msg' => $res);
+					$this->vue->chargerVue('membre_lostMDP', $vars);
 				}
-				$this->vue->chargerVue('membre_' . $action, $vars);
+				else{
+					header('Location: /');
+					exit();
+				}
 				break;
 			case 'drop':
 				//break;
@@ -161,11 +180,15 @@ class Main extends Controleur{
 					exit();
 				}
 				else
-					$vars['res'] = array('success' => false, 'msg' => 'Votre compte a été bloqué, contactez un admin');
+					$vars['connect'] = array('success' => false, 'msg' => 'Votre compte a été bloqué, contactez un admin');
 			}
 			else
-				$vars['res'] = array('success' => false, 'msg' => 'Couple login / mot de passe invalide');
-			$this->accueil('get', NULL, array('res' => $vars['res']));
+				$vars['connect'] = array('success' => false, 'msg' => 'Couple login / mot de passe invalide');
+			$this->accueil('get', NULL, array('connect' => $vars['connect']));
+		}
+		else{
+			header('Location: /');
+			exit();
 		}
 	}
 

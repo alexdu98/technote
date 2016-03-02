@@ -85,4 +85,12 @@ class MembreDAO extends DAO{
 		$_SESSION['user'] = $res;
 	}
 
+	public function checkMembreExiste($pseudoEmail){
+		$req = $this->pdo->prepare('SELECT cle_reset_pass FROM membre WHERE pseudo = :pseudoEmail OR email = :pseudoEmail');
+		$req->execute(array(
+			'pseudoEmail' => $pseudoEmail
+		));
+		return $req->fetch();
+	}
+
 }

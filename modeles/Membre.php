@@ -35,7 +35,7 @@ class Membre extends TableObject{
 
 	static public function checkPassUser($pass){
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
-		if($membreDAO->checkUser($_SESSION['user']->pseudo, $pass) !== false)
+		if($membreDAO->checkUserPass($_SESSION['user']->pseudo, $pass) !== false)
 			return true;
 		return 'Le mot de passe actuel est incorrect';
 	}

@@ -39,7 +39,7 @@
 								<div class="col-md-12 text-right conteneurLiensCo">
 									<div class="col-md-9 text-right liensCo">
 										• <a href="/membre/add">S'inscrire</a>
-										• <a href="/membre/edit">Mot de passe oublié</a> •
+										• <a href="/membre/edit?mdp=1">Mot de passe oublié</a> •
 									</div>
 									<div class="col-md-3 liensCo">
 										<div class="checkbox">
@@ -49,9 +49,9 @@
 										</div>
 									</div>
 								</div>
-								<?php if(!empty($v_res) && $v_res['success'] === false): ?>
+								<?php if(!empty($v_connect) && $v_connect['success'] === false): ?>
 									<div class="col-md-12 text-center">
-										<div class="badLogin"><?= $v_res['msg']; ?></div>
+										<div class="badLogin"><?= $v_connect['msg']; ?></div>
 									</div>
 								<?php endif; ?>
 							</form>
