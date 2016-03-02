@@ -15,7 +15,7 @@
 			<header class="container-fluid">
 				<div class="row">
 					<div class="col-md-5 col-md-offset-6">
-						<?php if($_SESSION['connecte']): ?>
+						<?php if($_SESSION['user']): ?>
 							<div class="text-right">
 								<a href="/membre"><?= ucfirst($_SESSION['user']->pseudo); ?></a> • <a href="/deconnexion">Déconnexion</a>
 							</div>

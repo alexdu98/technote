@@ -67,6 +67,9 @@ nav{
 nav li.active>a{
     background: #1495BC !important;
 }
+.nav-tabs{
+    margin-bottom: 15px;
+}
 h1{
     display: block;
     font-size: 48px;

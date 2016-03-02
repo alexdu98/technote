@@ -85,4 +85,13 @@ class TechnoteDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM technote WHERE id_technote = '$technote->id_technote'");
 	}
 
+	public function getNbRedige($id_auteur){
+		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM technote WHERE id_auteur = :id_auteur');
+		$req->execute(array(
+			'id_auteur' => $id_auteur
+		));
+		$res = $req->fetch();
+		return $res->nbRedige;
+	}
+
 }

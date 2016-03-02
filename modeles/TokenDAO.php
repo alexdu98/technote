@@ -37,7 +37,7 @@ class TokenDAO extends DAO{
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			$req = 'INSERT INTO token(' . $champs .') VALUES(' . $valeurs .')';
+			$req = 'INSERT INTO token(' . $champs .', date_expiration) VALUES(' . $valeurs .', DATE_ADD(NOW(), INTERVAL ' . DUREE_COOKIE_AUTOCONNECT_JOURS . ' DAY))';
 			$res = $this->pdo->exec($req);
 			$token->id_token = $this->pdo->lastInsertId();
 			return $res;
@@ -70,13 +70,21 @@ class TokenDAO extends DAO{
 				'token' => $_COOKIE['token']
 			));
 			if($res = $req->fetch()){
-				$_SESSION['connecte'] = true;
 				$_SESSION['user'] = $res;
-				return true;
+				return;
 			}
 		}
 		setcookie('token','', time());
-		return false;
+		$_SESSION['user'] = false;
+	}
+
+	public function getNbActif($id_membre){
+		$req = $this->pdo->prepare('SELECT COUNT(*) nbActif FROM token WHERE id_membre = :id_membre AND date_expiration > NOW()');
+		$req->execute(array(
+			'id_membre' => $id_membre
+		));
+		$res = $req->fetch();
+		return $res->nbActif;
 	}
 
 }

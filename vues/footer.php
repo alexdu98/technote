@@ -19,5 +19,6 @@
 	</footer>
 	<script src="/assets/librairies/jquery/jquery.min.js"></script>
 	<script src="/assets/librairies/bootstrap/js/bootstrap.min.js"></script>
+	<script src='https://www.google.com/recaptcha/api.js'></script>
 </body>
 </html>

@@ -24,7 +24,7 @@
 			<div class="form-group">
 				<label for="password" class="col-sm-2 control-label">Mot de passe</label>
 				<div class="col-sm-10">
-					<input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+					<input type="password" name="password" class="form-control" id="password" placeholder="Mot de passe" required>
 				</div>
 			</div>
 			<div class="form-group">
@@ -55,4 +55,3 @@
 		</form>
 	</div>
 </div>
-<script src='https://www.google.com/recaptcha/api.js'></script>

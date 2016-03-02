@@ -12,8 +12,8 @@ session_start();
 
 // Connecte le client s'il possède un cookie
 $tokenDAO = new TokenDAO(BDD::getInstancePDO());
-if(!isset($_SESSION['connecte']))
-	$_SESSION['connecte'] = $tokenDAO->checkToken();
+if(!isset($_SESSION['user']))
+	$tokenDAO->checkToken();
 
 // Enregistre la visite si c'est la premiere de cette heure
 $visiteDAO = new VisiteDAO(BDD::getInstancePDO());

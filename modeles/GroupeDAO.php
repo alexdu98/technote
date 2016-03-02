@@ -11,7 +11,7 @@ class GroupeDAO extends DAO{
 			'id_groupe' => $id['id_groupe']
 		));
 		$res = $req->fetch();
-		return new Visite($res);
+		return new Groupe($res);
 	}
 
 	public function getAll(){
@@ -57,6 +57,15 @@ class GroupeDAO extends DAO{
 
 	public function delete($groupe){
 		return $this->pdo->exec("DELETE FROM groupe WHERE id_groupe = '$groupe->id_groupe'");
+	}
+
+	public function getOneByLibelle($libelle){
+		$req = $this->pdo->prepare('SELECT * FROM groupe WHERE libelle = :libelle');
+		$req->execute(array(
+			'libelle' => $libelle
+		));
+		$res = $req->fetch();
+		return new Groupe($res);
 	}
 
 }

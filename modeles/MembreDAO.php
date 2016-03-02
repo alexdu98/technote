@@ -11,7 +11,17 @@ class MembreDAO extends DAO{
 			'id_membre' => $id['id_membre']
 		));
 		$res = $req->fetch();
-		return new Membre($res);
+		unset($res->password, $res->cle_reset_pass);
+		return new Membre(get_object_vars($res));
+	}
+
+	public function getOneByPseudo($pseudo){
+		$req = $this->pdo->prepare('SELECT id_membre, pseudo, email, g.libelle groupe, bloquer, DATE_FORMAT(date_inscription, "%d/%m/%Y à %Hh%i") date_inscription, DATE_FORMAT(date_connexion, "%d/%m/%Y à %Hh%i") date_connexion FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE pseudo = :pseudo');
+		$req->execute(array(
+			'pseudo' => $pseudo
+		));
+		$res = $req->fetch();
+		return new Membre(get_object_vars($res));
 	}
 
 	public function getAll(){
@@ -59,18 +69,20 @@ class MembreDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM membre WHERE id_membre = '$membre->id_membre'");
 	}
 
-	public function checkUser($pseudo, $pass){
-		$req = $this->pdo->prepare('SELECT * FROM membre WHERE pseudo = :pseudo');
+	public function checkUserPass($pseudo, $pass){
+		$req = $this->pdo->prepare('SELECT password FROM membre WHERE pseudo = :pseudo');
 		$req->execute(array(
 			'pseudo' => $pseudo
 		));
-		if(($res = $req->fetch())){
-			if(password_verify($pass, $res->password)){
-				unset($res->password, $res->cle_reset_pass);
-				return new Membre(get_object_vars($res));
-			}
-		}
+		if(($res = $req->fetch()))
+			return password_verify($pass, $res->password);
 		return false;
+	}
+
+	public function connexion($pseudo){
+		$this->pdo->exec("UPDATE membre SET date_connexion = NOW() WHERE pseudo = '$pseudo'");
+		$res = $this->getOneByPseudo($pseudo);
+		$_SESSION['user'] = $res;
 	}
 
 }

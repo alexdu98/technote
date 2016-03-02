@@ -59,4 +59,13 @@ class CommentaireDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM commentaire WHERE id_commentaire = '$commentaire->id_commentaire'");
 	}
 
+	public function getNbRedige($id_auteur){
+		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM commentaire WHERE id_auteur = :id_auteur');
+		$req->execute(array(
+			'id_auteur' => $id_auteur
+		));
+		$res = $req->fetch();
+		return $res->nbRedige;
+	}
+
 }

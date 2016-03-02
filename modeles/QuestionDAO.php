@@ -59,4 +59,13 @@ class QuestionDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM question WHERE id_question = '$question->id_question'");
 	}
 
+	public function getNbRedige($id_auteur){
+		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM question WHERE id_auteur = :id_auteur');
+		$req->execute(array(
+			'id_auteur' => $id_auteur
+		));
+		$res = $req->fetch();
+		return $res->nbRedige;
+	}
+
 }
