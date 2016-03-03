@@ -103,8 +103,12 @@ class Main extends Controleur{
 					if(!empty($_POST)){
 						$captcha = new Captcha();
 						if(($res = $captcha->check($_POST['g-recaptcha-response'])) === true){
-							if(($res = $membreDAO->checkMembreExiste($_POST['pseudoEmail'])) === true){
-								$vars['res'] = array('success' => true, 'msg' => 'Un email vous a été envoyé, merci de suivre les instructions');
+							if(($res = $membreDAO->checkMembreExiste($_POST['pseudoEmail'])) !== false){
+								$membre = $res;
+								if(($res = $membre->lostPass()) === true)
+									$vars['res'] = array('success' => true, 'msg' => 'Un email vous a été envoyé, merci de suivre les instructions');
+								else
+									$vars['res'] = array('success' => false, 'msg' => $res);
 							}
 							else
 								$vars['res'] = array('success' => false, 'msg' => 'Le pseudo ou l\'email n\'existe pas');

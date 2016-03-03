@@ -75,4 +75,20 @@ class Membre extends TableObject{
 		return 'Les conditions d\'utilisation ne sont pas acceptées';
 	}
 
+	public function lostPass(){
+		$cle = hash('sha512', uniqid(rand(), true) . SALT_RESET_PASS);
+		$membreDAO = new MembreDAO(BDD::getInstancePDO());
+		$membre = new membre(array(
+			'id_membre' => $this->id_membre,
+			'cle_reset_pass' => $cle
+		));
+		$membreDAO->save($membre);
+		$param = array(
+			'pseudo' => $this->pseudo,
+			'cle' => $cle
+		);
+		$mail = new Mail($this->email, 'Oubli de mot de passe', 'mail_lostPass.php', $param);
+		return $mail->sendMail();
+	}
+
 }
