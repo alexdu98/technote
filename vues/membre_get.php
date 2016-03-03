@@ -6,7 +6,14 @@
 			<li role="presentation"><a href="/membre/edit">Modifier</a></li>
 		</ul>
 		<div class="col-md-8">
-			<p>Connexion automatique sur <?= $v_nbTokenActif; ?> navigateur(s)</p>
+			<p>
+				Connexion automatique sur <?= $v_nbTokenActif; ?> navigateur(s) <br>
+				<?php
+					if($v_tokenActif)
+						foreach($v_tokenActif as $token)
+							echo $token->affiche() . '<br>';
+				?>
+			</p>
 			<br>
 			<p>
 				Vous avez rédigé :

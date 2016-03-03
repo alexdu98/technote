@@ -9,12 +9,27 @@
 			</div>
 		<?php endif; ?>
 		<form method="POST" class="form-horizontal">
+			<?php if(!empty($v_etape) && $v_etape == 'formMDP'): ?>
+				<div class="form-group">
+					<label for="passwordNew" class="col-sm-2 control-label">Nouveau mot de passe</label>
+					<div class="col-sm-10">
+						<input type="password" name="passwordNew" class="form-control" id="passwordNew" placeholder="Nouveau mot de passe" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="passwordNewConfirm" class="col-sm-2 control-label">Confirmation nouveau mot de passe</label>
+					<div class="col-sm-10">
+						<input type="password" name="passwordNewConfirm" class="form-control" id="passwordNewConfirm" placeholder="Confirmation nouveau mot de passe" required>
+					</div>
+				</div>
+			<?php else: ?>
 			<div class="form-group">
 				<label for="pseudoEmail" class="col-sm-2 control-label">Pseudo ou email</label>
 				<div class="col-sm-10">
 					<input type="text" name="pseudoEmail" class="form-control" id="pseudoEmail" placeholder="Pseudo ou email" required>
 				</div>
 			</div>
+			<?php endif; ?>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<div class="g-recaptcha" data-sitekey="6LdIRhgTAAAAAETW0QglcOGfBb3cYMTlcYOkWozt"></div>

@@ -96,4 +96,15 @@ class MembreDAO extends DAO{
 			return false;
 	}
 
+	public function checkCleResetPass($cle){
+		$req = $this->pdo->prepare('SELECT id_membre FROM membre WHERE cle_reset_pass = :cle_reset_pass');
+		$req->execute(array(
+			'cle_reset_pass' => $cle
+		));
+		if(($res = $req->fetch()))
+			return new Membre(get_object_vars($res));
+		else
+			return false;
+	}
+
 }

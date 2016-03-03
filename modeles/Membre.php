@@ -33,6 +33,19 @@ class Membre extends TableObject{
 		return $res;
 	}
 
+	static public function checkLostPass($param){
+		if(!empty($param['passwordNew']) && !empty($param['passwordNewConfirm']) && !empty($param['g-recaptcha-response'])){
+			if(($res = self::checkPass($param['passwordNew'], $param['passwordNewConfirm'])) === true){
+				$captcha = new Captcha();
+				if(($res = $captcha->check($param['g-recaptcha-response'])) === true)
+					return true;
+			}
+		}
+		else
+			return 'Tous les champs ne sont pas renseignés';
+		return $res;
+	}
+
 	static public function checkPassUser($pass){
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
 		if($membreDAO->checkUserPass($_SESSION['user']->pseudo, $pass) !== false)
@@ -76,7 +89,7 @@ class Membre extends TableObject{
 	}
 
 	public function lostPass(){
-		$cle = hash('sha512', uniqid(rand(), true) . SALT_RESET_PASS);
+		$cle = hash('sha256', uniqid(rand(), true) . SALT_RESET_PASS);
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
 		$membre = new membre(array(
 			'id_membre' => $this->id_membre,

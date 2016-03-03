@@ -87,4 +87,24 @@ class TokenDAO extends DAO{
 		return $res->nbActif;
 	}
 
+	public function getActif($id_membre){
+		$req = $this->pdo->prepare('SELECT ip, DATE_FORMAT(date_expiration, "%d/%m/%Y à %Hh%i") date_expiration FROM token WHERE id_membre = :id_membre AND date_expiration > NOW() LIMIT 5');
+		$req->execute(array(
+			'id_membre' => $id_membre
+		));
+		if($fetch = $req->fetchAll()){
+			$res = array();
+			foreach($fetch as $obj){
+				$ligne = array();
+				foreach($obj as $nomChamp => $valeur){
+					$ligne[$nomChamp] = $valeur;
+				}
+				$res[] = new Token($ligne);
+			}
+			return $res;
+		}
+		else
+			return false;
+	}
+
 }

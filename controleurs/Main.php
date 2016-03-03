@@ -38,6 +38,7 @@ class Main extends Controleur{
 					$reponseDAO = new ReponseDAO(BDD::getInstancePDO());
 					$actionDAO = new ActionDAO(BDD::getInstancePDO());
 					$vars['nbTokenActif'] = $tokenDAO->getNbActif($_SESSION['user']->id_membre);
+					$vars['tokenActif'] = $tokenDAO->getActif($_SESSION['user']->id_membre);
 					$vars['nbTechnoteRedige'] = $technoteDAO->getNbRedige($_SESSION['user']->id_membre);
 					$vars['nbCommentaireRedige'] = $commentaireDAO->getNbRedige($_SESSION['user']->id_membre);
 					$vars['nbQuestionRedige'] = $questionDAO->getNbRedige($_SESSION['user']->id_membre);
@@ -64,8 +65,10 @@ class Main extends Controleur{
 								'id_groupe' => $groupe->id_groupe,
 								'bloquer' => 0
 							));
-							if($membreDAO->save($membre))
+							if($membreDAO->save($membre)){
+								$this->action('Inscription');
 								$vars['res'] = array('success' => true, 'msg' => 'Inscription réussie');
+							}
 							else
 								$vars['res'] = array('success' => false, 'msg' => 'Erreur BDD');
 						}
@@ -90,7 +93,8 @@ class Main extends Controleur{
 								$array['password'] = password_hash($_POST['passwordNew'], PASSWORD_BCRYPT, array('cost' => 12));
 							$membre = new Membre($array);
 							if($membreDAO->save($membre)){
-								$_SESSION['user'] = $membreDAO->getOne(array('id_membre' => $_SESSION['user']->id_membre));
+								$_SESSION['user'] = $membreDAO->getOneByPseudo($_SESSION['user']->pseudo);
+								$this->action('Mise à jour du profil');
 								$vars['res'] = array('success' => true, 'msg' => 'Mise à jour réussie');
 							}else
 								$vars['res'] = array('success' => false, 'msg' => 'Erreur BDD');
@@ -100,13 +104,37 @@ class Main extends Controleur{
 					$this->vue->chargerVue('membre_' . $action, $vars);
 				}
 				elseif($param['mdp']){
-					if(!empty($_POST)){
+					if(!empty($param['cle']) && ($membre = $membreDAO->checkCleResetPass($param['cle']))){
+						if(!empty($_POST)){
+							if(($res = Membre::checkLostPass($_POST))){
+								$membre = new Membre(array(
+									'id_membre' => $membre->id_membre,
+									'password' => password_hash($_POST['passwordNew'], PASSWORD_BCRYPT, array('cost' => 12)),
+									'cle_reset_pass' => ''
+								));
+								$id_membre = $membre->id_membre;
+								if($membreDAO->save($membre)){
+									$this->action('Oubli de mot de passe (modification du mot de passe)', $id_membre);
+									$vars['res'] = array('success' => true, 'msg' => 'Mise à jour du mot de passe réussie');
+								}else
+									$vars['res'] = array('success' => false, 'msg' => 'Erreur BDD');
+							}
+							else
+								$vars['res'] = array('success' => false, 'msg' => $res);
+						}
+						else{
+							$vars['etape'] = 'formMDP';
+						}
+					}
+					elseif(!empty($_POST)){
 						$captcha = new Captcha();
 						if(($res = $captcha->check($_POST['g-recaptcha-response'])) === true){
 							if(($res = $membreDAO->checkMembreExiste($_POST['pseudoEmail'])) !== false){
 								$membre = $res;
-								if(($res = $membre->lostPass()) === true)
+								if(($res = $membre->lostPass()) === true){
+									$this->action('Oubli de mot de passe (création de la clé)', $membre->id_membre);
 									$vars['res'] = array('success' => true, 'msg' => 'Un email vous a été envoyé, merci de suivre les instructions');
+								}
 								else
 									$vars['res'] = array('success' => false, 'msg' => $res);
 							}
@@ -128,6 +156,17 @@ class Main extends Controleur{
 			default:
 				$this->vue->chargerVue('404', $vars);
 		}
+	}
+
+	private function action($libelle, $id_membre = NULL){
+		$id_membre = empty($id_membre) ? $_SESSION['user']->id_membre : $id_membre;
+		$actionDAO = new ActionDAO(BDD::getInstancePDO());
+		$action = new Action(array(
+			'id_action' => DAO::UNKNOWN_ID,
+			'libelle' => $libelle,
+			'id_membre' => $id_membre
+		));
+		$actionDAO->save($action);
 	}
 	
 	public function technotes($action, $param) {
@@ -174,21 +213,26 @@ class Main extends Controleur{
 						$token = new Token(array(
 							'id_token' => DAO::UNKNOWN_ID,
 							'cle' => $cle,
+							'ip' => $_SERVER['REMOTE_ADDR'],
 							'id_membre' => $_SESSION['user']->id_membre
 						));
 						$tokenDAO = new TokenDAO(BDD::getInstancePDO());
 						$tokenDAO->save($token);
 						setcookie('token', $cle, time() + DUREE_COOKIE_AUTOCONNECT_SEC);
 					}
+					$this->action("Connexion ($_SERVER[REMOTE_ADDR])");
 					header('Location: /membre');
 					exit();
 				}
-				else
+				else{
+					$_SESSION['user'] = false;
 					$vars['connect'] = array('success' => false, 'msg' => 'Votre compte a été bloqué, contactez un admin');
+				}
 			}
 			else
 				$vars['connect'] = array('success' => false, 'msg' => 'Couple login / mot de passe invalide');
 			$this->accueil('get', NULL, array('connect' => $vars['connect']));
+			exit();
 		}
 		else{
 			header('Location: /');
