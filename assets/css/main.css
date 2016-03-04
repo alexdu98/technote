@@ -52,7 +52,7 @@ div#logo{
     background: url('/assets/images/bgh.png');
     text-align: center;
 }
-nav{
+nav.main{
     background: #2aabd2;
     box-shadow: 0 0 5px #777;
 }
@@ -87,6 +87,8 @@ article{
 }
 img.img-technote{
     margin-bottom: 5px;
+    min-width: 75%;
+    max-height: 250px;
 }
 footer{
     position: absolute;
@@ -97,9 +99,6 @@ footer{
     height: 120px;
     box-shadow: 0 -1px 5px #777;
     width: 100%;
-}
-footer,#push{
-    height: 120px;
 }
 footer a{
     color: white;

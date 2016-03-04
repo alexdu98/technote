@@ -62,7 +62,7 @@
 			<div id="logo" class="col-md-12">
 				<img src="/assets/images/logo.png" alt="Logo">
 			</div>
-			<nav class="col-md-12">
+			<nav class="col-md-12 main">
 				<div class="col-md-8 col-md-offset-2">
 					<ul class="nav nav-pills nav-justified">
 						<li class="<?php if(isset($v_accueil)) echo "active";?>"><a href="/">Accueil</a></li>

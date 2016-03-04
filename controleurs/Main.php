@@ -226,7 +226,7 @@ class Main extends Controleur{
 				}
 				else{
 					$_SESSION['user'] = false;
-					$vars['connect'] = array('success' => false, 'msg' => 'Votre compte a été bloqué, contactez un admin');
+					$vars['connect'] = array('success' => false, 'msg' => 'Votre compte a été bloqué');
 				}
 			}
 			else
