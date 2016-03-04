@@ -31,7 +31,10 @@ class TechnoteDAO extends DAO{
 	public function getNTechnotes($offset, $limit){
 		$res = array();
 		
-		$req = $this->pdo->prepare('SELECT * FROM technote t LIMIT :limit OFFSET :offset');
+		$req = $this->pdo->prepare('SELECT * 
+									FROM technote t 
+									LIMIT :limit OFFSET :offset');
+		
 		$req->bindValue(':limit', $limit, PDO::PARAM_INT);
 		$req->bindValue(':offset', $offset, PDO::PARAM_INT);
 		$req->execute();
@@ -39,7 +42,11 @@ class TechnoteDAO extends DAO{
 		
 		foreach($req->fetchAll() as $obj){
 			$ligne = array();
-			$req = $this->pdo->prepare('SELECT label FROM mot_cle mc INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle WHERE d.id_technote = :id_technote');
+			$req = $this->pdo->prepare('SELECT label 
+										FROM mot_cle mc 
+										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle 
+										WHERE d.id_technote = :id_technote');
+			
 			$req->execute(array(
 				'id_technote' => $obj->id_technote
 			));

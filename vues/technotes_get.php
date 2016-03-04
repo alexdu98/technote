@@ -1,83 +1,34 @@
 <h1>Toutes les technotes</h1>
 <div class="container">
 	<div class="row">
-		<?php if(isset($v_technote1)) : ?>	
-		<div class="col-md-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title"><?php echo $v_technote1['titre']; ?></h3>
-				</div>
-				<div class="panel-body">
-					<?php echo $v_technote1['contenu']; ?>
-				</div>	
-			</div>
-		</div>
-		<?php endif; ?>
 		
-		<?php if(isset($v_technote2)) : ?>
-		<div class="col-md-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title"><?php echo $v_technote2['titre']; ?></h3>
-				</div>
-				<div class="panel-body">
-					<?php echo $v_technote2['contenu']; ?>
+		<?php foreach ($v_tn as $tn) : ?>
+			
+			<div class="col-md-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title"><?= $tn->getFields()['titre']; ?></h3>
+					</div>
+					<div class="panel-body">
+						<?= $tn->getFields()['contenu']; ?>
+					</div>
+					<div class="panel-footer">
+						<?php
+							// Pour afficher les mots-clés
+							$str = "";
+							
+							foreach($tn->getFields()['mot_cle'] as $mot_cle)
+								$str .= $mot_cle->label . ', ';
+							
+							$str = substr($str, 0, -2);
+							echo $str;
+						?>
+					</div>	
 				</div>
 			</div>
-		</div>
-		<?php endif; ?>
-				
-		<?php if(isset($v_technote3)) : ?>
-		<div class="col-md-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title"><?php echo $v_technote3['titre']; ?></h3>
-				</div>
-				<div class="panel-body">
-					<?php echo $v_technote3['contenu']; ?>
-				</div>
-			</div>
-		</div>
-		<?php endif; ?>
+			
+		<?php endforeach; ?>
 		
-		<?php if(isset($v_technote4)) : ?>
-		<div class="col-md-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title"><?php echo $v_technote4['titre']; ?></h3>
-				</div>
-				<div class="panel-body">
-					<?php echo $v_technote4['contenu']; ?>
-				</div>
-			</div>
-		</div>
-		<?php endif; ?>
-		
-		<?php if(isset($v_technote5)) : ?>
-		<div class="col-md-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title"><?php echo $v_technote5['titre']; ?></h3>
-				</div>
-				<div class="panel-body">
-					<?php echo $v_technote5['contenu']; ?>
-				</div>
-			</div>
-		</div>
-		<?php endif; ?>
-		
-		<?php if(isset($v_technote6)) : ?>
-		<div class="col-md-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title"><?php echo $v_technote6['titre']; ?></h3>
-				</div>
-				<div class="panel-body">
-					<?php echo $v_technote6['contenu']; ?>
-				</div>
-			</div>
-		</div>
-		<?php endif; ?>
 		
 	</div>
 	
