@@ -6,11 +6,25 @@
 class TechnoteDAO extends DAO{
 
 	public function getOne(array $id){
-		$req = $this->pdo->prepare('SELECT * FROM technote WHERE id_technote = :id_technote');
+		$req = $this->pdo->prepare('SELECT * 
+									FROM technote 
+									WHERE id_technote = :id_technote');
 		$req->execute(array(
 			'id_technote' => $id['id_technote']
 		));
-		$res = $req->fetch();
+		$res = $req->fetch(PDO::FETCH_ASSOC);
+		
+		$req = $this->pdo->prepare('SELECT label
+										FROM mot_cle mc
+										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle
+										WHERE d.id_technote = :id_technote');
+			
+		$req->execute(array(
+				'id_technote' => $res['id_technote']
+		));
+		
+		$res['mot_cle'] = $req->fetchAll();
+		
 		return new Technote($res);
 	}
 
@@ -89,11 +103,15 @@ class TechnoteDAO extends DAO{
 	}
 
 	public function delete($technote){
-		return $this->pdo->exec("DELETE FROM technote WHERE id_technote = '$technote->id_technote'");
+		return $this->pdo->exec("DELETE FROM technote 
+								WHERE id_technote = '$technote->id_technote'");
 	}
 
 	public function getNbRedige($id_auteur){
-		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM technote WHERE id_auteur = :id_auteur');
+		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige 
+									FROM technote 
+									WHERE id_auteur = :id_auteur');
+		
 		$req->execute(array(
 			'id_auteur' => $id_auteur
 		));

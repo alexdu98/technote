@@ -10,21 +10,27 @@
 						<h3 class="panel-title"><?= $tn->getFields()['titre']; ?></h3>
 					</div>
 					<div class="panel-body">
-						<?= $tn->getFields()['contenu']; ?>
+						<?= substr($tn->getFields()['contenu'], 0, 200) . '...'; ?>
 					</div>
 					<div class="panel-footer">
-						<?php
-							// Pour afficher les mots-clés
-							$str = "";
-							
-							foreach($tn->getFields()['mot_cle'] as $mot_cle)
-								$str .= $mot_cle->label . ', ';
-							
-							$str = substr($str, 0, -2);
-							echo $str;
-						?>
-					</div>	
+						<p>
+							Mots-clés : 
+							<?php
+								// Pour afficher les mots-clés
+								$str = "";
+								
+								foreach($tn->getFields()['mot_cle'] as $mot_cle)
+									$str .= $mot_cle->label . ', ';
+								
+								$str = substr($str, 0, -2);
+								echo $str;
+							?>
+							<a class="btn btn-default" href="technotes/get?id_technote=<?= $tn->getFields()['id_technote'];?>" role="button">Consulter</a>
+						</p>					
+					</div>
+					
 				</div>
+				
 			</div>
 			
 		<?php endforeach; ?>

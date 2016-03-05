@@ -178,13 +178,17 @@ class Main extends Controleur{
 			case 'get':
 				// Si on veut consulter une technote en particulier
 				if(isset($_GET['id_technote'])){
-					
+					$tn = $technoteDAO->getOne(array('id_technote' => $_GET['id_technote']));
+					$vars['tn'] = $tn;
+					$this->vue->chargerVue('technotes_' . $action . '_one', $vars);
 				}
 				else {
 					$nbTechnotes = 6;
 					$nav = isset($_GET["nav"]) ? $_GET["nav"] : $nav = 1;
 					$debut = ($nav - 1) * 6;
+					
 					$tn = $technoteDAO->getNTechnotes($debut, $nbTechnotes);
+					
 					$vars['tn'] = $tn;
 					$this->vue->chargerVue('technotes_' . $action, $vars);
 				}

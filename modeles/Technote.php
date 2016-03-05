@@ -1,7 +1,7 @@
 <?php
 
 class Technote extends TableObject{
-
+	
 	public function afficherPourAccueil(){
 		$str = '';
 		foreach($this->mot_cle as $mot_cle)
