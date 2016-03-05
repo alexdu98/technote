@@ -1,8 +1,10 @@
 <?php
 
 class Technote extends TableObject{
-	
-	public function afficherPourAccueil(){
+
+
+	public function afficherExtrait(){
+
 		$str = '';
 		foreach($this->mot_cle as $mot_cle)
 			$str .= $mot_cle->label . ', ';
@@ -17,7 +19,7 @@ class Technote extends TableObject{
 							<img src="' . $this->url_image . '" alt="test" class="img-thumbnail img-technote">
 						</div>
 						<div class="col-md-12 text-justify">
-							' . $this->contenu . '
+							' . substr($this->contenu, 0, 256) . '...
 						</div>
 					</div>
 					<div class="panel-footer">' . $str . '</div>

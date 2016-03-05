@@ -11,7 +11,7 @@
 				<?php
 					if($v_tokenActif)
 						foreach($v_tokenActif as $token)
-							echo $token->affiche() . '<br>';
+							echo $token->affiche() . ' : <a class="deleteToken">se déconnecter</a> <br>';
 				?>
 			</p>
 			<br>
