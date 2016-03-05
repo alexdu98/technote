@@ -1,17 +1,15 @@
 <div class="container">
-<div class="row">
-
+	<div class="row">
 	
-		<h1 class="jumbotron"><?= $v_tn->getFields()['titre']; ?></h1>
 		
-		<p>
-			<?= $v_tn->getFields()['contenu']; ?>
-		</p>
+			<h1 class="jumbotron"><?= $v_tn->getFields()['titre']; ?></h1>
 			
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<p>
-					Mots-clés : 
+			<p>
+				<?= $v_tn->getFields()['contenu']; ?>
+			</p>
+				
+			<div class="panel panel-default">
+				<div class="panel-body">
 					<?php
 						// Pour afficher les mots-clés
 						$str = "";
@@ -22,20 +20,11 @@
 						$str = substr($str, 0, -2);
 						echo $str;
 					?>
-					<a class="btn btn-default" href="technotes/get?id_technote= <?= $v_tn->getFields()['id_technote'];?> " role="button">Consulter</a>
-				</p>
+				</div>
+									
 			</div>
-								
-		</div>
-		
-	</div>
-	
-	
 			
-		
-		
-		
 	</div>
-	
-	
 </div>
+	
+	

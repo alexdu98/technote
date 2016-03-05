@@ -22,7 +22,10 @@ class Technote extends TableObject{
 							' . substr($this->contenu, 0, 256) . '...
 						</div>
 					</div>
-					<div class="panel-footer">' . $str . '</div>
+					<div class="panel-footer">' 
+						. $str . 						
+						'&nbsp <a class="btn btn-default" href="/technotes/get?id_technote=' . $this->id_technote . '" role="button">Consulter</a>
+					</div>
 				</div>
 			</div>
 		';
