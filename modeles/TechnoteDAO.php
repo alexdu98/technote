@@ -74,6 +74,15 @@ class TechnoteDAO extends DAO{
 		return $res;
 		
 	}
+	
+	public function getCount(){
+		$req = $this->pdo->prepare('SELECT Count(*) AS "nbTechnotes"
+									FROM technote');
+		$req->execute();
+		$res = $req->fetch(PDO::FETCH_ASSOC);
+	
+		return $res['nbTechnotes'];
+	}
 
 	public function save($technote){
 		if($technote->id_technote == DAO::UNKNOWN_ID){

@@ -184,11 +184,16 @@ class Main extends Controleur{
 				}
 				else {
 					$nbTechnotes = 6;
-					$nav = isset($_GET["nav"]) ? $_GET["nav"] : $nav = 1;
+					$nav = isset($_GET["nav"]) ? intval($_GET["nav"]) : 1;
 					$debut = ($nav - 1) * 6;
 					
 					$tn = $technoteDAO->getNTechnotes($debut, $nbTechnotes);
 					
+					$count = intval($technoteDAO->getCount());
+					$fin = $debut + 6 > $count ? 1 : 0;
+					
+					$vars['fin'] = $fin;
+					$vars['nav'] = $nav;
 					$vars['tn'] = $tn;
 					$this->vue->chargerVue('technotes_' . $action, $vars);
 				}

@@ -3,25 +3,15 @@
 <section>
 	<div class="container-fluid">
 		<nav class="text-center">
-			<ul class="pagination">
-				<li>
-					<a href="#" aria-label="Previous">
-						<span aria-hidden="true">&laquo;</span>
-					</a>
-				</li>
-				<li><a href="#">1</a></li>
-				<li><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li><a href="#">4</a></li>
-				<li><a href="#">5</a></li>
-				<li>
-					<a href="#" aria-label="Next">
-						<span aria-hidden="true">&raquo;</span>
-					</a>
-				</li>
+			<ul class="pager">
+				<?php if ($v_nav != 1): ?>
+				<li><a href="/technotes/get?nav=<?= $v_nav - 1; ?>">Précédent</a></li>
+			    <?php endif;?>
+			    <?php if (!$v_fin):?>
+			    <li><a href="/technotes/get?nav=<?= $v_nav + 1; ?>">Suivant</a></li>
+				<?php endif;?>
 			</ul>
 		</nav>
-
 	</div>
 	<div class="container-fluid">
 		<?php
@@ -38,22 +28,13 @@
 	</div>
 	<div class="container-fluid">
 		<nav class="text-center">
-			<ul class="pagination">
-				<li>
-					<a href="#" aria-label="Previous">
-						<span aria-hidden="true">&laquo;</span>
-					</a>
-				</li>
-				<li><a href="#">1</a></li>
-				<li><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li><a href="#">4</a></li>
-				<li><a href="#">5</a></li>
-				<li>
-					<a href="#" aria-label="Next">
-						<span aria-hidden="true">&raquo;</span>
-					</a>
-				</li>
+			<ul class="pager">
+				<?php if ($v_nav != 1): ?>
+				<li><a href="/technotes/get?nav=<?= $v_nav - 1; ?>">Précédent</a></li>
+			    <?php endif;?>
+			    <?php if (!$v_fin):?>
+			    <li><a href="/technotes/get?nav=<?= $v_nav + 1; ?>">Suivant</a></li>
+				<?php endif;?>
 			</ul>
 		</nav>
 	</div>

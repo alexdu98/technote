@@ -13,10 +13,16 @@ class Technote extends TableObject{
 		echo '
 			<div class="col-md-4">
 				<div class="panel panel-default">
-					<div class="panel-heading">' . $this->titre . '</div>
+					<div class="panel-heading">
+						<a href="/technotes/get?id_technote=' . $this->id_technote . '" role="button">' 
+							. $this->titre . 
+						'</a>
+					</div>
 					<div class="panel-body">
 						<div class="col-md-12 text-center">
-							<img src="' . $this->url_image . '" alt="test" class="img-thumbnail img-technote">
+							<a href="/technotes/get?id_technote=' . $this->id_technote . '" role="button">
+								<img src="' . $this->url_image . '" alt="test" class="img-thumbnail img-technote">
+							</a>
 						</div>
 						<div class="col-md-12 text-justify">
 							' . substr($this->contenu, 0, 256) . '...
@@ -24,8 +30,7 @@ class Technote extends TableObject{
 					</div>
 					<div class="panel-footer">' 
 						. $str . 						
-						'&nbsp <a class="btn btn-default" href="/technotes/get?id_technote=' . $this->id_technote . '" role="button">Consulter</a>
-					</div>
+					'</div>
 				</div>
 			</div>
 		';
