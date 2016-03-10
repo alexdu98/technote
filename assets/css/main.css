@@ -90,6 +90,15 @@ img.img-technote{
     min-width: 75%;
     max-height: 250px;
 }
+a {
+    color: #337ab7;
+}
+.panel{
+    margin-top: 20px;
+}
+a.extraitTechnote{
+    color: inherit;
+}
 footer{
     position: absolute;
     bottom: 0;

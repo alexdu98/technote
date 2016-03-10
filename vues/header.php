@@ -8,6 +8,10 @@
 	<link rel="stylesheet" href="/assets/librairies/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/assets/css/main.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="/assets/librairies/jquery/jquery.min.js"></script>
+	<script src="/assets/librairies/bootstrap/js/bootstrap.min.js"></script>
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<script src='/assets/js/main.js'></script>
 </head>
 <body>
 	<div class="container-fluid">

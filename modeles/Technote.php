@@ -5,35 +5,33 @@ class Technote extends TableObject{
 
 	public function afficherExtrait(){
 
-		$str = '';
+		$strMotCle = '';
 		foreach($this->mot_cle as $mot_cle)
-			$str .= $mot_cle->label . ', ';
-		$str = substr($str, 0, -2);
+			$strMotCle .= '<a href="recherche?type=motcle&value=test">' . $mot_cle->label . '</a>, ';
+		$strMotCle = substr($strMotCle, 0, -2);
 
-		echo '
+		if(true): ?>
 			<div class="col-md-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<a href="/technotes/get?id_technote=' . $this->id_technote . '" role="button">' 
-							. $this->titre . 
-						'</a>
+						<a href="/technotes/get?id_technote=<?= $this->id_technote; ?>"><?= $this->titre; ?></a>
 					</div>
 					<div class="panel-body">
-						<div class="col-md-12 text-center">
-							<a href="/technotes/get?id_technote=' . $this->id_technote . '" role="button">
-								<img src="' . $this->url_image . '" alt="test" class="img-thumbnail img-technote">
-							</a>
-						</div>
-						<div class="col-md-12 text-justify">
-							' . substr($this->contenu, 0, 256) . '...
-						</div>
+						<a href="/technotes/get?id_technote=<?= $this->id_technote; ?>" class="extraitTechnote">
+							<div class="col-md-12 text-center">
+								<img src="<?= $this->url_image; ?>" alt="test" class="img-thumbnail img-technote">
+							</div>
+							<div class="col-md-12 text-justify">
+								<?= substr($this->contenu, 0, 255); ?>...
+							</div>
+						</a>
 					</div>
-					<div class="panel-footer">' 
-						. $str . 						
-					'</div>
+					<div class="panel-footer">
+						<?= $strMotCle; ?>
+					</div>
 				</div>
 			</div>
-		';
+		<?php endif;
 	}
 
 }
