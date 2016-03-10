@@ -249,6 +249,21 @@ class Main extends Controleur{
 		}
 	}
 
+	public function contact($action, $param){
+		$vars = array();
+		$this->vue->chargerVue('contact', $vars);
+	}
+
+	public function conditions($action, $param){
+		$vars = array();
+		$this->vue->chargerVue('conditions', $vars);
+	}
+
+	public function mentions($action, $param){
+		$vars = array();
+		$this->vue->chargerVue('mentions', $vars);
+	}
+
 	public function deconnexion($action, $param){
 		session_destroy();
 		setcookie('token', '', time() - 10);

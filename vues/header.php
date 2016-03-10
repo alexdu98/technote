@@ -68,12 +68,22 @@
 			</div>
 			<nav class="col-md-12 main">
 				<div class="col-md-8 col-md-offset-2">
-					<ul class="nav nav-pills nav-justified">
-						<li class="<?php if(isset($v_accueil)) echo "active";?>"><a href="/">Accueil</a></li>
-						<li class="<?php if(isset($v_technotes)) echo "active";?>"><a href="/technotes">Technotes</a></li>
-						<li class="<?php if(isset($v_profile)) echo "active";?>"><a href="/membre">Profile</a></li>
-						<li class="<?php if(isset($v_messages)) echo "active";?>"><a href="#">Messages</a></li>
-					</ul>
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav nav-pills nav-justified">
+							<li class="<?php if(isset($v_accueil)) echo "active";?>"><a href="/">Accueil</a></li>
+							<li class="<?php if(isset($v_technotes)) echo "active";?>"><a href="/technotes">Technotes</a></li>
+							<li class="<?php if(isset($v_profile)) echo "active";?>"><a href="/membre">Profile</a></li>
+							<li class="<?php if(isset($v_contact)) echo "active";?>"><a href="/contact">Contact</a></li>
+						</ul>
+					</div>
 				</div>
 			</nav>
 			<article class="col-md-10 col-md-offset-1">
