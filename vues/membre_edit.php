@@ -24,6 +24,7 @@
 					<input type="submit" class="btn btn-default" value="Valider">
 				</div>
 			</div>
+			<input type="hidden" name="jetonCSRF" value="<?= $_SESSION['jetonCSRF']; ?>">
 		</form>
 		<hr>
 		<form method="POST" class="form-horizontal">
@@ -50,6 +51,7 @@
 					<input type="submit" class="btn btn-default" value="Valider">
 				</div>
 			</div>
+			<input type="hidden" name="jetonCSRF" value="<?= $_SESSION['jetonCSRF']; ?>">
 		</form>
 	</div>
 </div>

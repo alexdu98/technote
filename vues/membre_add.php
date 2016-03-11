@@ -12,7 +12,7 @@
 			<div class="form-group">
 				<label for="pseudo" class="col-sm-2 control-label">Pseudo</label>
 				<div class="col-sm-10">
-					<input type="text" name="pseudo" class="form-control" id="pseudo" placeholder="Pseudo" required>
+					<input type="text" name="pseudo" class="form-control" id="pseudo" placeholder="Pseudo" maxlength="31" required>
 				</div>
 			</div>
 			<div class="form-group">

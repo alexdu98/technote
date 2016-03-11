@@ -15,6 +15,10 @@ $tokenDAO = new TokenDAO(BDD::getInstancePDO());
 if(!isset($_SESSION['user']))
 	$tokenDAO->checkToken();
 
+// Créé le jeton pour éviter la faille CSRF
+if(empty($_SESSION['jetonCSRF']))
+	$_SESSION['jetonCSRF'] = hash('sha1', uniqid(rand(), true) . SALT_JETON_CSRF);
+
 // Enregistre la visite si c'est la premiere de cette heure
 $visiteDAO = new VisiteDAO(BDD::getInstancePDO());
 $visite = new Visite(array('id_visite' => DAO::UNKNOWN_ID, 'ip' => $_SERVER['REMOTE_ADDR']));

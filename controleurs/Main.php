@@ -85,21 +85,23 @@ class Main extends Controleur{
 			case 'edit':
 				if($_SESSION['user']){
 					if(!empty($_POST)){
-						if(($res = Membre::checkEdit($_POST)) === true){
-							$array = array('id_membre' => $_SESSION['user']->id_membre);
-							if(!empty($_POST['email']))
-								$array['email'] = $_POST['email'];
-							if(!empty($_POST['passwordNew']))
-								$array['password'] = password_hash($_POST['passwordNew'], PASSWORD_BCRYPT, array('cost' => 12));
-							$membre = new Membre($array);
-							if($membreDAO->save($membre)){
-								$_SESSION['user'] = $membreDAO->getOneByPseudo($_SESSION['user']->pseudo);
-								$this->action('Mise à jour du profil');
-								$vars['res'] = array('success' => true, 'msg' => 'Mise à jour réussie');
+						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+							if(($res = Membre::checkEdit($_POST)) === true){
+								$array = array('id_membre' => $_SESSION['user']->id_membre);
+								if(!empty($_POST['email']))
+									$array['email'] = $_POST['email'];
+								if(!empty($_POST['passwordNew']))
+									$array['password'] = password_hash($_POST['passwordNew'], PASSWORD_BCRYPT, array('cost' => 12));
+								$membre = new Membre($array);
+								if($membreDAO->save($membre)){
+									$_SESSION['user'] = $membreDAO->getOneByPseudo($_SESSION['user']->pseudo);
+									$this->action('Mise à jour du profil');
+									$vars['res'] = array('success' => true, 'msg' => 'Mise à jour réussie');
+								}else
+									$vars['res'] = array('success' => false, 'msg' => 'Erreur BDD');
 							}else
-								$vars['res'] = array('success' => false, 'msg' => 'Erreur BDD');
-						}else
-							$vars['res'] = array('success' => false, 'msg' => $res);
+								$vars['res'] = array('success' => false, 'msg' => $res);
+						}
 					}
 					$this->vue->chargerVue('membre_' . $action, $vars);
 				}
@@ -214,7 +216,7 @@ class Main extends Controleur{
 		$vars = array();
 		if(!empty($_POST)){
 			$membreDAO = new MembreDAO(BDD::getInstancePDO());
-			if($res = $membreDAO->checkUserPass($_POST['pseudo'], $_POST['password'])){
+			if($membreDAO->checkUserPass($_POST['pseudo'], $_POST['password'])){
 				$membreDAO->connexion($_POST['pseudo']);
 				if(!$_SESSION['user']->bloquer){
 					if(!empty($_POST['autoConnexion']) && $_POST['autoConnexion'] == 'on'){
@@ -251,6 +253,22 @@ class Main extends Controleur{
 
 	public function contact($action, $param){
 		$vars = array();
+		$vars["contact"] = 1;
+		if(!empty($_POST)){
+			if(!$_SESSION['user'] || ($_SESSION['user'] && !empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF'])){
+				if(($res = Membre::checkContact($_POST)) === true){
+					if(($res = Membre::contact($_POST)) === true){
+						if($_SESSION['user'])
+							$this->action('Contact par formulaire', $_SESSION['user']->id_membre);
+						$vars['res'] = array('success' => true, 'msg' => 'L\'email nous a été envoyé, nous y répondrons dès que possible');
+					}
+					else
+						$vars['res'] = array('success' => false, 'msg' => $res);
+				}
+				else
+					$vars['res'] = array('success' => false, 'msg' => $res);
+			}
+		}
 		$this->vue->chargerVue('contact', $vars);
 	}
 
