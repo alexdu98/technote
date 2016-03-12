@@ -90,11 +90,10 @@
 									<li><a href="/technotes?nav=1">Voir toutes les technotes</a></li>
 		        	    			<li><a href="/technotes/add">Ecrire une technote</a></li>
 						       	</ul>
-								
 							</li>
 							
 							<?php if($_SESSION['user']): ?>
-							<li class="<?php if(isset($v_profile)) echo "active";?>"><a href="/membre">Profile</a></li>
+								<li class="<?php if(isset($v_profile)) echo "active";?>"><a href="/membre">Profile</a></li>
 							<?php endif; ?>
 							<li class="<?php if(isset($v_contact)) echo "active";?>"><a href="/contact">Contact</a></li>
 						</ul>

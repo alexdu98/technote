@@ -198,7 +198,7 @@ class Main extends Controleur{
 					if(!empty($_POST)){
 
 					}
-					else $this->vue->chargerVue('technotes_' . $action, $vars);
+					else $this->vue->chargerVue('technotes_add', $vars);
 				}
 				else $this->technotes('get', array('nav' => '1'));
 				break;
@@ -241,11 +241,11 @@ class Main extends Controleur{
 					if(!$_SESSION['user'] || ($_SESSION['user'] && !empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF'])){
 						$contact = new Contact($_POST);
 						$res = $contact->sendMail();
-						if($_SESSION['user'] && $res->success === true){
-							$res->messages .= ', nous vous répondrons dès que possible';
+						if($_SESSION['user'] && $res['success'] === true){
+							$res['messages'] .= ', nous vous répondrons dès que possible';
 							unset($_POST);
 						}
-						$vars['res'] = array('success' => $res->success, 'messages' => $res->messages);
+						$vars['res'] = array('success' => $res['success'], 'messages' => $res['messages']);
 					}
 				}
 				$this->vue->chargerVue('contact', $vars);
