@@ -42,8 +42,10 @@ class MembreDAO extends DAO{
 		if($membre->id_membre == DAO::UNKNOWN_ID){
 			$champs = $valeurs = '';
 			foreach($membre as $nomChamp => $valeur){
-				$champs .= $nomChamp . ', ';
-				$valeurs .= "'$valeur', ";
+				if($nomChamp !== 'id_membre') {
+					$champs .= $nomChamp . ', ';
+					$valeurs .= "'$valeur', ";
+				}
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);

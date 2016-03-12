@@ -6,25 +6,25 @@
 		<nav class="text-center">
 			<ul class="pagination">
 			
-				<?php if (isset($_GET['nav']) && $_GET['nav'] > 1) : ?>
+				<?php if (isset($v_nav) && $v_nav > 1) : ?>
 				<li>
-					<a href="/technotes/get?nav=<?= $_GET['nav'] - 1?>" aria-label="Previous">
+					<a href="/technotes/get?nav=<?= $v_nav - 1?>" aria-label="Previous">
 						<span aria-hidden="true">&laquo;</span>
 					</a>
 				</li>
 				<?php endif; ?>
 				
 				<?php for ($i = 1; $i < $v_nbPages; $i++) :?>		
-				<?php if($i == $_GET['nav']) :?>
+				<?php if($i == $v_nav) :?>
 				<li class="active" ><a href="/technotes/get?nav=<?= $i ?>"><?= $i ?></a></li>
 				<?php else :?>
 				<li><a href="/technotes/get?nav=<?= $i ?>"><?= $i ?></a></li>
 				<?php endif;?>
 				<?php endfor;?>
 				
-				<?php if(!$v_fin && isset($_GET['nav'])) :?>
+				<?php if(!$v_fin && isset($v_nav)) :?>
 				<li>
-					<a href="/technotes/get?nav=<?= $_GET['nav'] + 1?>" aria-label="Next">
+					<a href="/technotes/get?nav=<?= $v_nav + 1?>" aria-label="Next">
 						<span aria-hidden="true">&raquo;</span>
 					</a>
 				</li>
@@ -52,25 +52,25 @@
 		<nav class="text-center">
 			<ul class="pagination">
 			
-				<?php if (isset($_GET['nav']) && $_GET['nav'] > 1) : ?>
+				<?php if (isset($v_nav) && $v_nav > 1) : ?>
 				<li>
-					<a href="/technotes/get?nav=<?= $_GET['nav'] - 1?>" aria-label="Previous">
+					<a href="/technotes/get?nav=<?= $v_nav - 1?>" aria-label="Previous">
 						<span aria-hidden="true">&laquo;</span>
 					</a>
 				</li>
 				<?php endif; ?>
 				
 				<?php for ($i = 1; $i < $v_nbPages; $i++) :?>		
-				<?php if($i == $_GET['nav']) :?>
+				<?php if($i == $v_nav) :?>
 				<li class="active" ><a href="/technotes/get?nav=<?= $i ?>"><?= $i ?></a></li>
 				<?php else :?>
 				<li><a href="/technotes/get?nav=<?= $i ?>"><?= $i ?></a></li>
 				<?php endif;?>
 				<?php endfor;?>
 				
-				<?php if(!$v_fin && isset($_GET['nav'])) :?>
+				<?php if(!$v_fin && isset($v_nav)) :?>
 				<li>
-					<a href="/technotes/get?nav=<?= $_GET['nav'] + 1?>" aria-label="Next">
+					<a href="/technotes/get?nav=<?= $v_nav + 1?>" aria-label="Next">
 						<span aria-hidden="true">&raquo;</span>
 					</a>
 				</li>

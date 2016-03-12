@@ -174,14 +174,14 @@ class Main extends Controleur{
 	
 	public function technotes($action, $param) {
 		$vars = array();
-		$vars["technotes"] = 1; // Pour rendre actif l'onglet de la barre de menu
+		$vars['technotes'] = 1; // Pour rendre actif l'onglet de la barre de menu
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());		
 		
 		switch($action){
 			case 'get':
 				// Si on veut consulter une technote en particulier
-				if(isset($_GET['id_technote'])){
-					$tn = $technoteDAO->getOne(array('id_technote' => $_GET['id_technote']));
+				if(isset($param['id_technote'])){
+					$tn = $technoteDAO->getOne(array('id_technote' => $param['id_technote']));
 					$vars['tn'] = $tn;
 					$this->vue->chargerVue('technotes_' . $action . '_one', $vars);
 				}
@@ -190,7 +190,7 @@ class Main extends Controleur{
 					$nbTechnotes = 6;
 					
 					// Recuperation du numero de la page courante
-					$nav = isset($_GET["nav"]) ? intval($_GET["nav"]) : 1;
+					$nav = isset($param['nav']) ? intval($param['nav']) : 1;
 					
 					// Recuperation des technotes a afficher
 					$debut = ($nav - 1) * 6;
@@ -210,6 +210,13 @@ class Main extends Controleur{
 				}
 				break;
 			case 'add':
+				if(!empty($_SESSION['user'])){
+					if(!empty($_POST)){
+						
+					}
+					else $this->vue->chargerVue('technotes_' . $action, $vars);
+				}
+				else $this->technotes('get', array('nav' => '1'));
 				break;
 			case 'edit':
 				break;
