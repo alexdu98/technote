@@ -29,7 +29,7 @@
 									<div class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon"><img src="/assets/images/pseudo.png" alt="Pseudo"></span>
-											<input type="text" name="pseudo" class="form-control" placeholder="Pseudo" required>
+											<input type="text" name="pseudo" class="form-control" placeholder="Pseudo" value="<?php if(isset($_POST['pseudo'])) echo $_POST['pseudo']; ?>" required>
 										</div>
 									</div>
 									<div class="form-group">

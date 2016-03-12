@@ -68,6 +68,7 @@ class Main extends Controleur{
 							if($membreDAO->save($membre)){
 								$this->action('Inscription');
 								$vars['res'] = array('success' => true, 'msg' => 'Inscription réussie');
+								unset($_POST);
 							}
 							else
 								$vars['res'] = array('success' => false, 'msg' => 'Erreur BDD');
@@ -261,6 +262,7 @@ class Main extends Controleur{
 						if($_SESSION['user'])
 							$this->action('Contact par formulaire', $_SESSION['user']->id_membre);
 						$vars['res'] = array('success' => true, 'msg' => 'L\'email nous a été envoyé, nous y répondrons dès que possible');
+						unset($_POST);
 					}
 					else
 						$vars['res'] = array('success' => false, 'msg' => $res);

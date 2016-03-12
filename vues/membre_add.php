@@ -12,13 +12,13 @@
 			<div class="form-group">
 				<label for="pseudo" class="col-sm-2 control-label">Pseudo</label>
 				<div class="col-sm-10">
-					<input type="text" name="pseudo" class="form-control" id="pseudo" placeholder="Pseudo" maxlength="31" required>
+					<input type="text" name="pseudo" class="form-control" id="pseudo" placeholder="Pseudo" maxlength="31" value="<?php if(isset($_POST['pseudo'])) echo $_POST['pseudo']; ?>" required>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="email" class="col-sm-2 control-label">Email</label>
 				<div class="col-sm-10">
-					<input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+					<input type="email" name="email" class="form-control" id="email" placeholder="Email" value="<?php if(isset($_POST['email'])) echo $_POST['email']; ?>" required>
 				</div>
 			</div>
 			<div class="form-group">
