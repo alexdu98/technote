@@ -17,9 +17,9 @@ class Controleur{
 	 * @param string $action
 	 * @param array $param
 	 */
-	public function chargerControleurPage($controleur, $page, $action, $param){
+	public function chargerControleurPage($controleur, $page, $action){
 		if(method_exists($controleur, $page)){
-			$controleur->$page($action, $param);
+			$controleur->$page($action, array());
 			return;
 		}
 		elseif($page == '_403'){

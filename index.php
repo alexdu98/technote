@@ -68,4 +68,4 @@ unset($_GET['params']);
 $controleur = new $controleur();
 
 // Charge le controleur de la page demandé
-$controleur->chargerControleurPage($controleur, $page, $action, $_GET);
+$controleur->chargerControleurPage($controleur, $page, $action);

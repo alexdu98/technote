@@ -5,31 +5,24 @@
  */
 class Main extends Controleur{
 
-	public function accueil($action, $param, $vars = array()){
-		$vars["accueil"] = 1; // Pour rendre actif l'onglet de la barre de menu 
+	public function accueil($action, $vars){
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
+				$vars['accueil'] = 1;
 				$vars['tn'] = $technoteDAO->getNTechnotes(0, 3);
-				$this->vue->chargerVue('accueil_' . $action, $vars);
+				$this->vue->chargerVue('accueil_get', $vars);
 				break;
-			case 'add':
-				//break;
-			case 'edit':
-				//break;
-			case 'drop':
-				//break;
 			default:
 				$this->vue->chargerVue('404', $vars);
 		}
 	}
 
-	public function membre($action, $param){
-		$vars = array();
-		$vars["profile"] = 1; // Pour rendre actif l'onglet de la barre de menu
+	public function membre($action, $vars){
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
+				$vars['profile'] = 1;
 				if($_SESSION['user']){
 					$tokenDAO = new TokenDAO(BDD::getInstancePDO());
 					$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
@@ -44,7 +37,7 @@ class Main extends Controleur{
 					$vars['nbQuestionRedige'] = $questionDAO->getNbRedige($_SESSION['user']->id_membre);
 					$vars['nbReponseRedige'] = $reponseDAO->getNbRedige($_SESSION['user']->id_membre);
 					$vars['actions'] = $actionDAO->getLast($_SESSION['user']->id_membre);
-					$this->vue->chargerVue('membre_' . $action, $vars);
+					$this->vue->chargerVue('membre_get', $vars);
 				}
 				else{
 					header('Location: /');
@@ -52,6 +45,7 @@ class Main extends Controleur{
 				}
 				break;
 			case 'add':
+				$vars['profile'] = 1;
 				if(!$_SESSION['user']){
 					if(!empty($_POST)){
 						if(($res = Membre::checkAdd($_POST)) === true){
@@ -76,7 +70,7 @@ class Main extends Controleur{
 						else
 							$vars['res'] = array('success' => false, 'msg' => $res);
 					}
-					$this->vue->chargerVue('membre_' . $action, $vars);
+					$this->vue->chargerVue('membre_add', $vars);
 				}
 				else{
 					header('Location: /');
@@ -84,6 +78,7 @@ class Main extends Controleur{
 				}
 				break;
 			case 'edit':
+				$vars['profile'] = 1;
 				if($_SESSION['user']){
 					if(!empty($_POST)){
 						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
@@ -104,10 +99,10 @@ class Main extends Controleur{
 								$vars['res'] = array('success' => false, 'msg' => $res);
 						}
 					}
-					$this->vue->chargerVue('membre_' . $action, $vars);
+					$this->vue->chargerVue('membre_edit', $vars);
 				}
-				elseif($param['mdp']){
-					if(!empty($param['cle']) && ($membre = $membreDAO->checkCleResetPass($param['cle']))){
+				elseif($_GET['mdp']){
+					if(!empty($_GET['cle']) && ($membre = $membreDAO->checkCleResetPass($_GET['cle']))){
 						if(!empty($_POST)){
 							if(($res = Membre::checkLostPass($_POST))){
 								$membre = new Membre(array(
@@ -155,35 +150,23 @@ class Main extends Controleur{
 				}
 				break;
 			case 'drop':
+				$vars['profile'] = 1;
 				//break;
 			default:
 				$this->vue->chargerVue('404', $vars);
 		}
 	}
-
-	private function action($libelle, $id_membre = NULL){
-		$id_membre = empty($id_membre) ? $_SESSION['user']->id_membre : $id_membre;
-		$actionDAO = new ActionDAO(BDD::getInstancePDO());
-		$action = new Action(array(
-			'id_action' => DAO::UNKNOWN_ID,
-			'libelle' => $libelle,
-			'id_membre' => $id_membre
-		));
-		$actionDAO->save($action);
-	}
 	
-	public function technotes($action, $param) {
-		$vars = array();
-		$vars["technotes"] = 1; // Pour rendre actif l'onglet de la barre de menu
-		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());		
-		
+	public function technotes($action, $vars) {
+		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
+				$vars['technotes'] = 1;
 				// Si on veut consulter une technote en particulier
 				if(isset($_GET['id_technote'])){
 					$tn = $technoteDAO->getOne(array('id_technote' => $_GET['id_technote']));
 					$vars['tn'] = $tn;
-					$this->vue->chargerVue('technotes_' . $action . '_one', $vars);
+					$this->vue->chargerVue('technotes_get_one', $vars);
 				}
 				else {
 					$nbTechnotes = 6;
@@ -198,23 +181,24 @@ class Main extends Controleur{
 					$vars['fin'] = $fin;
 					$vars['nav'] = $nav;
 					$vars['tn'] = $tn;
-					$this->vue->chargerVue('technotes_' . $action, $vars);
+					$this->vue->chargerVue('technotes_get', $vars);
 				}
 				break;
 			case 'add':
-				break;
+				$vars['technotes'] = 1;
+				//break;
 			case 'edit':
-				break;
+				$vars['technotes'] = 1;
+				//break;
 			case 'del':
-				break;
+				$vars['technotes'] = 1;
+				//break;
 			default:
 				$this->vue->chargerVue('404', $vars);
 		}
-		
 	}
 
-	public function connexion($action, $param){
-		$vars = array();
+	public function connexion($action, $vars){
 		if(!empty($_POST)){
 			$membreDAO = new MembreDAO(BDD::getInstancePDO());
 			if($membreDAO->checkUserPass($_POST['pseudo'], $_POST['password'])){
@@ -243,7 +227,7 @@ class Main extends Controleur{
 			}
 			else
 				$vars['connect'] = array('success' => false, 'msg' => 'Couple login / mot de passe invalide');
-			$this->accueil('get', NULL, array('connect' => $vars['connect']));
+			$this->accueil('get', array('connect' => $vars['connect']));
 			exit();
 		}
 		else{
@@ -252,43 +236,63 @@ class Main extends Controleur{
 		}
 	}
 
-	public function contact($action, $param){
-		$vars = array();
-		$vars["contact"] = 1;
-		if(!empty($_POST)){
-			if(!$_SESSION['user'] || ($_SESSION['user'] && !empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF'])){
-				if(($res = Membre::checkContact($_POST)) === true){
-					if(($res = Membre::contact($_POST)) === true){
-						if($_SESSION['user'])
-							$this->action('Contact par formulaire', $_SESSION['user']->id_membre);
-						$vars['res'] = array('success' => true, 'msg' => 'L\'email nous a été envoyé, nous y répondrons dès que possible');
-						unset($_POST);
+	public function contact($action, $vars){
+		switch($action){
+			case 'get':
+				$vars['contact'] = 1;
+				if(!empty($_POST)){
+					if(!$_SESSION['user'] || ($_SESSION['user'] && !empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF'])){
+						$contact = new Contact($_POST);
+						if(($res = $contact->sendMail()) === true)
+							$vars['res'] = array('success' => true, 'msg' => 'L\'email nous a été envoyé, nous y répondrons dès que possible');
+						else
+							$vars['res'] = array('success' => false, 'msg' => $res);
 					}
-					else
-						$vars['res'] = array('success' => false, 'msg' => $res);
 				}
-				else
-					$vars['res'] = array('success' => false, 'msg' => $res);
-			}
+				$this->vue->chargerVue('contact', $vars);
+				break;
+			default:
+				$this->vue->chargerVue('404', $vars);
 		}
-		$this->vue->chargerVue('contact', $vars);
 	}
 
-	public function conditions($action, $param){
-		$vars = array();
-		$this->vue->chargerVue('conditions', $vars);
+	public function conditions($action, $vars){
+		switch($action){
+			case 'get':
+				$this->vue->chargerVue('conditions', $vars);
+				break;
+			default:
+				$this->vue->chargerVue('404', $vars);
+		}
 	}
 
-	public function mentions($action, $param){
-		$vars = array();
-		$this->vue->chargerVue('mentions', $vars);
+	public function mentions($action, $vars){
+		switch($action){
+			case 'get':
+				$this->vue->chargerVue('mentions', $vars);
+				break;
+			default:
+				$this->vue->chargerVue('404', $vars);
+		}
+
 	}
 
-	public function deconnexion($action, $param){
+	public function deconnexion($action, $vars){
 		session_destroy();
 		setcookie('token', '', time() - 10);
 		header('Location: /');
 		exit();
+	}
+
+	private function action($libelle, $id_membre = NULL){
+		$id_membre = empty($id_membre) ? $_SESSION['user']->id_membre : $id_membre;
+		$actionDAO = new ActionDAO(BDD::getInstancePDO());
+		$action = new Action(array(
+			'id_action' => DAO::UNKNOWN_ID,
+			'libelle' => $libelle,
+			'id_membre' => $id_membre
+		));
+		$actionDAO->save($action);
 	}
 
 }
