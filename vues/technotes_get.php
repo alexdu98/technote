@@ -3,6 +3,7 @@
 	<div class="container-fluid">
 		<nav class="text-center">
 			<ul class="pagination">
+			
 				<li>
 					<a href="#" aria-label="Previous">
 						<span aria-hidden="true">&laquo;</span>
@@ -18,6 +19,7 @@
 						<span aria-hidden="true">&raquo;</span>
 					</a>
 				</li>
+			
 			</ul>
 		</nav>
 		<div class="container-fluid">
@@ -29,7 +31,7 @@
                     $tn->afficherExtrait();
                     if($i%3 == 2)
 						echo '</div>';
-                    $i;
+                    $i++;
 				}
             ?>
 		</div>
