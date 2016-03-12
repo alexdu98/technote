@@ -79,7 +79,7 @@
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav nav-pills nav-justified">
 							<li class="<?php if(isset($v_accueil)) echo "active";?>"><a href="/">Accueil</a></li>
-							<li class="<?php if(isset($v_technotes)) echo "active";?>"><a href="/technotes">Technotes</a></li>
+							<li class="<?php if(isset($v_technotes)) echo "active";?>"><a href="/technotes?nav=1">Technotes</a></li>
 							<?php if($_SESSION['user']): ?>
 								<li class="<?php if(isset($v_profile)) echo "active";?>"><a href="/membre">Profile</a></li>
 							<?php endif; ?>

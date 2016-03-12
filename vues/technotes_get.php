@@ -1,27 +1,39 @@
 <h1>Toutes les technotes</h1>
 <section>
 	<div class="container-fluid">
+		
+		<!-- PAGINATION -->
 		<nav class="text-center">
 			<ul class="pagination">
 			
+				<?php if (isset($_GET['nav']) && $_GET['nav'] > 1) : ?>
 				<li>
-					<a href="#" aria-label="Previous">
+					<a href="/technotes/get?nav=<?= $_GET['nav'] - 1?>" aria-label="Previous">
 						<span aria-hidden="true">&laquo;</span>
 					</a>
 				</li>
-				<li><a href="#">1</a></li>
-				<li><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li><a href="#">4</a></li>
-				<li><a href="#">5</a></li>
+				<?php endif; ?>
+				
+				<?php for ($i = 1; $i < $v_nbPages; $i++) :?>		
+				<?php if($i == $_GET['nav']) :?>
+				<li class="active" ><a href="/technotes/get?nav=<?= $i ?>"><?= $i ?></a></li>
+				<?php else :?>
+				<li><a href="/technotes/get?nav=<?= $i ?>"><?= $i ?></a></li>
+				<?php endif;?>
+				<?php endfor;?>
+				
+				<?php if(!$v_fin && isset($_GET['nav'])) :?>
 				<li>
-					<a href="#" aria-label="Next">
+					<a href="/technotes/get?nav=<?= $_GET['nav'] + 1?>" aria-label="Next">
 						<span aria-hidden="true">&raquo;</span>
 					</a>
 				</li>
+				<?php endif; ?>
 			
 			</ul>
 		</nav>
+		
+		<!-- AFFICHAGE TECHNOTES -->
 		<div class="container-fluid">
 			<?php
 				$i = 0;
@@ -35,26 +47,37 @@
 				}
             ?>
 		</div>
-		<div class="container-fluid">
-			<nav class="text-center">
-				<ul class="pagination">
-					<li>
-						<a href="#" aria-label="Previous">
-							<span aria-hidden="true">&laquo;</span>
-						</a>
-					</li>
-					<li><a href="#">1</a></li>
-					<li><a href="#">2</a></li>
-					<li><a href="#">3</a></li>
-					<li><a href="#">4</a></li>
-					<li><a href="#">5</a></li>
-					<li>
-						<a href="#" aria-label="Next">
-							<span aria-hidden="true">&raquo;</span>
-						</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
+		
+		<!-- PAGINATION -->
+		<nav class="text-center">
+			<ul class="pagination">
+			
+				<?php if (isset($_GET['nav']) && $_GET['nav'] > 1) : ?>
+				<li>
+					<a href="/technotes/get?nav=<?= $_GET['nav'] - 1?>" aria-label="Previous">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+				<?php endif; ?>
+				
+				<?php for ($i = 1; $i < $v_nbPages; $i++) :?>		
+				<?php if($i == $_GET['nav']) :?>
+				<li class="active" ><a href="/technotes/get?nav=<?= $i ?>"><?= $i ?></a></li>
+				<?php else :?>
+				<li><a href="/technotes/get?nav=<?= $i ?>"><?= $i ?></a></li>
+				<?php endif;?>
+				<?php endfor;?>
+				
+				<?php if(!$v_fin && isset($_GET['nav'])) :?>
+				<li>
+					<a href="/technotes/get?nav=<?= $_GET['nav'] + 1?>" aria-label="Next">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+				<?php endif; ?>
+			
+			</ul>
+		</nav>
+		
 	</div>
 </section>
