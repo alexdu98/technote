@@ -2,6 +2,42 @@
 
 class Membre extends TableObject{
 
+	static public function connexion($param){
+		$pseudo = !empty($param['pseudo']) ? $param['pseudo'] : NULL;
+		$password = !empty($param['password']) ? $param['password'] : NULL;
+		$autoConnexion = !empty($param['autoConnexion']) ? $param['autoConnexion'] : NULL;
+
+		if(empty($pseudo))
+			return array('success' => false, 'message' => 'Le pseudo n\'est pas renseigné');
+		elseif(empty($password))
+			return array('success' => false, 'message' => 'Le mot de passe n\'est pas renseigné');
+
+		$membreDAO = new MembreDAO(BDD::getInstancePDO());
+		if($membreDAO->checkUserPass($pseudo, $password) === true){
+			if(($res = $membreDAO->connexion($pseudo)) !== false){
+				if(!$res->bloquer){
+					$_SESSION['user'] = $res;
+					$jeton = '';
+					if($autoConnexion == 'on'){
+						Token::createToken();
+						$jeton = ' avec jeton';
+					}
+					$actionDAO = new ActionDAO(BDD::getInstancePDO());
+					$action = new Action(array(
+						'id_action' => DAO::UNKNOWN_ID,
+						'libelle' => "Connexion$jeton ($_SERVER[REMOTE_ADDR])",
+						'id_membre' => $_SESSION['user']->id_membre
+					));
+					$actionDAO->save($action);
+					return array('success' => true, 'message' => '');
+				}
+				return array('success' => false, 'message' => 'Votre compte a été bloqué');
+			}
+			return array('success' => false, 'message' => 'Problème de BDD');
+		}
+		return array('success' => false, 'message' => 'Couple login / mot de passe incorrect');
+	}
+
 	static public function checkAdd(&$param){
 		if(!empty($param['pseudo']) && !empty($param['email']) && !empty($param['password']) && !empty($param['passwordConfirm']) && !empty($param['conditions']) && !empty($param['g-recaptcha-response'])){
 			if(($res = self::checkPseudo($param['pseudo'])) === true)

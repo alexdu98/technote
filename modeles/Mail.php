@@ -3,14 +3,10 @@
 class Mail{
 
 	static public $expediteur = EXPEDITEUR_MAIL;
-
-	public $destinataire;
-
-	public $sujet;
-
-	public $vue;
-
-	public $param;
+	private $destinataire;
+	private $sujet;
+	private $vue;
+	private $param;
 
 	public function __construct($destinataire, $sujet, $vue, $param){
 		$this->destinataire = $destinataire;
@@ -19,7 +15,19 @@ class Mail{
 		$this->param = $param;
 	}
 
-	public function addHeaderFooter(){
+	public function sendMail(){
+		$std = new StdClass();
+		$message = $this->addHeaderFooter();
+		$headers = 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+		$headers .= 'From: no-reply@technote.dev <no-reply@technote.dev>' . "\r\n";
+		if(mail($this->destinataire, $this->sujet, $message, $headers))
+			return array('success' => true, 'messages' => 'L\'email a été envoyé avec succès');
+		else
+			return array('success' => false, 'messages' => 'L\'email n\'a pas pu être envoyé, veuillez réessayer plus tard');
+	}
+
+	private function addHeaderFooter(){
 		ob_start();
 		include('/vues/' . $this->vue);
 		$corps = ob_get_clean();
@@ -28,17 +36,6 @@ class Mail{
 		include('/vues/mail_base.php');
 		$message = ob_get_clean();
 		return $message;
-	}
-
-	public function sendMail(){
-		$message = $this->addHeaderFooter();
-		$headers = 'MIME-Version: 1.0' . "\r\n";
-		$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
-		$headers .= 'From: no-reply@technote.dev <no-reply@technote.dev>' . "\r\n";
-		if(mail($this->destinataire, $this->sujet, $message, $headers))
-			return true;
-		else
-			return 'L\'email n\'a pas pu être envoyé, veuillez réessayer plus tard';
 	}
 
 }

@@ -32,9 +32,18 @@ class Contact{
 				'message' => nl2br($this->message)
 			);
 			$mail = new Mail(DESTINATAIRE_MAIL_CONTACT, '[Technote.dev] Contact', 'mail_contact.php', $param);
-			return $mail->sendMail();
+			if(($res = $mail->sendMail()) === true){
+				$actionDAO = new ActionDAO(BDD::getInstancePDO());
+				$action = new Action(array(
+					'id_action' => DAO::UNKNOWN_ID,
+					'libelle' => 'Contact par formulaire',
+					'id_membre' => $_SESSION['user']->id_membre
+				));
+				$actionDAO->save($action);
+			}
+			return $res;
 		}
-		return $res;
+		return array('success' => false, 'messages' => $res);
 	}
 
 	private function check(){

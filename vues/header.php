@@ -53,9 +53,9 @@
 										</div>
 									</div>
 								</div>
-								<?php if(!empty($v_connect) && $v_connect['success'] === false): ?>
+								<?php if(!empty($v_connexion) && $v_connexion['success'] === false): ?>
 									<div class="col-md-12 text-center">
-										<div class="badLogin"><?= $v_connect['msg']; ?></div>
+										<div class="badLogin"><?= $v_connexion['msg']; ?></div>
 									</div>
 								<?php endif; ?>
 							</form>

@@ -109,6 +109,14 @@ a {
 a.extraitTechnote{
     color: inherit;
 }
+.flex{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.flex ul{
+    margin: 5px 0;
+}
 footer{
     position: absolute;
     bottom: 0;

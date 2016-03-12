@@ -39,8 +39,18 @@
 				<?php if(!empty($v_res)): ?>
 					<div class="alert alert-<?php if($v_res['success']) echo 'success'; else echo 'danger'; ?> alert-dismissible" role="alert">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-						<?= $v_res['msg']; ?>
+						<div class="flex">
+							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+							<ul>
+								<?php if($v_res['success'] === false): ?>
+									<?php foreach($v_res['messages'] as $message): ?>
+										<li><?= $message; ?></li>
+									<?php endforeach; ?>
+								<?php else: ?>
+									<li><?= $v_res['messages']; ?></li>
+								<?php endif; ?>
+							</ul>
+						</div>
 					</div>
 				<?php endif; ?>
 				<form method="POST" class="form-horizontal">

@@ -199,40 +199,22 @@ class Main extends Controleur{
 	}
 
 	public function connexion($action, $vars){
-		if(!empty($_POST)){
-			$membreDAO = new MembreDAO(BDD::getInstancePDO());
-			if($membreDAO->checkUserPass($_POST['pseudo'], $_POST['password'])){
-				$membreDAO->connexion($_POST['pseudo']);
-				if(!$_SESSION['user']->bloquer){
-					if(!empty($_POST['autoConnexion']) && $_POST['autoConnexion'] == 'on'){
-						$cle = Token::createToken();
-						$token = new Token(array(
-							'id_token' => DAO::UNKNOWN_ID,
-							'cle' => $cle,
-							'ip' => $_SERVER['REMOTE_ADDR'],
-							'id_membre' => $_SESSION['user']->id_membre
-						));
-						$tokenDAO = new TokenDAO(BDD::getInstancePDO());
-						$tokenDAO->save($token);
-						setcookie('token', $cle, time() + DUREE_COOKIE_AUTOCONNECT_SEC);
+		switch($action){
+			case 'get':
+				if(!empty($_POST)){
+					$res = Membre::connexion($_POST);
+					if($res['success'] === true){
+						header('Location: /membre');
+						exit();
 					}
-					$this->action("Connexion ($_SERVER[REMOTE_ADDR])");
-					header('Location: /membre');
-					exit();
+					$vars['connexion'] = array('success' => $res['success'], 'message' => $res['message']);
+					$this->accueil('get', array('connexion' => $vars['connexion']));
+					break;
 				}
-				else{
-					$_SESSION['user'] = false;
-					$vars['connect'] = array('success' => false, 'msg' => 'Votre compte a été bloqué');
-				}
-			}
-			else
-				$vars['connect'] = array('success' => false, 'msg' => 'Couple login / mot de passe invalide');
-			$this->accueil('get', array('connect' => $vars['connect']));
-			exit();
-		}
-		else{
-			header('Location: /');
-			exit();
+				$this->vue->chargerVue('404', $vars);
+				break;
+			default:
+				$this->vue->chargerVue('404', $vars);
 		}
 	}
 
@@ -243,10 +225,12 @@ class Main extends Controleur{
 				if(!empty($_POST)){
 					if(!$_SESSION['user'] || ($_SESSION['user'] && !empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF'])){
 						$contact = new Contact($_POST);
-						if(($res = $contact->sendMail()) === true)
-							$vars['res'] = array('success' => true, 'msg' => 'L\'email nous a été envoyé, nous y répondrons dès que possible');
-						else
-							$vars['res'] = array('success' => false, 'msg' => $res);
+						$res = $contact->sendMail();
+						if($_SESSION['user'] && $res->success === true){
+							$res->messages .= ', nous vous répondrons dès que possible';
+							unset($_POST);
+						}
+						$vars['res'] = array('success' => $res->success, 'messages' => $res->messages);
 					}
 				}
 				$this->vue->chargerVue('contact', $vars);
@@ -282,17 +266,6 @@ class Main extends Controleur{
 		setcookie('token', '', time() - 10);
 		header('Location: /');
 		exit();
-	}
-
-	private function action($libelle, $id_membre = NULL){
-		$id_membre = empty($id_membre) ? $_SESSION['user']->id_membre : $id_membre;
-		$actionDAO = new ActionDAO(BDD::getInstancePDO());
-		$action = new Action(array(
-			'id_action' => DAO::UNKNOWN_ID,
-			'libelle' => $libelle,
-			'id_membre' => $id_membre
-		));
-		$actionDAO->save($action);
 	}
 
 }

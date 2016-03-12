@@ -10,9 +10,11 @@ class MembreDAO extends DAO{
 		$req->execute(array(
 			'id_membre' => $id['id_membre']
 		));
-		$res = $req->fetch();
-		unset($res->password, $res->cle_reset_pass);
-		return new Membre(get_object_vars($res));
+		if(($res = $req->fetch()) !== false){
+			unset($res->password, $res->cle_reset_pass);
+			return new Membre(get_object_vars($res));
+		}
+		return false;
 	}
 
 	public function getOneByPseudo($pseudo){
@@ -20,8 +22,9 @@ class MembreDAO extends DAO{
 		$req->execute(array(
 			'pseudo' => $pseudo
 		));
-		$res = $req->fetch();
-		return new Membre(get_object_vars($res));
+		if(($res = $req->fetch()) !== false)
+			return new Membre(get_object_vars($res));
+		return false;
 	}
 
 	public function getAll(){
@@ -81,8 +84,8 @@ class MembreDAO extends DAO{
 
 	public function connexion($pseudo){
 		$this->pdo->exec("UPDATE membre SET date_connexion = NOW() WHERE pseudo = '$pseudo'");
-		$res = $this->getOneByPseudo($pseudo);
-		$_SESSION['user'] = $res;
+		return $this->getOneByPseudo($pseudo);
+
 	}
 
 	public function checkMembreExiste($pseudoEmail){
