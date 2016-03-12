@@ -64,7 +64,7 @@ class GroupeDAO extends DAO{
 		$req->execute(array(
 			'libelle' => $libelle
 		));
-		$res = $req->fetch();
+		$res = $req->fetch(PDO::FETCH_ASSOC);
 		return new Groupe($res);
 	}
 

@@ -169,15 +169,23 @@ class Main extends Controleur{
 					$this->vue->chargerVue('technotes_get_one', $vars);
 				}
 				else {
+					// Le nombre de technotes est arbitraire
 					$nbTechnotes = 6;
-					$nav = isset($_GET["nav"]) ? intval($_GET["nav"]) : 1;
+
+					// Recuperation du numero de la page courante
+					$nav = isset($_GET['nav']) ? intval($_GET['nav']) : 1;
+
+					// Recuperation des technotes a afficher
 					$debut = ($nav - 1) * 6;
-					
 					$tn = $technoteDAO->getNTechnotes($debut, $nbTechnotes);
 					
+					// Pour le nb de pages de la navigation
 					$count = intval($technoteDAO->getCount());
+					$nbPages = $count / 6;
+					if ($count % 6 != 0) $nbPages++;
 					$fin = $debut + 6 > $count ? 1 : 0;
 					
+					$vars['nbPages'] = $nbPages;
 					$vars['fin'] = $fin;
 					$vars['nav'] = $nav;
 					$vars['tn'] = $tn;
@@ -186,7 +194,14 @@ class Main extends Controleur{
 				break;
 			case 'add':
 				$vars['technotes'] = 1;
-				//break;
+				if(!empty($_SESSION['user'])){
+					if(!empty($_POST)){
+
+					}
+					else $this->vue->chargerVue('technotes_' . $action, $vars);
+				}
+				else $this->technotes('get', array('nav' => '1'));
+				break;
 			case 'edit':
 				$vars['technotes'] = 1;
 				//break;
