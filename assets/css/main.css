@@ -1,3 +1,9 @@
+/*
+    #####################################################################
+    ############################# GENERIQUE #############################
+    #####################################################################
+*/
+
 *::selection{
     background: #2aabd2;
     color: #FFF;
@@ -10,99 +16,10 @@ body{
     margin-bottom: 120px;
     background: url('/assets/images/bg.png');
 }
-header{
-    background: #2aabd2;
-    padding: 5px 0;
-    margin-bottom: 5px;
-    box-shadow: 0 1px 5px #777;
-}
-header a{
-    color: white;
-    font-weight: bold;
-}
-header a:hover{
-    text-decoration: none;
-    color: #23527c ;
-    border-bottom: 1px dashed #23527c;
-}
 input[type="checkbox"]{
     height: 17px;
     width: 17px;
     vertical-align: bottom;
-}
-.conteneurLiensCo{
-    display: table;
-}
-.liensCo{
-    display: table-cell;
-    float: none;
-    vertical-align: bottom;
-}
-.liensCo label{
-    color: #FFF;
-}
-.badLogin{
-    color: #a94442;
-    font-weight: bold;
-    background: rgba(255,255,255,0.7);
-    padding: 5px 10px;
-    border-radius: 5px;
-}
-div#logo{
-    background: url('/assets/images/bgh.png');
-    text-align: center;
-}
-nav.main{
-    background: #2aabd2;
-    box-shadow: 0 0 5px #777;
-}
-.nav-pills>li>a{
-    border-radius: inherit;
-    color: #FFF;
-    transition-duration: 0.5s;
-    transition-timing-function: linear;
-}
-.nav-pills>li>a:hover{
-    background: rgba(66,195,234,0.6);
-}
-.nav-pills>li.active>a, .nav-pills>li.active>a:hover{
-    background: #1495BC;
-}
-.nav .open>a{
-    background: #22A3CA;
-}
-.nav .open>a:hover{
-    background: rgba(66,195,234,0.6);
-}
-.nav-tabs{
-    margin-bottom: 15px;
-}
-button.navbar-toggle{
-    background: rgba(66,195,234,0.6);
-    border: 1px solid #1495BC;
-}
-button.navbar-toggle span{
-    background: white;
-}
-.dropdown-menu{
-    border-radius: inherit;
-    margin: 0;
-    padding: 0;
-}
-.nav-pills li.open ul{
-    background: #2aabd2;
-    color: white !important;
-    width: 100%;
-}
-.dropdown-menu>li>a{
-    color: white;
-    transition-duration: 0.5s;
-    transition-timing-function: linear;
-    padding: 8px 20px;
-}
-.dropdown-menu>li>a:hover{
-    background: rgba(66,195,234,0.6);
-    color: inherit;
 }
 section{
     margin: 0 15px;
@@ -122,13 +39,126 @@ h1:first-letter{
 article{
     margin: 25px 0;
 }
+a{
+    color: #337ab7;
+}
+
+/*
+    #####################################################################
+    ############################### HEADER ##############################
+    #####################################################################
+*/
+
+header{
+    background: #2aabd2;
+    padding: 5px 0;
+    margin-bottom: 5px;
+    box-shadow: 0 1px 5px #777;
+}
+header a{
+    color: white;
+    font-weight: bold;
+}
+header a:hover{
+    text-decoration: none;
+    color: #23527c ;
+    border-bottom: 1px dashed #23527c;
+}
+div#logo{
+    background: url('/assets/images/bgh.png');
+    text-align: center;
+}
+header .conteneurLiensCo{
+    display: table;
+}
+header .liensCo{
+    display: table-cell;
+    float: none;
+    vertical-align: bottom;
+}
+header .liensCo label{
+    color: #FFF;
+}
+header .badLogin{
+    color: #a94442;
+    font-weight: bold;
+    background: rgba(255,255,255,0.7);
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/*
+    #####################################################################
+    ################################ MENU ###############################
+    #####################################################################
+*/
+
+nav.main{
+    background: #2aabd2;
+    box-shadow: 0 0 5px #777;
+}
+nav .nav-pills>li>a{
+    border-radius: inherit;
+    color: #FFF;
+    transition-duration: 0.5s;
+    transition-timing-function: linear;
+}
+nav .nav-pills>li>a:hover{
+    background: rgba(66,195,234,0.6);
+}
+nav .nav-pills>li.active>a, .nav-pills>li.active>a:hover{
+    background: #1495BC;
+}
+nav .nav .open>a{
+    background: #22A3CA;
+}
+nav .nav .open>a:hover{
+    background: rgba(66,195,234,0.6);
+}
+nav .nav .open li.active>a{
+    background: #1495BC;
+}
+nav .nav-tabs{
+    margin-bottom: 15px;
+}
+nav button.navbar-toggle{
+    background: rgba(66,195,234,0.6);
+    border: 1px solid #1495BC;
+}
+nav button.navbar-toggle span{
+    background: white;
+}
+nav .dropdown-menu{
+    border-radius: inherit;
+    margin: 0;
+    padding: 0;
+}
+nav .nav-pills li.open ul{
+    background: #2aabd2;
+    color: white !important;
+    width: 100%;
+}
+nav .dropdown-menu>li>a{
+    color: white;
+    transition-duration: 0.5s;
+    transition-timing-function: linear;
+    padding: 8px 20px;
+}
+nav .dropdown-menu>li>a:hover{
+    background: rgba(66,195,234,0.6);
+    color: inherit;
+}
+
+/*
+    #####################################################################
+    ############################### CORPS ###############################
+    #####################################################################
+*/
+
 img.img-technote{
     margin-bottom: 5px;
     min-width: 75%;
     max-height: 250px;
-}
-a {
-    color: #337ab7;
 }
 .panel{
     margin-top: 20px;
@@ -144,6 +174,13 @@ a.extraitTechnote{
 .flex ul{
     margin: 5px 0;
 }
+
+/*
+    #####################################################################
+    ############################### FOOTER ##############################
+    #####################################################################
+*/
+
 footer{
     position: absolute;
     bottom: 0;
@@ -157,15 +194,18 @@ footer{
 footer a{
     color: white;
 }
-#copyright{
+footer #copyright{
     text-align: center;
     font-weight: bold;
     display: block;
     padding-top: 2px;
 }
-#copyright>a:hover{
+footer #copyright>a:hover{
     text-decoration: none;
 }
-.inline-block{
-    display: inline-block;
-}
+
+/*
+    #####################################################################
+    ############################### DIVERS ##############################
+    #####################################################################
+*/

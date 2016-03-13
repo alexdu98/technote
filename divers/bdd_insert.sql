@@ -91,6 +91,6 @@ Isdem diebus Apollinaris Domitiani gener, paulo ante agens palatii Caesaris cura
 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/MVC-Process.svg/2000px-MVC-Process.svg.png'
 );
 
-INSERT IGNORE INTO `technote`.`mot_cle` (`label`) VALUES ('C'), ('expressions régulières'), ('expressions régulières'), ('regexp'), ('mémoire'), ('PHP'), ('navigateur'), ('sessions');
+INSERT IGNORE INTO `technote`.`mot_cle` (`label`) VALUES ('C'), ('expressions régulières'), ('C++'), ('regexp'), ('mémoire'), ('PHP'), ('navigateur'), ('sessions');
 
 INSERT IGNORE INTO `technote`.`decrire` (`id_technote`, `id_mot_cle`) VALUES ('1', '1'), ('1', '2'), ('1', '3'), ('2', '4'), ('2', '6'), ('3', '5'), ('3', '7');

@@ -6,12 +6,14 @@
 	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
 	<link rel="shortcut icon" href="/assets/images/favicon.ico">
 	<link rel="stylesheet" href="/assets/librairies/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/assets/librairies/multiselect/multiselect.css" type="text/css">
 	<link rel="stylesheet" href="/assets/css/main.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="/assets/librairies/jquery/jquery.min.js"></script>
 	<script src="/assets/librairies/bootstrap/js/bootstrap.min.js"></script>
 	<script src="/assets/librairies/ckeditor/ckeditor.js"></script>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<script type="text/javascript" src="/assets/librairies/multiselect/multiselect.js"></script>
 	<script src='/assets/js/main.js'></script>
 </head>
 <body>
@@ -80,18 +82,17 @@
 					<div class="collapse navbar-collapse">
 						<ul class="nav nav-pills nav-justified">
 							<li class="<?php if(isset($v_accueil)) echo "active";?>"><a href="/">Accueil</a></li>
-							
-							<!-- TECHNOTES DROPDOWN MENU -->
 							<li class="dropdown <?php if(isset($v_technotes)) echo "active";?>">
 								<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 									Technotes <span class="caret"></span>
 								</a>
 								<ul class="dropdown-menu">
-									<li><a href="/technotes?nav=1">Voir toutes les technotes</a></li>
-		        	    			<li><a href="/technotes/add">Ecrire une technote</a></li>
-						       	</ul>
+									<li class="<?php if(isset($v_technotes_all)) echo "active";?>"><a href="/technotes?nav=1">Voir toutes les technotes</a></li>
+									<?php if($_SESSION['user']): ?>
+			                            <li class="<?php if(isset($v_technotes_add)) echo "active";?>"><a href="/technotes/add">Ecrire une technote</a></li>
+									<?php endif; ?>
+								</ul>
 							</li>
-							
 							<?php if($_SESSION['user']): ?>
 								<li class="<?php if(isset($v_profile)) echo "active";?>"><a href="/membre">Profile</a></li>
 							<?php endif; ?>

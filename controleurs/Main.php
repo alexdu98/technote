@@ -169,6 +169,7 @@ class Main extends Controleur{
 					$this->vue->chargerVue('technotes_get_one', $vars);
 				}
 				else {
+					$vars['technotes_all'] = 1;
 					// Le nombre de technotes est arbitraire
 					$nbTechnotes = 6;
 
@@ -194,13 +195,21 @@ class Main extends Controleur{
 				break;
 			case 'add':
 				$vars['technotes'] = 1;
-				if(!empty($_SESSION['user'])){
+				$vars['technotes_add'] = 1;
+				if($_SESSION['user']){
 					if(!empty($_POST)){
-
+						var_dump($_POST);
+						die;
 					}
-					else $this->vue->chargerVue('technotes_add', $vars);
+					else{
+						$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+						$motsCles = $motCleDAO->getAll();
+						$vars['motsCles'] = $motsCles;
+						$this->vue->chargerVue('technotes_add', $vars);
+					}
 				}
-				else $this->technotes('get', array('nav' => '1'));
+				else
+					$this->technotes('403', $vars);
 				break;
 			case 'edit':
 				$vars['technotes'] = 1;
@@ -214,23 +223,26 @@ class Main extends Controleur{
 	}
 
 	public function connexion($action, $vars){
-		switch($action){
-			case 'get':
-				if(!empty($_POST)){
-					$res = Membre::connexion($_POST);
-					if($res['success'] === true){
-						header('Location: /membre');
-						exit();
+		if(!$_SESSION['user']){
+			switch($action){
+				case 'get':
+					if(!empty($_POST)){
+						$res = Membre::connexion($_POST);
+						if($res['success'] === true){
+							header('Location: /membre');
+							exit();
+						}
+						$vars['connexion'] = array('success' => $res['success'], 'message' => $res['message']);
+						$this->accueil('get', array('connexion' => $vars['connexion']));
+						break;
 					}
-					$vars['connexion'] = array('success' => $res['success'], 'message' => $res['message']);
-					$this->accueil('get', array('connexion' => $vars['connexion']));
+					$this->vue->chargerVue('403', $vars);
 					break;
-				}
-				$this->vue->chargerVue('404', $vars);
-				break;
-			default:
-				$this->vue->chargerVue('404', $vars);
+				default:
+					$this->vue->chargerVue('404', $vars);
+			}
 		}
+		$this->vue->chargerVue('403', $vars);
 	}
 
 	public function contact($action, $vars){
