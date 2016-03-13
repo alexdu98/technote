@@ -32,11 +32,14 @@ class ActionDAO extends DAO{
 		if($action->id_action == DAO::UNKNOWN_ID){
 			$champs = $valeurs = '';
 			foreach($action as $nomChamp => $valeur){
-				$champs .= $nomChamp . ', ';
-				$valeurs .= "'$valeur', ";
+				if($nomChamp != 'id_action'){
+					$champs .= $nomChamp . ', ';
+					$valeurs .= "'$valeur', ";
+				}
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
+			
 			$req = 'INSERT INTO action(' . $champs .') VALUES(' . $valeurs .')';
 			$res = $this->pdo->exec($req);
 			$action->id_action = $this->pdo->lastInsertId();

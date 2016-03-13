@@ -232,7 +232,7 @@ class Main extends Controleur{
 							header('Location: /membre');
 							exit();
 						}
-						$vars['connexion'] = array('success' => $res['success'], 'message' => $res['message']);
+						$vars['connexion'] = array('success' => $res['success'], 'msg' => $res['message']);
 						$this->accueil('get', array('connexion' => $vars['connexion']));
 						break;
 					}

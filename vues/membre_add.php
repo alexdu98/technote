@@ -9,11 +9,11 @@
 					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 					<ul>
 						<?php if($v_res['success'] === false): ?>
-							<?php foreach($v_res['messages'] as $message): ?>
+							<?php foreach($v_res['msg'] as $message): ?>
 								<li><?= $message; ?></li>
 							<?php endforeach; ?>
 						<?php else: ?>
-							<li><?= $v_res['messages']; ?></li>
+							<li><?= $v_res['msg']; ?></li>
 						<?php endif; ?>
 					</ul>
 				</div>
