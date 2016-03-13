@@ -1,10 +1,23 @@
+# Active la réécriture d'URL
 Options +FollowSymlinks
 RewriteEngine on
 
-ErrorDocument 403 /index.php?params=main/_403/get
-ErrorDocument 404 /index.php?params=main/_404/get
+# Redirige les erreurs 403 et 404 sur les pages personnalisées
+ErrorDocument 403 /index.php
+ErrorDocument 404 /index.php
 
+# Si l'URL demandé n'est pas un fichier ni un dossier on réécrit l'URL
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-RewriteRule ^(.*)$ index.php?params=$1 [L,QSA]
+# Administration
+RewriteRule ^admin/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/?$ index.php?url_controleur=admin&url_page=$1&url_action=$2&url_id=$3 [L,QSA]
+RewriteRule ^admin/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/?$ index.php?url_controleur=admin&url_page=$1&url_action=$2 [L,QSA]
+RewriteRule ^admin/([a-zA-Z0-9_-]+)/?$ index.php?url_controleur=admin&url_page=$1 [L,QSA]
+RewriteRule ^admin/?$ index.php?url_controleur=admin [L,QSA]
+
+# Main
+RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/?$ index.php?url_controleur=main&url_page=$1&url_action=$2&url_id=$3 [L,QSA]
+RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/?$ index.php?url_controleur=main&url_page=$1&url_action=$2 [L,QSA]
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ index.php?url_controleur=main&url_page=$1 [L,QSA]
+RewriteRule ^/?$ index.php?url_controleur=main [L,QSA]
