@@ -60,15 +60,15 @@ class Main extends Controleur{
 								'bloquer' => 0
 							));
 							if($membreDAO->save($membre)){
-								$this->action('Inscription');
-								$vars['res'] = array('success' => true, 'msg' => 'Inscription réussie');
+								//$this->action('Inscription');
+								$vars['res'] = array('success' => true, 'messages' => 'Inscription réussie');
 								unset($_POST);
 							}
 							else
-								$vars['res'] = array('success' => false, 'msg' => 'Erreur BDD');
+								$vars['res'] = array('success' => false, 'messages' => 'Erreur BDD');
 						}
 						else
-							$vars['res'] = array('success' => false, 'msg' => $res);
+							$vars['res'] = array('success' => false, 'messages' => $res);
 					}
 					$this->vue->chargerVue('membre_add', $vars);
 				}
@@ -91,12 +91,12 @@ class Main extends Controleur{
 								$membre = new Membre($array);
 								if($membreDAO->save($membre)){
 									$_SESSION['user'] = $membreDAO->getOneByPseudo($_SESSION['user']->pseudo);
-									$this->action('Mise à jour du profil');
-									$vars['res'] = array('success' => true, 'msg' => 'Mise à jour réussie');
+									//$this->action('Mise à jour du profil');
+									$vars['res'] = array('success' => true, 'messages' => 'Mise à jour réussie');
 								}else
-									$vars['res'] = array('success' => false, 'msg' => 'Erreur BDD');
+									$vars['res'] = array('success' => false, 'messages' => 'Erreur BDD');
 							}else
-								$vars['res'] = array('success' => false, 'msg' => $res);
+								$vars['res'] = array('success' => false, 'messages' => $res);
 						}
 					}
 					$this->vue->chargerVue('membre_edit', $vars);
@@ -112,13 +112,13 @@ class Main extends Controleur{
 								));
 								$id_membre = $membre->id_membre;
 								if($membreDAO->save($membre)){
-									$this->action('Oubli de mot de passe (modification du mot de passe)', $id_membre);
-									$vars['res'] = array('success' => true, 'msg' => 'Mise à jour du mot de passe réussie');
+									//$this->action('Oubli de mot de passe (modification du mot de passe)', $id_membre);
+									$vars['res'] = array('success' => true, 'messages' => 'Mise à jour du mot de passe réussie');
 								}else
-									$vars['res'] = array('success' => false, 'msg' => 'Erreur BDD');
+									$vars['res'] = array('success' => false, 'messages' => 'Erreur BDD');
 							}
 							else
-								$vars['res'] = array('success' => false, 'msg' => $res);
+								$vars['res'] = array('success' => false, 'messages' => $res);
 						}
 						else{
 							$vars['etape'] = 'formMDP';
@@ -130,17 +130,17 @@ class Main extends Controleur{
 							if(($res = $membreDAO->checkMembreExiste($_POST['pseudoEmail'])) !== false){
 								$membre = $res;
 								if(($res = $membre->lostPass()) === true){
-									$this->action('Oubli de mot de passe (création de la clé)', $membre->id_membre);
-									$vars['res'] = array('success' => true, 'msg' => 'Un email vous a été envoyé, merci de suivre les instructions');
+									//$this->action('Oubli de mot de passe (création de la clé)', $membre->id_membre);
+									$vars['res'] = array('success' => true, 'messages' => 'Un email vous a été envoyé, merci de suivre les instructions');
 								}
 								else
-									$vars['res'] = array('success' => false, 'msg' => $res);
+									$vars['res'] = array('success' => false, 'messages' => $res);
 							}
 							else
-								$vars['res'] = array('success' => false, 'msg' => 'Le pseudo ou l\'email n\'existe pas');
+								$vars['res'] = array('success' => false, 'messages' => 'Le pseudo ou l\'email n\'existe pas');
 						}
 						else
-							$vars['res'] = array('success' => false, 'msg' => $res);
+							$vars['res'] = array('success' => false, 'messages' => $res);
 					}
 					$this->vue->chargerVue('membre_lostMDP', $vars);
 				}
@@ -208,7 +208,7 @@ class Main extends Controleur{
 					}
 				}
 				else
-					$this->technotes('403', $vars);
+					$this->technotes('403', NULL, $vars);
 				break;
 			case 'edit':
 				$vars['technotes'] = 1;
@@ -232,7 +232,7 @@ class Main extends Controleur{
 							exit();
 						}
 						$vars['connexion'] = $res;
-						$this->accueil('get', array('connexion' => $vars['connexion']));
+						$this->accueil('get', NULL, array('connexion' => $vars['connexion']));
 						break;
 					}
 					$this->vue->chargerVue('403', $vars);
