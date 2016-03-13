@@ -13,7 +13,8 @@ class TechnoteDAO extends DAO{
 			'id_technote' => $id['id_technote']
 		));
 		$res = $req->fetch(PDO::FETCH_ASSOC);
-		
+		if(!$res)
+			return false;
 		$req = $this->pdo->prepare('SELECT label
 										FROM mot_cle mc
 										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle
@@ -73,6 +74,40 @@ class TechnoteDAO extends DAO{
 		}
 		return $res;
 		
+	}
+
+	public function getLastNTechnotes($limit){
+		$res = array();
+
+		$req = $this->pdo->prepare('SELECT *
+									FROM technote t
+									ORDER BY date_creation DESC
+									LIMIT :limit OFFSET :offset');
+
+		$req->bindValue(':limit', $limit, PDO::PARAM_INT);
+		$req->bindValue(':offset', 0, PDO::PARAM_INT);
+		$req->execute();
+
+
+		foreach($req->fetchAll() as $obj){
+			$ligne = array();
+			$req = $this->pdo->prepare('SELECT label
+										FROM mot_cle mc
+										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle
+										WHERE d.id_technote = :id_technote');
+
+			$req->execute(array(
+				'id_technote' => $obj->id_technote
+			));
+			$res_mc = $req->fetchAll();
+			$ligne['mot_cle'] = $res_mc;
+			foreach($obj as $nomChamp => $valeur){
+				$ligne[$nomChamp] = $valeur;
+			}
+			$res[] = new Technote($ligne);
+		}
+		return $res;
+
 	}
 	
 	public function getCount(){

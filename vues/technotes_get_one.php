@@ -1,8 +1,8 @@
-<h1><?= $v_tn->titre; ?></h1>
+<h1><?= ucfirst($v_technote->titre); ?></h1>
 <section>
 	<div class="panel panel-default">
 		<div class="panel-body">
-			<?= $v_tn->contenu; ?>
+			<?= $v_technote->contenu; ?>
 		</div>
 	</div>
 </section>

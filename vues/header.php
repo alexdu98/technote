@@ -58,7 +58,7 @@
 								</div>
 								<?php if(!empty($v_connexion) && $v_connexion['success'] === false): ?>
 									<div class="col-md-12 text-center">
-										<div class="badLogin"><?= $v_connexion['msg']; ?></div>
+										<div class="badLogin"><?= $v_connexion['message']; ?></div>
 									</div>
 								<?php endif; ?>
 							</form>
@@ -87,7 +87,7 @@
 									Technotes <span class="caret"></span>
 								</a>
 								<ul class="dropdown-menu">
-									<li class="<?php if(isset($v_technotes_all)) echo "active";?>"><a href="/technotes?nav=1">Voir toutes les technotes</a></li>
+									<li class="<?php if(isset($v_technotes_all)) echo "active";?>"><a href="/technotes">Voir toutes les technotes</a></li>
 									<?php if($_SESSION['user']): ?>
 			                            <li class="<?php if(isset($v_technotes_add)) echo "active";?>"><a href="/technotes/add">Ecrire une technote</a></li>
 									<?php endif; ?>

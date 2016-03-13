@@ -14,15 +14,15 @@ class Technote extends TableObject{
 			<div class="col-md-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<a href="/technotes/get?id_technote=<?= $this->id_technote; ?>"><?= $this->titre; ?></a>
+						<a href="/technotes/get/<?= $this->id_technote; ?>"><?= ucfirst($this->titre); ?></a>
 					</div>
 					<div class="panel-body">
-						<a href="/technotes/get?id_technote=<?= $this->id_technote; ?>" class="extraitTechnote">
+						<a href="/technotes/get/<?= $this->id_technote; ?>" class="extraitTechnote">
 							<div class="col-md-12 text-center">
 								<img src="<?= $this->url_image; ?>" alt="test" class="img-thumbnail img-technote">
 							</div>
 							<div class="col-md-12 text-justify">
-								<?= substr($this->contenu, 0, 255); ?>...
+								<?= ucfirst(strip_tags(substr($this->contenu, 0, 383))); ?>...
 							</div>
 						</a>
 					</div>

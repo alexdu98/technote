@@ -5,12 +5,12 @@
  */
 class Main extends Controleur{
 
-	public function accueil($action, $vars){
+	public function accueil($action, $id, $vars){
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
 				$vars['accueil'] = 1;
-				$vars['tn'] = $technoteDAO->getNTechnotes(0, 3);
+				$vars['tn'] = $technoteDAO->getLastNTechnotes(NB_TN_ACCUEIL);
 				$this->vue->chargerVue('accueil_get', $vars);
 				break;
 			default:
@@ -18,7 +18,7 @@ class Main extends Controleur{
 		}
 	}
 
-	public function membre($action, $vars){
+	public function membre($action, $id, $vars){
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
@@ -157,39 +157,38 @@ class Main extends Controleur{
 		}
 	}
 	
-	public function technotes($action, $vars) {
+	public function technotes($action, $id, $vars) {
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
 				$vars['technotes'] = 1;
 				// Si on veut consulter une technote en particulier
-				if(isset($_GET['id_technote'])){
-					$tn = $technoteDAO->getOne(array('id_technote' => $_GET['id_technote']));
-					$vars['tn'] = $tn;
-					$this->vue->chargerVue('technotes_get_one', $vars);
+				if(!empty($id)){
+					$vars['technote'] = $technoteDAO->getOne(array('id_technote' => $id));
+					if($vars['technote'] !== false)
+						$this->vue->chargerVue('technotes_get_one', $vars);
+					else
+						$this->vue->chargerVue('404', $vars);
 				}
-				else {
+				else{
 					$vars['technotes_all'] = 1;
-					// Le nombre de technotes est arbitraire
-					$nbTechnotes = 6;
 
 					// Recuperation du numero de la page courante
-					$nav = isset($_GET['nav']) ? intval($_GET['nav']) : 1;
+					$page = !empty($_GET['page']) ? intval($_GET['page']) : 1;
 
 					// Recuperation des technotes a afficher
-					$debut = ($nav - 1) * 6;
-					$tn = $technoteDAO->getNTechnotes($debut, $nbTechnotes);
+					$debut = ($page - 1) * NB_TN_PAGE;
+					$vars['technotes'] = $technoteDAO->getNTechnotes($debut, NB_TN_PAGE);
 					
 					// Pour le nb de pages de la navigation
 					$count = intval($technoteDAO->getCount());
-					$nbPages = $count / 6;
-					if ($count % 6 != 0) $nbPages++;
-					$fin = $debut + 6 > $count ? 1 : 0;
+					$nbPages = $count / NB_TN_PAGE;
+					if ($count % NB_TN_PAGE != 0) $nbPages++;
+					$fin = $debut + NB_TN_PAGE > $count ? 1 : 0;
 					
 					$vars['nbPages'] = $nbPages;
 					$vars['fin'] = $fin;
-					$vars['nav'] = $nav;
-					$vars['tn'] = $tn;
+					$vars['page'] = $page;
 					$this->vue->chargerVue('technotes_get', $vars);
 				}
 				break;
@@ -222,7 +221,7 @@ class Main extends Controleur{
 		}
 	}
 
-	public function connexion($action, $vars){
+	public function connexion($action, $id, $vars){
 		if(!$_SESSION['user']){
 			switch($action){
 				case 'get':
@@ -232,7 +231,7 @@ class Main extends Controleur{
 							header('Location: /membre');
 							exit();
 						}
-						$vars['connexion'] = array('success' => $res['success'], 'message' => $res['message']);
+						$vars['connexion'] = $res;
 						$this->accueil('get', array('connexion' => $vars['connexion']));
 						break;
 					}
@@ -245,7 +244,7 @@ class Main extends Controleur{
 		$this->vue->chargerVue('403', $vars);
 	}
 
-	public function contact($action, $vars){
+	public function contact($action, $id, $vars){
 		switch($action){
 			case 'get':
 				$vars['contact'] = 1;
@@ -257,7 +256,7 @@ class Main extends Controleur{
 							$res['messages'] .= ', nous vous répondrons dès que possible';
 							unset($_POST);
 						}
-						$vars['res'] = array('success' => $res['success'], 'messages' => $res['messages']);
+						$vars['res'] = $res;
 					}
 				}
 				$this->vue->chargerVue('contact', $vars);
@@ -267,7 +266,7 @@ class Main extends Controleur{
 		}
 	}
 
-	public function conditions($action, $vars){
+	public function conditions($action, $id, $vars){
 		switch($action){
 			case 'get':
 				$this->vue->chargerVue('conditions', $vars);
@@ -277,7 +276,7 @@ class Main extends Controleur{
 		}
 	}
 
-	public function mentions($action, $vars){
+	public function mentions($action, $id, $vars){
 		switch($action){
 			case 'get':
 				$this->vue->chargerVue('mentions', $vars);
@@ -288,7 +287,7 @@ class Main extends Controleur{
 
 	}
 
-	public function deconnexion($action, $vars){
+	public function deconnexion($action, $id, $vars){
 		session_destroy();
 		setcookie('token', '', time() - 10);
 		header('Location: /');
