@@ -65,10 +65,10 @@ class Main extends Controleur{
 								unset($_POST);
 							}
 							else
-								$vars['res'] = array('success' => false, 'messages' => 'Erreur BDD');
+								$vars['res'] = array('success' => false, 'messages' => array('Erreur BDD'));
 						}
 						else
-							$vars['res'] = array('success' => false, 'messages' => $res);
+							$vars['res'] = array('success' => false, 'messages' => array($res));
 					}
 					$this->vue->chargerVue('membre_add', $vars);
 				}
@@ -94,9 +94,9 @@ class Main extends Controleur{
 									//$this->action('Mise à jour du profil');
 									$vars['res'] = array('success' => true, 'messages' => 'Mise à jour réussie');
 								}else
-									$vars['res'] = array('success' => false, 'messages' => 'Erreur BDD');
+									$vars['res'] = array('success' => false, 'messages' => array('Erreur BDD'));
 							}else
-								$vars['res'] = array('success' => false, 'messages' => $res);
+								$vars['res'] = array('success' => false, 'messages' => array($res));
 						}
 					}
 					$this->vue->chargerVue('membre_edit', $vars);
@@ -115,10 +115,10 @@ class Main extends Controleur{
 									//$this->action('Oubli de mot de passe (modification du mot de passe)', $id_membre);
 									$vars['res'] = array('success' => true, 'messages' => 'Mise à jour du mot de passe réussie');
 								}else
-									$vars['res'] = array('success' => false, 'messages' => 'Erreur BDD');
+									$vars['res'] = array('success' => false, 'messages' => array('Erreur BDD'));
 							}
 							else
-								$vars['res'] = array('success' => false, 'messages' => $res);
+								$vars['res'] = array('success' => false, 'messages' => array($res));
 						}
 						else{
 							$vars['etape'] = 'formMDP';
@@ -134,13 +134,13 @@ class Main extends Controleur{
 									$vars['res'] = array('success' => true, 'messages' => 'Un email vous a été envoyé, merci de suivre les instructions');
 								}
 								else
-									$vars['res'] = array('success' => false, 'messages' => $res);
+									$vars['res'] = array('success' => false, 'messages' => array($res));
 							}
 							else
-								$vars['res'] = array('success' => false, 'messages' => 'Le pseudo ou l\'email n\'existe pas');
+								$vars['res'] = array('success' => false, 'messages' => array('Le pseudo ou l\'email n\'existe pas'));
 						}
 						else
-							$vars['res'] = array('success' => false, 'messages' => $res);
+							$vars['res'] = array('success' => false, 'messages' => array($res));
 					}
 					$this->vue->chargerVue('membre_lostMDP', $vars);
 				}
