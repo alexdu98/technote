@@ -160,23 +160,8 @@ class Main extends Controleur{
 				}
 				else{
 					$vars['technotes_all'] = 1;
-
-					// Recuperation du numero de la page courante
-					$page = !empty($_GET['page']) ? intval($_GET['page']) : 1;
-
-					// Recuperation des technotes a afficher
-					$debut = ($page - 1) * NB_TN_PAGE;
-					$vars['technotes'] = $technoteDAO->getNTechnotes($debut, NB_TN_PAGE);
-					
-					// Pour le nb de pages de la navigation
-					$count = intval($technoteDAO->getCount());
-					$nbPages = $count / NB_TN_PAGE;
-					if ($count % NB_TN_PAGE != 0) $nbPages++;
-					$fin = $debut + NB_TN_PAGE > $count ? 1 : 0;
-					
-					$vars['nbPages'] = $nbPages;
-					$vars['fin'] = $fin;
-					$vars['page'] = $page;
+					$vars['pagination'] = Modele::pagination();
+					$vars['technotes'] = $technoteDAO->getNTechnotes($vars['pagination']->debut, NB_TN_PAGE);
 					$this->vue->chargerVue('technotes_get', $vars);
 				}
 				break;

@@ -111,12 +111,12 @@ class TechnoteDAO extends DAO{
 	}
 	
 	public function getCount(){
-		$req = $this->pdo->prepare('SELECT Count(*) AS "nbTechnotes"
+		$req = $this->pdo->prepare('SELECT COUNT(*) AS nbTechnotes
 									FROM technote');
 		$req->execute();
-		$res = $req->fetch(PDO::FETCH_ASSOC);
+		$res = $req->fetch();
 	
-		return $res['nbTechnotes'];
+		return $res->nbTechnotes;
 	}
 
 	public function save($technote){
