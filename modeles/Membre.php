@@ -2,6 +2,23 @@
 
 class Membre extends TableObject{
 
+	public function getProfile(){
+		$tokenDAO = new TokenDAO(BDD::getInstancePDO());
+		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+		$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
+		$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+		$reponseDAO = new ReponseDAO(BDD::getInstancePDO());
+		$actionDAO = new ActionDAO(BDD::getInstancePDO());
+		$res['nbTokenActif'] = $tokenDAO->getNbActif($this->id_membre);
+		$res['tokenActif'] = $tokenDAO->getActif($this->id_membre);
+		$res['nbTechnoteRedige'] = $technoteDAO->getNbRedige($this->id_membre);
+		$res['nbCommentaireRedige'] = $commentaireDAO->getNbRedige($this->id_membre);
+		$res['nbQuestionRedige'] = $questionDAO->getNbRedige($this->id_membre);
+		$res['nbReponseRedige'] = $reponseDAO->getNbRedige($this->id_membre);
+		$res['actions'] = $actionDAO->getLast($this->id_membre);
+		return $res;
+	}
+
 	static public function connexion($param){
 		$pseudo = !empty($param['pseudo']) ? $param['pseudo'] : NULL;
 		$password = !empty($param['password']) ? $param['password'] : NULL;

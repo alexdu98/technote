@@ -24,19 +24,7 @@ class Main extends Controleur{
 			case 'get':
 				$vars['profile'] = 1;
 				if($_SESSION['user']){
-					$tokenDAO = new TokenDAO(BDD::getInstancePDO());
-					$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
-					$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
-					$questionDAO = new QuestionDAO(BDD::getInstancePDO());
-					$reponseDAO = new ReponseDAO(BDD::getInstancePDO());
-					$actionDAO = new ActionDAO(BDD::getInstancePDO());
-					$vars['nbTokenActif'] = $tokenDAO->getNbActif($_SESSION['user']->id_membre);
-					$vars['tokenActif'] = $tokenDAO->getActif($_SESSION['user']->id_membre);
-					$vars['nbTechnoteRedige'] = $technoteDAO->getNbRedige($_SESSION['user']->id_membre);
-					$vars['nbCommentaireRedige'] = $commentaireDAO->getNbRedige($_SESSION['user']->id_membre);
-					$vars['nbQuestionRedige'] = $questionDAO->getNbRedige($_SESSION['user']->id_membre);
-					$vars['nbReponseRedige'] = $reponseDAO->getNbRedige($_SESSION['user']->id_membre);
-					$vars['actions'] = $actionDAO->getLast($_SESSION['user']->id_membre);
+					$vars['profile'] = $_SESSION['user']->getProfile();
 					$this->vue->chargerVue('membre_get', $vars);
 				}
 				else{

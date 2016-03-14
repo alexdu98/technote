@@ -7,10 +7,10 @@
 		</ul>
 		<div class="col-md-8">
 			<p>
-				Connexion automatique sur <?= $v_nbTokenActif; ?> navigateur(s) <br>
+				Connexion automatique sur <?= $v_profile['nbTokenActif']; ?> navigateur(s) <br>
 				<?php
-					if($v_tokenActif)
-						foreach($v_tokenActif as $token)
+					if($v_profile['tokenActif'])
+						foreach($v_profile['tokenActif'] as $token)
 							echo $token->affiche() . ' : <a class="deleteToken">se déconnecter</a> <br>';
 				?>
 			</p>
@@ -18,10 +18,10 @@
 			<p>
 				Vous avez rédigé :
 				<ul>
-					<li><b><?= $v_nbTechnoteRedige; ?></b> technote(s)</li>
-					<li><b><?= $v_nbCommentaireRedige; ?></b> commentaire(s)</li>
-					<li><b><?= $v_nbQuestionRedige; ?></b> question(s)</li>
-					<li><b><?= $v_nbReponseRedige; ?></b> réponse(s)</li>
+					<li><b><?= $v_profile['nbTechnoteRedige']; ?></b> technote(s)</li>
+					<li><b><?= $v_profile['nbCommentaireRedige']; ?></b> commentaire(s)</li>
+					<li><b><?= $v_profile['nbQuestionRedige']; ?></b> question(s)</li>
+					<li><b><?= $v_profile['nbReponseRedige']; ?></b> réponse(s)</li>
 				</ul>
 			</p>
 		</div>
@@ -32,7 +32,7 @@
 		</div>
 		<div class="col-md-12 text-center"><hr>
 			<h4>Dernières actions</h4>
-			<?php foreach($v_actions as $action): ?>
+			<?php foreach($v_profile['actions'] as $action): ?>
 				<p><?php $action->affiche(); ?></p>
 			<?php endforeach; ?>
 		</div>
