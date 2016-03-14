@@ -15,8 +15,4 @@ class Token extends TableObject{
 		setcookie('token', $cle, time() + DUREE_COOKIE_AUTOCONNECT_SEC);
 	}
 
-	public function affiche(){
-		echo 'IP de création : ' . $this->ip . ' / Expire le ' . $this->date_expiration;
-	}
-
 }

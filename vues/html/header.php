@@ -81,22 +81,22 @@
 					</div>
 					<div class="collapse navbar-collapse">
 						<ul class="nav nav-pills nav-justified">
-							<li class="<?php if(isset($v_accueil)) echo "active";?>"><a href="/">Accueil</a></li>
-							<li class="dropdown <?php if(isset($v_technotes)) echo "active";?>">
+							<li class="<?php if(isset($v_active_accueil)) echo "active";?>"><a href="/">Accueil</a></li>
+							<li class="dropdown <?php if(isset($v_active_technotes)) echo "active";?>">
 								<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 									Technotes <span class="caret"></span>
 								</a>
 								<ul class="dropdown-menu">
-									<li class="<?php if(isset($v_technotes_all)) echo "active";?>"><a href="/technotes">Voir toutes les technotes</a></li>
+									<li class="<?php if(isset($v_active_technotes_all)) echo "active";?>"><a href="/technotes">Voir toutes les technotes</a></li>
 									<?php if($_SESSION['user']): ?>
-			                            <li class="<?php if(isset($v_technotes_add)) echo "active";?>"><a href="/technotes/add">Ecrire une technote</a></li>
+			                            <li class="<?php if(isset($v_active_technotes_add)) echo "active";?>"><a href="/technotes/add">Ecrire une technote</a></li>
 									<?php endif; ?>
 								</ul>
 							</li>
 							<?php if($_SESSION['user']): ?>
-								<li class="<?php if(isset($v_profile)) echo "active";?>"><a href="/membre">Profile</a></li>
+								<li class="<?php if(isset($v_active_profile)) echo "active";?>"><a href="/membre">Profile</a></li>
 							<?php endif; ?>
-							<li class="<?php if(isset($v_contact)) echo "active";?>"><a href="/contact">Contact</a></li>
+							<li class="<?php if(isset($v_active_contact)) echo "active";?>"><a href="/contact">Contact</a></li>
 						</ul>
 					</div>
 				</div>

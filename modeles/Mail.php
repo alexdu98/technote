@@ -29,11 +29,11 @@ class Mail{
 
 	private function addHeaderFooter(){
 		ob_start();
-		include('/vues/mail/' . $this->vue);
+		include('/vues/html/mail/' . $this->vue);
 		$corps = ob_get_clean();
 		$date = date('d/m/Y à H:i');
 		ob_start();
-		include('/vues/mail/mail_base.php');
+		include('/vues/html/mail/mail_base.php');
 		$message = ob_get_clean();
 		return $message;
 	}

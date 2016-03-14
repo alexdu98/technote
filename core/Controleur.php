@@ -3,15 +3,13 @@
 class Controleur{
 
 	protected $vue;
-	protected $model;
 
 	public function __construct(){
-		$this->vue = new Vue();
-		$this->model = new Modele();
+		$this->vue = new MainVue();
 	}
 
 	/**
-	 * Charge le controleur de la page demandé
+	 * Charge le controleur principal de la page demandé
 	 * @param Admin|Main L'instance du controleur
 	 * @param string $page
 	 * @param string $action
@@ -28,8 +26,7 @@ class Controleur{
 		else{
 			$vueCentrale = '404';
 		}
-		$vue = new Vue();
-		$vue->chargerVue($vueCentrale, array());
+		$this->vue->afficher($vueCentrale, array());
 	}
 
 }

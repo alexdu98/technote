@@ -22,8 +22,8 @@ define('SALT_JETON_CSRF', '4}&Bl|/|)J');
 define('SALT_RESET_PASS', 'b@dK|U^Qh:');
 
 // TECHNOTES
-define('NB_TN_ACCUEIL', 6);
-define('NB_TN_PAGE', 9);
+define('NB_TECHNOTE_ACCUEIL', 6);
+define('NB_TECHNOTE_PAGE', 9);
 
 // STATISTIQUES
 define('NB_SEC_ENTRE_2_VISITES', 60 * 60);

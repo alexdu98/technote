@@ -47,7 +47,8 @@ class TechnoteDAO extends DAO{
 		$res = array();
 		
 		$req = $this->pdo->prepare('SELECT * 
-									FROM technote t 
+									FROM technote t
+									ORDER BY date_creation DESC
 									LIMIT :limit OFFSET :offset');
 		
 		$req->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -57,7 +58,7 @@ class TechnoteDAO extends DAO{
 		
 		foreach($req->fetchAll() as $obj){
 			$ligne = array();
-			$req = $this->pdo->prepare('SELECT label 
+			$req = $this->pdo->prepare('SELECT mc.id_mot_cle, label
 										FROM mot_cle mc 
 										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle 
 										WHERE d.id_technote = :id_technote');
@@ -91,7 +92,7 @@ class TechnoteDAO extends DAO{
 
 		foreach($req->fetchAll() as $obj){
 			$ligne = array();
-			$req = $this->pdo->prepare('SELECT label
+			$req = $this->pdo->prepare('SELECT mc.id_mot_cle, label
 										FROM mot_cle mc
 										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle
 										WHERE d.id_technote = :id_technote');

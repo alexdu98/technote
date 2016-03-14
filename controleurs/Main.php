@@ -6,15 +6,17 @@
 class Main extends Controleur{
 
 	public function accueil($action, $id, $vars){
-		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
-				$vars['accueil'] = 1;
-				$vars['tn'] = $technoteDAO->getLastNTechnotes(NB_TN_ACCUEIL);
-				$this->vue->chargerVue('accueil_get', $vars);
+				$vars['active_accueil'] = 1;
+
+				$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+				$vars['technotes'] = new TechnoteVue($technoteDAO->getLastNTechnotes(NB_TECHNOTE_ACCUEIL));
+
+				$this->vue->afficher('accueil_get', $vars);
 				break;
 			default:
-				$this->vue->chargerVue('404', $vars);
+				new Vue('404', $vars);
 		}
 	}
 
@@ -22,10 +24,10 @@ class Main extends Controleur{
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
-				$vars['profile'] = 1;
+				$vars['active_profile'] = 1;
 				if($_SESSION['user']){
 					$vars['profile'] = $_SESSION['user']->getProfile();
-					$this->vue->chargerVue('membre_get', $vars);
+					$this->vue->afficher('membre_get', $vars);
 				}
 				else{
 					header('Location: /');
@@ -33,7 +35,7 @@ class Main extends Controleur{
 				}
 				break;
 			case 'add':
-				$vars['profile'] = 1;
+				$vars['active_profile'] = 1;
 				if(!$_SESSION['user']){
 					if(!empty($_POST)){
 						if(($res = Membre::checkAdd($_POST)) === true){
@@ -58,7 +60,7 @@ class Main extends Controleur{
 						else
 							$vars['res'] = array('success' => false, 'messages' => array($res));
 					}
-					$this->vue->chargerVue('membre_add', $vars);
+					$this->vue->afficher('membre_add', $vars);
 				}
 				else{
 					header('Location: /');
@@ -66,7 +68,7 @@ class Main extends Controleur{
 				}
 				break;
 			case 'edit':
-				$vars['profile'] = 1;
+				$vars['active_profile'] = 1;
 				if($_SESSION['user']){
 					if(!empty($_POST)){
 						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
@@ -87,7 +89,7 @@ class Main extends Controleur{
 								$vars['res'] = array('success' => false, 'messages' => array($res));
 						}
 					}
-					$this->vue->chargerVue('membre_edit', $vars);
+					$this->vue->afficher('membre_edit', $vars);
 				}
 				elseif($_GET['mdp']){
 					if(!empty($_GET['cle']) && ($membre = $membreDAO->checkCleResetPass($_GET['cle']))){
@@ -130,7 +132,7 @@ class Main extends Controleur{
 						else
 							$vars['res'] = array('success' => false, 'messages' => array($res));
 					}
-					$this->vue->chargerVue('membre_lostMDP', $vars);
+					$this->vue->afficher('membre_lostMDP', $vars);
 				}
 				else{
 					header('Location: /');
@@ -138,10 +140,10 @@ class Main extends Controleur{
 				}
 				break;
 			case 'drop':
-				$vars['profile'] = 1;
+				$vars['active_profile'] = 1;
 				//break;
 			default:
-				$this->vue->chargerVue('404', $vars);
+				$this->vue->afficher('404', $vars);
 		}
 	}
 	
@@ -149,25 +151,29 @@ class Main extends Controleur{
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
-				$vars['technotes'] = 1;
+				$vars['active_technotes'] = 1;
 				// Si on veut consulter une technote en particulier
-				if(!empty($id)){
+				if(isset($id)){
 					$vars['technote'] = $technoteDAO->getOne(array('id_technote' => $id));
 					if($vars['technote'] !== false)
-						$this->vue->chargerVue('technotes_get_one', $vars);
+						$this->vue->afficher('technotes_get_one', $vars);
 					else
-						$this->vue->chargerVue('404', $vars);
+						$this->vue->afficher('404', $vars);
 				}
 				else{
-					$vars['technotes_all'] = 1;
-					$vars['pagination'] = Modele::pagination();
-					$vars['technotes'] = $technoteDAO->getNTechnotes($vars['pagination']->debut, NB_TN_PAGE);
-					$this->vue->chargerVue('technotes_get', $vars);
+					$vars['active_technotes_all'] = 1;
+					$page = !empty($_GET['page']) ? intval($_GET['page']) : 1;
+					$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+					$count = intval($technoteDAO->getCount());
+					$vars['pagination'] = new Pagination($page, $count);
+
+					$vars['technotes'] = new TechnoteVue($technoteDAO->getNTechnotes($vars['pagination']->debut, NB_TECHNOTE_PAGE));
+					$this->vue->afficher('technotes_get', $vars);
 				}
 				break;
 			case 'add':
-				$vars['technotes'] = 1;
-				$vars['technotes_add'] = 1;
+				$vars['active_technotes'] = 1;
+				$vars['active_technotes_add'] = 1;
 				if($_SESSION['user']){
 					if(!empty($_POST)){
 						var_dump($_POST);
@@ -177,20 +183,20 @@ class Main extends Controleur{
 						$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 						$motsCles = $motCleDAO->getAll();
 						$vars['motsCles'] = $motsCles;
-						$this->vue->chargerVue('technotes_add', $vars);
+						$this->vue->afficher('technotes_add', $vars);
 					}
 				}
 				else
 					$this->technotes('403', NULL, $vars);
 				break;
 			case 'edit':
-				$vars['technotes'] = 1;
+				$vars['active_technotes'] = 1;
 				//break;
 			case 'del':
-				$vars['technotes'] = 1;
+				$vars['active_technotes'] = 1;
 				//break;
 			default:
-				$this->vue->chargerVue('404', $vars);
+				$this->vue->afficher('404', $vars);
 		}
 	}
 
@@ -208,19 +214,19 @@ class Main extends Controleur{
 						$this->accueil('get', NULL, array('connexion' => $vars['connexion']));
 						break;
 					}
-					$this->vue->chargerVue('403', $vars);
+					$this->vue->afficher('403', $vars);
 					break;
 				default:
-					$this->vue->chargerVue('404', $vars);
+					$this->vue->afficher('404', $vars);
 			}
 		}
-		$this->vue->chargerVue('403', $vars);
+		$this->vue->afficher('403', $vars);
 	}
 
 	public function contact($action, $id, $vars){
 		switch($action){
 			case 'get':
-				$vars['contact'] = 1;
+				$vars['active_contact'] = 1;
 				if(!empty($_POST)){
 					if(!$_SESSION['user'] || ($_SESSION['user'] && !empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF'])){
 						$contact = new Contact($_POST);
@@ -232,30 +238,30 @@ class Main extends Controleur{
 						$vars['res'] = $res;
 					}
 				}
-				$this->vue->chargerVue('contact', $vars);
+				$this->vue->afficher('contact', $vars);
 				break;
 			default:
-				$this->vue->chargerVue('404', $vars);
+				$this->vue->afficher('404', $vars);
 		}
 	}
 
 	public function conditions($action, $id, $vars){
 		switch($action){
 			case 'get':
-				$this->vue->chargerVue('conditions', $vars);
+				$this->vue->afficher('conditions', $vars);
 				break;
 			default:
-				$this->vue->chargerVue('404', $vars);
+				$this->vue->afficher('404', $vars);
 		}
 	}
 
 	public function mentions($action, $id, $vars){
 		switch($action){
 			case 'get':
-				$this->vue->chargerVue('mentions', $vars);
+				$this->vue->afficher('mentions', $vars);
 				break;
 			default:
-				$this->vue->chargerVue('404', $vars);
+				$this->vue->afficher('404', $vars);
 		}
 
 	}
