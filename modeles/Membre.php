@@ -159,7 +159,7 @@ class Membre extends TableObject{
 			'pseudo' => $this->pseudo,
 			'cle' => $cle
 		);
-		$mail = new Mail($this->email, '[Technote.dev] Oubli de mot de passe', 'mail_lostPass.php', $param);
+		$mail = new Mail($this->email, '[Technote.dev] Oubli de mot de passe', 'mail_lostPass.twig', $param);
 		return $mail->sendMail();
 	}
 

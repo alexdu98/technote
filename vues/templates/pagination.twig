@@ -1,0 +1,25 @@
+<nav class="text-center">
+	<ul class="pagination">
+		{% if pagination.page > 1 %}
+			<li>
+				<a href="{{ pagination.url ~ (pagination.page - 1) }}" aria-label="Previous">
+					<span aria-hidden="true">&laquo;</span>
+				</a>
+			</li>
+		{% endif %}
+		{% for i in 1..pagination.nbPages %}
+			{% if loop.index == pagination.page %}
+				<li class="active"><a href="{{ pagination.url ~ loop.index }}">{{ loop.index }}</a></li>
+			{% else %}
+				<li><a href="{{ pagination.url ~ loop.index }}">{{ loop.index }}</a></li>
+			{% endif %}
+		{% endfor %}
+		{% if not pagination.fin and pagination.page is defined %}
+			<li>
+				<a href="{{ pagination.url ~ (pagination.page + 1) }}" aria-label="Next">
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+			</li>
+		{% endif %}
+	</ul>
+</nav>

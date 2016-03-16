@@ -1,0 +1,17 @@
+{% if not res is empty %}
+<div class="alert alert-{% if res.success %}success{% else %}danger{% endif %} alert-dismissible" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<div class="flex">
+		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+		<ul>
+			{% if res.success is same as(false) %}
+				{% for message in res.messages %}
+					<li>{{ message }}</li>
+				{% endfor %}
+			{% else %}
+				<li>{{ res.messages }}</li>
+			{% endif %}
+		</ul>
+	</div>
+</div>
+{% endif %}

@@ -1,0 +1,46 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	<section class="row">
+		<div class="container-fluid">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<ul class="nav nav-tabs">
+						<li role="presentation" class="active"><a href="/membre/get">Profil</a></li>
+						<li role="presentation"><a href="/membre/edit">Modifier</a></li>
+					</ul>
+					<div class="col-md-8">
+						<p>
+							Connexion automatique sur {{ profil.nbTokenActif }} navigateur(s) <br>
+							{% if profil.tokenActif %}
+								{% for token in profil.tokenActif %}
+									IP de création : {{ token.ip }} / Expire le {{ token.date_expiration }} : <a class="deleteToken">se déconnecter</a><br>
+								{% endfor %}
+							{% endif %}
+						</p>
+						<br>
+						<p>
+							Vous avez rédigé :
+							<ul>
+								<li><b>{{ profil.nbTechnoteRedige }}</b> technote(s)</li>
+								<li><b>{{ profil.nbCommentaireRedige }}</b> commentaire(s)</li>
+								<li><b>{{ profil.nbQuestionRedige }}</b> question(s)</li>
+								<li><b>{{ profil.nbReponseRedige }}</b> réponse(s)</li>
+							</ul>
+						</p>
+					</div>
+					<div class="col-md-4 text-right">
+						<p><b>Date inscription :</b> {{ session.user.date_inscription }}</p>
+						<p><b>Dernière connexion :</b> {{ session.user.date_connexion }}</p>
+						<p><b>Groupe :</b> {{ session.user.groupe }}</p>
+					</div>
+					<div class="col-md-12 text-center"><hr>
+						<h4>Dernières actions</h4>
+						{% for action in profil.actions %}
+							<p>{{ action.date_action }} : <b>{{ action.libelle }}</b></p>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

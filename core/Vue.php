@@ -2,18 +2,21 @@
 
 class Vue{
 
-	protected $params = array();
+	protected $twig;
 
-	public function __construct($vars = NULL){
-		$this->params = $vars;
+	public function __construct(){
+		// Défini le dossier des templates pour Twig
+		$loader = new Twig_Loader_Filesystem('vues');
+		$this->twig = new Twig_Environment($loader, array('debug' => true));
+		$this->twig->addExtension(new Twig_Extension_Debug());
+		$this->twig->addGlobal('server', $_SERVER);
+		$this->twig->addGlobal('session', $_SESSION);
+		$this->twig->addGlobal('post', $_POST);
+		$this->twig->addGlobal('get', $_GET);
 	}
 
-	public function afficher($vue, $vars){
-		$this->params = $vars;
-		extract($this->params, EXTR_PREFIX_ALL, 'v'); // Toutes les variables $var pour la vue deviennent $v_var
-		include '/vues/html/header.php';
-		include '/vues/html/' . $vue . '.php';
-		include '/vues/html/footer.php';
+	public function get(){
+		return $this->twig;
 	}
 
 }

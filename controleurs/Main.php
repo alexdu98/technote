@@ -8,15 +8,15 @@ class Main extends Controleur{
 	public function accueil($action, $id, $vars){
 		switch($action){
 			case 'get':
+				$vars['titrePage'] = 'Les dernières technotes';
 				$vars['active_accueil'] = 1;
-
 				$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
-				$vars['technotes'] = new TechnoteVue($technoteDAO->getLastNTechnotes(NB_TECHNOTE_ACCUEIL));
-
-				$this->vue->afficher('accueil_get', $vars);
-				break;
+				$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_ACCUEIL);
+				$this->vue->display('accueil.twig', $vars);
+				exit();
 			default:
-				new Vue('404', $vars);
+				$this->vue->display('404.twig', $vars);
+				exit();
 		}
 	}
 
@@ -24,17 +24,19 @@ class Main extends Controleur{
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
 		switch($action){
 			case 'get':
+				$vars['titrePage'] = 'Profil';
 				$vars['active_profile'] = 1;
 				if($_SESSION['user']){
-					$vars['profile'] = $_SESSION['user']->getProfile();
-					$this->vue->afficher('membre_get', $vars);
+					$vars['profil'] = $_SESSION['user']->getProfile();
+					$this->vue->display('membre_get.twig', $vars);
+					exit();
 				}
 				else{
 					header('Location: /');
 					exit();
 				}
-				break;
 			case 'add':
+				$vars['titrePage'] = 'Inscription';
 				$vars['active_profile'] = 1;
 				if(!$_SESSION['user']){
 					if(!empty($_POST)){
@@ -52,7 +54,6 @@ class Main extends Controleur{
 							if($membreDAO->save($membre)){
 								//$this->action('Inscription');
 								$vars['res'] = array('success' => true, 'messages' => 'Inscription réussie');
-								unset($_POST);
 							}
 							else
 								$vars['res'] = array('success' => false, 'messages' => array('Erreur BDD'));
@@ -60,16 +61,18 @@ class Main extends Controleur{
 						else
 							$vars['res'] = array('success' => false, 'messages' => array($res));
 					}
-					$this->vue->afficher('membre_add', $vars);
+					$this->vue->display('membre_add.twig', $vars);
+					exit();
 				}
 				else{
 					header('Location: /');
 					exit();
 				}
-				break;
+				exit();
 			case 'edit':
 				$vars['active_profile'] = 1;
 				if($_SESSION['user']){
+					$vars['titrePage'] = 'Modification du profil';
 					if(!empty($_POST)){
 						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
 							if(($res = Membre::checkEdit($_POST)) === true){
@@ -89,9 +92,11 @@ class Main extends Controleur{
 								$vars['res'] = array('success' => false, 'messages' => array($res));
 						}
 					}
-					$this->vue->afficher('membre_edit', $vars);
+					$this->vue->display('membre_edit.twig', $vars);
+					exit();
 				}
 				elseif($_GET['mdp']){
+					$vars['titrePage'] = 'Mot de passe oublié';
 					if(!empty($_GET['cle']) && ($membre = $membreDAO->checkCleResetPass($_GET['cle']))){
 						if(!empty($_POST)){
 							if(($res = Membre::checkLostPass($_POST))){
@@ -132,18 +137,20 @@ class Main extends Controleur{
 						else
 							$vars['res'] = array('success' => false, 'messages' => array($res));
 					}
-					$this->vue->afficher('membre_lostMDP', $vars);
+					$this->vue->display('membre_lostMDP.twig', $vars);
+					exit();
 				}
 				else{
 					header('Location: /');
 					exit();
 				}
-				break;
+				exit();
 			case 'drop':
 				$vars['active_profile'] = 1;
-				//break;
+				//exit();
 			default:
-				$this->vue->afficher('404', $vars);
+				$this->vue->display('404.twig', $vars);
+				exit();
 		}
 	}
 	
@@ -155,22 +162,26 @@ class Main extends Controleur{
 				// Si on veut consulter une technote en particulier
 				if(isset($id)){
 					$vars['technote'] = $technoteDAO->getOne(array('id_technote' => $id));
-					if($vars['technote'] !== false)
-						$this->vue->afficher('technotes_get_one', $vars);
+					if($vars['technote'] !== false){
+						$vars['titrePage'] = $vars['technote']->titre;
+						$this->vue->display('technote.twig', $vars);
+					}
 					else
-						$this->vue->afficher('404', $vars);
+						$this->vue->display('404.twig', $vars);
+					exit();
 				}
 				else{
+					$vars['titrePage'] = 'Toutes les technotes';
 					$vars['active_technotes_all'] = 1;
 					$page = !empty($_GET['page']) ? intval($_GET['page']) : 1;
 					$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 					$count = intval($technoteDAO->getCount());
-					$vars['pagination'] = new Pagination($page, $count);
+					$vars['pagination'] = new Pagination($page, $count, '/technotes/get?page=');
 
-					$vars['technotes'] = new TechnoteVue($technoteDAO->getNTechnotes($vars['pagination']->debut, NB_TECHNOTE_PAGE));
-					$this->vue->afficher('technotes_get', $vars);
+					$vars['technotes'] = $technoteDAO->getNTechnotes($vars['pagination']->debut, NB_TECHNOTE_PAGE);
+					$this->vue->display('technotes.twig', $vars);
+					exit();
 				}
-				break;
 			case 'add':
 				$vars['active_technotes'] = 1;
 				$vars['active_technotes_add'] = 1;
@@ -183,20 +194,22 @@ class Main extends Controleur{
 						$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 						$motsCles = $motCleDAO->getAll();
 						$vars['motsCles'] = $motsCles;
-						$this->vue->afficher('technotes_add', $vars);
+						$this->vue->display('technotes_add.twig', $vars);
+						exit();
 					}
 				}
 				else
-					$this->technotes('403', NULL, $vars);
-				break;
+					$this->technotes('403.twig', NULL, $vars);
+				exit();
 			case 'edit':
 				$vars['active_technotes'] = 1;
-				//break;
+				//exit();
 			case 'del':
 				$vars['active_technotes'] = 1;
-				//break;
+				//exit();
 			default:
-				$this->vue->afficher('404', $vars);
+				$this->vue->display('404.twig', $vars);
+				exit();
 		}
 	}
 
@@ -210,22 +223,24 @@ class Main extends Controleur{
 							header('Location: /membre');
 							exit();
 						}
-						$vars['connexion'] = $res;
-						$this->accueil('get', NULL, array('connexion' => $vars['connexion']));
-						break;
+						$this->accueil('get', NULL, array('msgCo' => $res));
+						exit();
 					}
-					$this->vue->afficher('403', $vars);
-					break;
+					$this->vue->display('403.twig', $vars);
+					exit();
 				default:
-					$this->vue->afficher('404', $vars);
+					$this->vue->display('404.twig', $vars);
+					exit();
 			}
 		}
-		$this->vue->afficher('403', $vars);
+		$this->vue->display('403.twig', $vars);
+		exit();
 	}
 
 	public function contact($action, $id, $vars){
 		switch($action){
 			case 'get':
+				$vars['titrePage'] = 'Contact';
 				$vars['active_contact'] = 1;
 				if(!empty($_POST)){
 					if(!$_SESSION['user'] || ($_SESSION['user'] && !empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF'])){
@@ -233,37 +248,40 @@ class Main extends Controleur{
 						$res = $contact->sendMail();
 						if($_SESSION['user'] && $res['success'] === true){
 							$res['messages'] .= ', nous vous répondrons dès que possible';
-							unset($_POST);
 						}
 						$vars['res'] = $res;
 					}
 				}
-				$this->vue->afficher('contact', $vars);
-				break;
+				$this->vue->display('contact.twig', $vars);
+				exit();
 			default:
-				$this->vue->afficher('404', $vars);
+				$this->vue->display('404.twig', $vars);
+				exit();
 		}
 	}
 
 	public function conditions($action, $id, $vars){
 		switch($action){
 			case 'get':
-				$this->vue->afficher('conditions', $vars);
-				break;
+				$vars['titrePage'] = 'Conditions d\'utilisation';
+				$this->vue->display('conditions.twig', $vars);
+				exit();
 			default:
-				$this->vue->afficher('404', $vars);
+				$this->vue->display('404.twig', $vars);
+				exit();
 		}
 	}
 
 	public function mentions($action, $id, $vars){
 		switch($action){
 			case 'get':
-				$this->vue->afficher('mentions', $vars);
-				break;
+				$vars['titrePage'] = 'Mentions légales';
+				$this->vue->display('mentions.twig', $vars);
+				exit();
 			default:
-				$this->vue->afficher('404', $vars);
+				$this->vue->display('404.twig', $vars);
+				exit();
 		}
-
 	}
 
 	public function deconnexion($action, $id, $vars){

@@ -28,14 +28,9 @@ class Mail{
 	}
 
 	private function addHeaderFooter(){
-		ob_start();
-		include('/vues/html/mail/' . $this->vue);
-		$corps = ob_get_clean();
-		$date = date('d/m/Y à H:i');
-		ob_start();
-		include('/vues/html/mail/mail_base.php');
-		$message = ob_get_clean();
-		return $message;
+		$vue = new Vue();
+		$twig = $vue->get();
+		return $twig->render('mail/' . $this->vue, $this->param);
 	}
 
 }

@@ -1,0 +1,58 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	<section class="row">
+		<div class="container-fluid">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<ul class="nav nav-tabs">
+						<li role="presentation"><a href="/membre/get">Profil</a></li>
+						<li role="presentation" class="active"><a href="/membre/edit">Modifier</a></li>
+					</ul>
+					<p class="text-center text-danger text">* champs obligatoires</p>
+					{% include 'templates/messages.twig' %}
+					<form method="POST" class="form-horizontal">
+						<div class="form-group">
+							<label for="email" class="col-sm-2 control-label">Email*</label>
+							<div class="col-sm-10">
+								<input type="email" name="email" class="form-control" id="email" placeholder="{{ session.user.email }}" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<input type="submit" class="btn btn-default" value="Valider">
+							</div>
+						</div>
+						<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+					</form>
+					<hr>
+					<form method="POST" class="form-horizontal">
+						<div class="form-group">
+							<label for="passwordNow" class="col-sm-2 control-label">Mot de passe actuel*</label>
+							<div class="col-sm-10">
+								<input type="password" name="passwordNow" class="form-control" id="passwordNow" placeholder="Mot de passe actuel" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="passwordNew" class="col-sm-2 control-label">Nouveau mot de passe*</label>
+							<div class="col-sm-10">
+								<input type="password" name="passwordNew" class="form-control" id="passwordNew" placeholder="Nouveau mot de passe" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="passwordNewConfirm" class="col-sm-2 control-label">Confirmation nouveau mot de passe*</label>
+							<div class="col-sm-10">
+								<input type="password" name="passwordNewConfirm" class="form-control" id="passwordNewConfirm" placeholder="Confirmation nouveau mot de passe" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<input type="submit" class="btn btn-default" value="Valider">
+							</div>
+						</div>
+						<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}>">
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

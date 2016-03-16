@@ -1,0 +1,19 @@
+{% extends "mail/mail_base.twig" %}
+{% block titre %}
+	{{ sujet }}
+{% endblock %}
+{% block pseudo %}
+	{{ pseudo }}
+{% endblock %}
+{% block contenu %}
+	<p>
+		{{ pseudoExpediteur }} ({% if session.user %}connecté{% else %}non connecté{% endif %}) à envoyé un formulaire de contact sur Technote.<br>
+		Email : {{ emailExpediteur }}<br>
+		Sujet : {{ sujet }}
+	</p>
+	<p>
+		Message : <br>
+	<hr>
+	{{ message | raw }}
+	<hr>
+{% endblock %}

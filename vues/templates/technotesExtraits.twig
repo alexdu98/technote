@@ -1,0 +1,30 @@
+{% for technote in technotes %}
+    {% if loop.index%3 == 0 %}
+        <div class="row">
+    {% endif %}
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="/technotes/get/{{ technote.id_technote }}">{{ technote.titre | capitalize }}</a>
+            </div>
+            <div class="panel-body">
+                <a href="/technotes/get/{{ technote.id_technote }}" class="extraitTechnote">
+                    <div class="col-md-12 text-center">
+                        <img src="{{ technote.url_image }}" alt="img" class="img-thumbnail img-technote">
+                    </div>
+                    <div class="col-md-12 text-justify">
+                        {{ technote.contenu[:383] | striptags | capitalize }}...
+                    </div>
+                </a>
+            </div>
+            <div class="panel-footer">
+                {% for motCle in technote.mot_cle %}
+                    <a href="motscles/get/{{ motCle.id_mot_cle }}">{{ motCle.label }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% if loop.index%3 == 3 or loop.last %}
+        </div>
+    {% endif %}
+{% endfor %}

@@ -1,0 +1,64 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	<section class="row">
+		<div class="container-fluid">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<p class="text-center text-danger text">* champs obligatoires</p>
+					{% include 'templates/messages.twig' %}
+					<form method="POST" class="form-horizontal">
+						<div class="form-group">
+							<label for="titre" class="col-md-2 control-label">Titre*</label>
+							<div class="col-md-10">
+								<input type="text" name="titre" class="form-control" id="titre" placeholder="Titre" maxlength="63" value="{% if post.titre is defined %}{{ post.titre }}{% endif %}" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="url_image" class="col-md-2 control-label">URL image*</label>
+							<div class="col-md-10">
+								<input type="url" name="url_image" class="form-control" id="url_image" placeholder="URL image" maxlength="1023" value="{% if post.url_image is defined %}{{ post.url_image }}{% endif %}" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="contenu" class="col-md-2 control-label">Contenu*</label>
+							<div class="col-md-10">
+								<textarea name="contenu" id="contenu" class="form-control" rows="25" cols="6"></textarea>
+							</div>
+							<script>
+				                CKEDITOR.replace('contenu');
+							</script>
+						</div>
+						<div class="form-group">
+							<label for="mots-cles" class="col-md-2 control-label">Mots-clés</label>
+							<div class="col-md-10">
+								<select name="mots-cles[]" class="form-control" id="mots-cles" multiple="multiple">
+									{% for motCle in motsCles %}
+										<option value="{{ motCle.id_mot_cle }}">{{ motCle.label }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<script>
+								$(document).ready(function() {
+									$('#mots-cles').multiselect({
+										buttonWidth: '100%',
+										nonSelectedText: 'Aucun mot-clé sélectionné',
+										nSelectedText: ' mots-clés sélectionnés',
+										filterPlaceholder: 'Rechercher un mot-clé',
+										enableFiltering: true,
+										maxHeight: 400,
+										dropUp: true
+									});
+								});
+							</script>
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-2 col-md-10">
+								<input type="submit" class="btn btn-default" value="Envoyer">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	<section class="row">
+		<div class="container-fluid">
+			{% include 'templates/pagination.twig' %}
+			{% include 'templates/technotesExtraits.twig' %}
+			{% include 'templates/pagination.twig' %}
+		</div>
+	</section>
+{% endblock %}

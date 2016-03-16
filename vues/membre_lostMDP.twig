@@ -1,0 +1,47 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	<section class="row">
+		<div class="container-fluid">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<p class="text-center text-danger text">* champs obligatoires</p>
+					{% include 'templates/messages.twig' %}
+					<form method="POST" class="form-horizontal">
+						{% if not etape is empty and etape == 'formMDP' %}
+							<div class="form-group">
+								<label for="passwordNew" class="col-sm-2 control-label">Nouveau mot de passe*</label>
+								<div class="col-sm-10">
+									<input type="password" name="passwordNew" class="form-control" id="passwordNew" placeholder="Nouveau mot de passe" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="passwordNewConfirm" class="col-sm-2 control-label">Confirmation nouveau mot de passe*</label>
+								<div class="col-sm-10">
+									<input type="password" name="passwordNewConfirm" class="form-control" id="passwordNewConfirm" placeholder="Confirmation nouveau mot de passe" required>
+								</div>
+							</div>
+						{% else %}
+						<div class="form-group">
+							<label for="pseudoEmail" class="col-sm-2 control-label">Pseudo ou email*</label>
+							<div class="col-sm-10">
+								<input type="text" name="pseudoEmail" class="form-control" id="pseudoEmail" placeholder="Pseudo ou email" required>
+							</div>
+						</div>
+						{% endif %}
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Captcha*</label>
+							<div class="col-sm-10">
+								<div class="g-recaptcha" data-sitekey="6LdIRhgTAAAAAETW0QglcOGfBb3cYMTlcYOkWozt"></div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<input type="submit" class="btn btn-default" value="Valider">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

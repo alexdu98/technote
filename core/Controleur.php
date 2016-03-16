@@ -5,7 +5,8 @@ class Controleur{
 	protected $vue;
 
 	public function __construct(){
-		$this->vue = new MainVue();
+		$twig = new Vue();
+		$this->vue = $twig->get();
 	}
 
 	/**
@@ -21,12 +22,12 @@ class Controleur{
 			return;
 		}
 		elseif($page == '_403'){
-			$vueCentrale = '403';
+			$vueCentrale = '403.twig';
 		}
 		else{
-			$vueCentrale = '404';
+			$vueCentrale = '404.twig';
 		}
-		$this->vue->afficher($vueCentrale, array());
+		$this->vue->display($vueCentrale, array());
 	}
 
 }

@@ -3,6 +3,9 @@
 // Charge le fichier de configuration
 require('config.php');
 
+// Charge l'autoloader de Composer
+require 'vendor/autoload.php';
+
 // Charge l'autoloader de classe
 require('Autoloader.php');
 Autoloader::Autoload();

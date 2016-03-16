@@ -1,0 +1,10 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	<section class="row">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				{{ technote.contenu | raw }}
+			</div>
+		</div>
+	</section>
+{% endblock %}

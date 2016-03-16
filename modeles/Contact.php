@@ -31,7 +31,7 @@ class Contact{
 				'sujet' => $this->sujet,
 				'message' => nl2br($this->message)
 			);
-			$mail = new Mail(DESTINATAIRE_MAIL_CONTACT, '[Technote.dev] Contact', 'mail_contact.php', $param);
+			$mail = new Mail(DESTINATAIRE_MAIL_CONTACT, '[Technote.dev] Contact', 'mail_contact.twig', $param);
 			if(($res = $mail->sendMail()) === true){
 				$actionDAO = new ActionDAO(BDD::getInstancePDO());
 				$action = new Action(array(
