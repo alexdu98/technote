@@ -1,3 +1,7 @@
 <?php
 
-class Technote extends TableObject{}
+class Technote extends TableObject{
+	
+	
+	
+}

@@ -187,8 +187,27 @@ class Main extends Controleur{
 				$vars['active_technotes_add'] = 1;
 				if($_SESSION['user']){
 					if(!empty($_POST)){
-						var_dump($_POST);
-						die;
+						if(!empty($_POST)){
+							if(($res = Technote::checkAdd($_POST)) === true){
+								
+								$technote = new Technote(array(
+										'titre' => $_POST['titre'],
+										'url_image' => $_POST['url_image'],
+										'contenu' => $_POST['contenu'],
+										'mot_cles' => $_POST['mot_cles']
+								));
+								if($technoteDAO->save($technote)){
+									//$this->action('Inscription');
+									$vars['res'] = array('success' => true, 'messages' => 'Inscription réussie');
+								}
+								else
+									$vars['res'] = array('success' => false, 'messages' => array('Erreur BDD'));
+							}
+							else
+								$vars['res'] = array('success' => false, 'messages' => array($res));
+						}
+						$this->vue->display('membre_add.twig', $vars);
+						exit();
 					}
 					else{
 						$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
