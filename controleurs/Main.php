@@ -33,6 +33,7 @@ class Main extends Controleur{
 				}
 				header('Location: /');
 				exit();
+				
 			case 'add':
 				$vars['titrePage'] = 'Inscription';
 				$vars['active_profile'] = 1;
@@ -49,6 +50,7 @@ class Main extends Controleur{
 				}
 				header('Location: /');
 				exit();
+				
 			case 'edit':
 				$vars['active_profile'] = 1;
 				if($_SESSION['user']){
@@ -142,44 +144,29 @@ class Main extends Controleur{
 					$this->vue->display('technotes.twig', $vars);
 				}
 				exit();
+				
 			case 'add':
 				$vars['active_technotes'] = 1;
 				$vars['active_technotes_add'] = 1;
+				
+				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+				$vars['motsCles'] = $motCleDAO->getAll();
+				
 				if($_SESSION['user']){
 					if(!empty($_POST)){
-						if(!empty($_POST)){
-							if(($res = Technote::checkAdd($_POST)) === true){
-								
-								$technote = new Technote(array(
-										'titre' => $_POST['titre'],
-										'url_image' => $_POST['url_image'],
-										'contenu' => $_POST['contenu'],
-										'mot_cles' => $_POST['mot_cles']
-								));
-								if($technoteDAO->save($technote)){
-									//$this->action('Inscription');
-									$vars['res'] = array('success' => true, 'messages' => 'Inscription réussie');
-								}
-								else
-									$vars['res'] = array('success' => false, 'messages' => array('Erreur BDD'));
-							}
-							else
-								$vars['res'] = array('success' => false, 'messages' => array($res));
+						$vars['res'] = Technote::addTechnote($_POST);
+						if($vars['res']->success === true){
+							$_POST = NULL;
+							$this->vue->display('technotes_add.twig', $vars);
 						}
-						$this->vue->display('membre_add.twig', $vars);
-						exit();
 					}
-					else{
-						$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
-						$motsCles = $motCleDAO->getAll();
-						$vars['motsCles'] = $motsCles;
-						$this->vue->display('technotes_add.twig', $vars);
-						exit();
-					}
+					else $this->vue->display('technotes_add.twig', $vars);
+					exit();
 				}
 				else
 					$this->technotes('403.twig', NULL, $vars);
 				exit();
+				
 			case 'edit':
 				$vars['active_technotes'] = 1;
 				//exit();

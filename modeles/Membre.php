@@ -59,9 +59,14 @@ class Membre extends TableObject{
 	}
 
 	static public function inscription(&$param){
+		// Verification sur les champs du formulaire
 		$resCheck = self::checkInscription($param);
 		$res = $resCheck;
+		
+		// Si le formulaire a bien ete rempli 
 		if($resCheck->success === true){
+			
+			// Creation de l'objet Membre
 			$groupeDAO = new GroupeDAO(BDD::getInstancePDO());
 			$groupe = $groupeDAO->getOneByLibelle('membre');
 			$membre = new Membre(array(
@@ -73,6 +78,8 @@ class Membre extends TableObject{
 				'bloquer' => 0
 			));
 			$membreDAO = new MembreDAO(BDD::getInstancePDO());
+			
+			// Sauvegarde de l'objet Membre dans la BDD
 			if(($resSave = $membreDAO->save($membre)) !== false){
 				$actionDAO = new ActionDAO(BDD::getInstancePDO());
 				$action = new Action(array(
