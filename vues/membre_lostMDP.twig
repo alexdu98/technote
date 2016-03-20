@@ -7,7 +7,7 @@
 					<p class="text-center text-danger text">* champs obligatoires</p>
 					{% include 'templates/messages.twig' %}
 					<form method="POST" class="form-horizontal">
-						{% if not etape is empty and etape == 'formMDP' %}
+						{% if etape == 'formMDP' %}
 							<div class="form-group">
 								<label for="passwordNew" class="col-sm-2 control-label">Nouveau mot de passe*</label>
 								<div class="col-sm-10">

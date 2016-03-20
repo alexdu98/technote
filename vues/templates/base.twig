@@ -14,6 +14,7 @@
 	<script src="/assets/librairies/ckeditor/ckeditor.js"></script>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<script type="text/javascript" src="/assets/librairies/multiselect/multiselect.js"></script>
+	<script type="text/javascript" src="/assets/librairies/jquery/ajaxForm.js"></script>
 	<script src='/assets/js/main.js'></script>
 </head>
 <body>
@@ -32,7 +33,7 @@
 									<div class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon"><img src="/assets/images/pseudo.png" alt="Pseudo"></span>
-											<input type="text" name="pseudo" class="form-control" placeholder="Pseudo" value="{% if post.pseudo is defined %}{{ post.pseudo }}{% endif %}" required>
+											<input type="text" name="pseudo" class="form-control" placeholder="Pseudo" value="{{ post.pseudo }}" required>
 										</div>
 									</div>
 									<div class="form-group">
@@ -56,7 +57,7 @@
 										</div>
 									</div>
 								</div>
-								{% if not msgCo is empty %}
+								{% if msgCo %}
 									<div class="col-md-12 text-center">
 										<div class="badLogin">{{ msgCo.message }}</div>
 									</div>

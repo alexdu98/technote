@@ -11,11 +11,9 @@
 					<div class="col-md-8">
 						<p>
 							Connexion automatique sur {{ profil.nbTokenActif }} navigateur(s) <br>
-							{% if profil.tokenActif %}
-								{% for token in profil.tokenActif %}
-									IP de création : {{ token.ip }} / Expire le {{ token.date_expiration }} : <a class="deleteToken">se déconnecter</a><br>
-								{% endfor %}
-							{% endif %}
+							{% for token in profil.tokenActif %}
+								IP de création : {{ token.ip }} / Expire le {{ token.date_expiration }} : <a class="deleteToken">se déconnecter</a><br>
+							{% endfor %}
 						</p>
 						<br>
 						<p>

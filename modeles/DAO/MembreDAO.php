@@ -53,8 +53,10 @@ class MembreDAO extends DAO{
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
 			$req = 'INSERT INTO membre(' . $champs .') VALUES(' . $valeurs .')';
-			$res = $this->pdo->exec($req);
-			$membre->id_membre = $this->pdo->lastInsertId();
+			if(($res = $this->pdo->exec($req)) !== false){
+				$membre->id_membre = $this->pdo->lastInsertId();
+				return $membre;
+			}
 			return $res;
 		}
 		else{
@@ -87,7 +89,6 @@ class MembreDAO extends DAO{
 	public function connexion($pseudo){
 		$this->pdo->exec("UPDATE membre SET date_connexion = NOW() WHERE pseudo = '$pseudo'");
 		return $this->getOneByPseudo($pseudo);
-
 	}
 
 	public function checkMembreExiste($pseudoEmail){

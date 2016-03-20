@@ -8,22 +8,24 @@ class Contact{
 	private $message;
 	private $captcha;
 
-	public function __construct($param){
+	public function __construct(&$param){
 		if($_SESSION['user']){
 			$this->pseudo = $_SESSION['user']->pseudo;
 			$this->email = $_SESSION['user']->email;
 		}
 		else{
-			$this->pseudo = !empty($param['pseudo']) ? $param['pseudo'] : NULL;
-			$this->email = !empty($param['email']) ? $param['email'] : NULL;
-			$this->captcha = !empty($param['g-recaptcha-response']) ? $param['g-recaptcha-response'] : NULL;
+			$this->pseudo = $param['pseudo'];
+			$this->email = $param['email'];
+			$this->captcha = $param['g-recaptcha-response'];
 		}
-		$this->sujet = !empty($param['sujet']) ? $param['sujet'] : NULL;
-		$this->message = !empty($param['message']) ? $param['message'] : NULL;
+		$this->sujet = $param['sujet'];
+		$this->message = $param['message'];
 	}
 
 	public function sendMail(){
-		if(($res = $this->check()) === true){
+		$resCheck = $this->check();
+		$res = $resCheck;
+		if($resCheck->success === true){
 			$param = array(
 				'pseudo' => 'Admin',
 				'pseudoExpediteur' => $this->pseudo,
@@ -32,7 +34,10 @@ class Contact{
 				'message' => nl2br($this->message)
 			);
 			$mail = new Mail(DESTINATAIRE_MAIL_CONTACT, '[Technote.dev] Contact', 'mail_contact.twig', $param);
-			if(($res = $mail->sendMail()) === true){
+			$resMail = $mail->sendMail();
+			$res->success = $resCheck->success && $resMail->success;
+			$res->msg = array_merge($res->msg, $resMail->msg);
+			if($resMail->success === true){
 				$actionDAO = new ActionDAO(BDD::getInstancePDO());
 				$action = new Action(array(
 					'id_action' => DAO::UNKNOWN_ID,
@@ -41,30 +46,30 @@ class Contact{
 				));
 				$actionDAO->save($action);
 			}
-			return $res;
 		}
-		return array('success' => false, 'messages' => $res);
+		return $res;
 	}
 
 	private function check(){
-		$tab = array();
+		$std = (object) array('success' => false, 'msg' => array());
+
 		if(!$_SESSION['user']){
 			if(($res = Membre::checkPseudo($this->pseudo)) !== true)
-				$tab[] = $res;
+				$std->msg[] = $res;
 			if(($res = Membre::checkEmail($this->email)) !== true)
-				$tab[] = $res;
-			if(($res = Captcha::check($this->captcha)) !== true)
-				$tab[] = $res;
+				$std->msg[] = $res;
+			$captcha = new Captcha();
+			if(($res = $captcha->check($this->captcha)) !== true)
+				$std->msg[] = $res;
 		}
 		if(($res = $this->checkSujet($this->sujet)) !== true)
-			$tab[] = $res;
+			$std->msg[] = $res;
 		if(($res = $this->checkMessage($this->message)) !== true)
-			$tab[] = $res;
+			$std->msg[] = $res;
 
-		if(!empty($tab))
-			return $tab;
-		else
-			return true;
+		if(empty($std->msg))
+			$std->success = true;
+		return $std;
 	}
 
 	private function checkMessage($message){

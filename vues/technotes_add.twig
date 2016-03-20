@@ -10,13 +10,13 @@
 						<div class="form-group">
 							<label for="titre" class="col-md-2 control-label">Titre*</label>
 							<div class="col-md-10">
-								<input type="text" name="titre" class="form-control" id="titre" placeholder="Titre" maxlength="63" value="{% if post.titre is defined %}{{ post.titre }}{% endif %}" required>
+								<input type="text" name="titre" class="form-control" id="titre" placeholder="Titre" maxlength="63" value="{{ post.titre }}" required>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="url_image" class="col-md-2 control-label">URL image*</label>
 							<div class="col-md-10">
-								<input type="url" name="url_image" class="form-control" id="url_image" placeholder="URL image" maxlength="1023" value="{% if post.url_image is defined %}{{ post.url_image }}{% endif %}" required>
+								<input type="url" name="url_image" class="form-control" id="url_image" placeholder="URL image" maxlength="1023" value="{{ post.url_image }}" required>
 							</div>
 						</div>
 						<div class="form-group">
