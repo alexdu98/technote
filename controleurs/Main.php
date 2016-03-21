@@ -78,28 +78,14 @@ class Main extends Controleur{
 						$vars['etape'] = 'formMDP';
 						$this->vue->display('membre_lostMDP.twig', $vars);
 						exit();
-					} // TODO verif les captchas
+					}
 					elseif(!empty($_GET['cle'])){
 						$this->vue->display('membre_lostMDP.twig', $vars);
 						exit();
 					}
 					elseif(!empty($_POST)){
-						$captcha = new Captcha();
-						if(($res = $captcha->check($_POST['g-recaptcha-response'])) === true){
-							if(($res = $membreDAO->checkMembreExiste($_POST['pseudoEmail'])) !== false){
-								$membre = $res;
-								if(($res = $membre->lostPass()) === true){
-									//$this->action('Oubli de mot de passe (création de la clé)', $membre->id_membre);
-									$vars['res'] = array('success' => true, 'messages' => 'Un email vous a été envoyé, merci de suivre les instructions');
-								}
-								else
-									$vars['res'] = array('success' => false, 'messages' => array($res));
-							}
-							else
-								$vars['res'] = array('success' => false, 'messages' => array('Le pseudo ou l\'email n\'existe pas'));
-						}
-						else
-							$vars['res'] = array('success' => false, 'messages' => array($res));
+						$vars['res'] = Membre::sendMailLostPass($_POST);
+						$this->vue->display('membre_lostMDP.twig', $vars);
 					}
 					$this->vue->display('membre_lostMDP.twig', $vars);
 					exit();
@@ -148,6 +134,7 @@ class Main extends Controleur{
 			case 'add':
 				$vars['active_technotes'] = 1;
 				$vars['active_technotes_add'] = 1;
+				$vars['titrePage'] = 'Ajouter une technote';
 				
 				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 				$vars['motsCles'] = $motCleDAO->getAll();

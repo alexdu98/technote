@@ -35,4 +35,9 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
+
+	// Configuration pour les codes
+    config.extraPlugins = 'codesnippetgeshi';
+	config.codeSnippetGeshi_url = '/assets/librairies/ckeditor/colorize.php';
+	config.codeSnippet_theme = 'monokai_sublime';
 };

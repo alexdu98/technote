@@ -56,6 +56,7 @@ class Membre extends TableObject{
 			$std->message = 'Erreur BDD';
 		}
 		$std->message = 'Couple login / mot de passe incorrect';
+		return $std;
 	}
 
 	static public function inscription(&$param){
@@ -102,16 +103,18 @@ class Membre extends TableObject{
 	static private function checkInscription(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
-		if(($res = Membre::checkPseudo($param['pseudo'])) !== true)
-			$std->msg[] = $res;
-		if(($res = Membre::checkEmail($param['email'])) !== true)
-			$std->msg[] = $res;
-		if(($res = Membre::checkPass($param['password'], $param['passwordConfirm'])) !== true)
-			$std->msg[] = $res;
-		if(($res = Membre::checkConditions($param['conditions'])) !== true)
-			$std->msg[] = $res;
 		$captcha = new Captcha();
-		if(($res = $captcha->check($param['g-recaptcha-response'])) !== true)
+		if(($res = $captcha->check($param['g-recaptcha-response'])) === true){
+			if(($res = Membre::checkPseudo($param['pseudo'])) !== true)
+				$std->msg[] = $res;
+			if(($res = Membre::checkEmail($param['email'])) !== true)
+				$std->msg[] = $res;
+			if(($res = Membre::checkPass($param['password'], $param['passwordConfirm'])) !== true)
+				$std->msg[] = $res;
+			if(($res = Membre::checkConditions($param['conditions'])) !== true)
+				$std->msg[] = $res;
+		}
+		else
 			$std->msg[] = $res;
 
 		if(empty($std->msg))
@@ -203,10 +206,12 @@ class Membre extends TableObject{
 	private function checkResetPassword(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
-		if(($res = Membre::checkPass($param['passwordNew'], $param['passwordNewConfirm'])) !== true)
-			$std->msg[] = $res;
 		$captcha = new Captcha();
-		if(($res = $captcha->check($param['g-recaptcha-response'])) !== true)
+		if(($res = $captcha->check($param['g-recaptcha-response'])) === true){
+			if(($res = Membre::checkPass($param['passwordNew'], $param['passwordNewConfirm'])) !== true)
+				$std->msg[] = $res;
+		}
+		else
 			$std->msg[] = $res;
 
 		if(empty($std->msg))
@@ -269,20 +274,65 @@ class Membre extends TableObject{
 		return 'Les conditions d\'utilisation ne sont pas acceptées';
 	}
 
-	public function lostPass(){
-		$cle = hash('sha256', uniqid(rand(), true) . SALT_RESET_PASS);
-		$membreDAO = new MembreDAO(BDD::getInstancePDO());
-		$membre = new membre(array(
-			'id_membre' => $this->id_membre,
-			'cle_reset_pass' => $cle
-		));
-		$membreDAO->save($membre);
-		$param = array(
-			'pseudo' => $this->pseudo,
-			'cle' => $cle
-		);
-		$mail = new Mail($this->email, '[Technote.dev] Oubli de mot de passe', 'mail_lostPass.twig', $param);
-		return $mail->sendMail();
+	static public function checkSendMailLostPass(&$param){
+		$std = (object) array('success' => false, 'msg' => array());
+
+		$captcha = new Captcha();
+		if(($res = $captcha->check($param['g-recaptcha-response'])) === true){
+			$membreDAO = new MembreDAO(BDD::getInstancePDO());
+			if(empty($param['pseudoEmail'])){
+				$std->msg[] = 'Le pseudo ou l\'email n\'est pas renseigné';
+				return $std;
+			}
+			if(($res = $membreDAO->checkMembreExiste($param['pseudoEmail'])) === false)
+				$std->msg[] = 'Le pseudo ou l\'email n\'existe pas';
+			else
+				return $res;
+		}
+		else
+			$std->msg[] = $res;
+
+		return $std;
+	}
+
+	static public function sendMailLostPass(&$param){
+		$resCheck = self::checkSendMailLostPass($param);
+		$res = $resCheck;
+		if(!isset($resCheck->success)){
+			$membreRes = $resCheck;
+			$cle = hash('sha256', uniqid(rand(), true) . SALT_RESET_PASS);
+			$membreDAO = new MembreDAO(BDD::getInstancePDO());
+			$membre = new membre(array(
+				'id_membre' => $membreRes->id_membre,
+				'cle_reset_pass' => $cle
+			));
+			if(($resSave = $membreDAO->save($membre)) !== false){
+				$param = array(
+					'pseudo' => $membreRes->pseudo,
+					'sujet' => 'Oubli de mot de passe',
+					'cle' => $cle
+				);
+				$mail = new Mail($membreRes->email, '[Technote.dev] Oubli de mot de passe', 'mail_lostPass.twig', $param);
+				$resMail = $mail->sendMail();
+				$res = $resMail;
+				if($resMail->success === true){
+					$actionDAO = new ActionDAO(BDD::getInstancePDO());
+					$action = new Action(array(
+						'id_action' => DAO::UNKNOWN_ID,
+						'libelle' => 'Oubli de mot de passe (création de la clé)',
+						'id_membre' => $membreRes->id_membre
+					));
+					$actionDAO->save($action);
+					$res->success = true;
+					$res->msg[0] = 'Un email vous a été envoyé, merci de suivre les instructions';
+				}
+			}
+			else{
+				$res->success = false;
+				$res->msg[] = 'Erreur BDD';
+			}
+		}
+		return $res;
 	}
 
 }
