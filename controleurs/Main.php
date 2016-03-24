@@ -176,12 +176,10 @@ class Main extends Controleur{
 						$vars['res'] = Technote::addTechnote($_POST);
 						if($vars['res']->success === true){
 							$_POST = NULL;
-							$this->vue->display('technotes_add.twig', $vars);
+							$this->vue->addGlobal('post', $_POST);
 						}
 					}
-					// Sinon formulaire de création d'une technote
-					else
-						$this->vue->display('technotes_add.twig', $vars);
+					$this->vue->display('technotes_add.twig', $vars);
 					exit();
 				}
 				else

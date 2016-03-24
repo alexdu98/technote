@@ -14,8 +14,10 @@ class MotCleDAO extends DAO{
 		$req->execute(array(
 			'id_mot_cle' => $id['id_mot_cle']
 		));
-		$res = $req->fetch();
-		return new MotCle($res);
+		if(($res = $req->fetch()) !== false)
+			return new MotCle(get_object_vars($res));
+		else
+			return false;
 	}
 
 	public function getAll(){

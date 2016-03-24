@@ -13,7 +13,7 @@
                         <img src="{{ technote.url_image }}" alt="img" class="img-thumbnail img-technote">
                     </div>
                     <div class="col-md-12 text-justify">
-                        {{ technote.contenu[:383] | striptags | capitalize }}...
+	                    {{ technote.contenu[:383] | capitalize | striptags | raw }}...
                     </div>
                 </a>
             </div>

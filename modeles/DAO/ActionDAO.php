@@ -43,7 +43,6 @@ class ActionDAO extends DAO{
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			
 			$req = 'INSERT INTO action(' . $champs .') VALUES(' . $valeurs .')';
 			$res = $this->pdo->exec($req);
 			$action->id_action = $this->pdo->lastInsertId();

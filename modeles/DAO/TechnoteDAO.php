@@ -48,19 +48,6 @@ class TechnoteDAO extends DAO{
 	}
 
 	public function save($technote){
-		// Pour implementer la methode save de DAO (car DAO est une classe abstraite)
-	}
-	
-	public function delete($technote){
-		return $this->pdo->exec("DELETE FROM technote 
-								WHERE id_technote = '$technote->id_technote'");
-	}
-
-	// #######################################
-	// ######## MÉTHODES PERSONNELLES ########
-	// #######################################
-
-	public function saveTechnote($technote, $mot_cles){
 		if($technote->id_technote == DAO::UNKNOWN_ID){
 			$champs = $valeurs = '';
 			foreach($technote as $nomChamp => $valeur){
@@ -72,22 +59,12 @@ class TechnoteDAO extends DAO{
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
 			$req = 'INSERT INTO technote(' . $champs .') VALUES(' . $valeurs .')';
-			$res = $this->pdo->exec($req);
-			$technote->id_technote = $this->pdo->lastInsertId();
-
-			if($res !== false){
-				foreach ($mot_cles as $id_mot_cle){
-					$req = $this->pdo->prepare('INSERT INTO decrire(id_technote, id_mot_cle) VALUES(:id_technote , :id_mot_cle)');
-
-					$req->bindValue(':id_technote', $technote->id_technote, PDO::PARAM_INT);
-					$req->bindValue(':id_mot_cle', $id_mot_cle, PDO::PARAM_INT);
-
-					if(($res = $req->execute()) === false){
-						return $res;
-					}
-				}
+			if(($res = $this->pdo->exec($req)) !== false){
+				$technote->id_technote = $this->pdo->lastInsertId();
+				return $technote;
 			}
-			return $res;
+			else
+				return false;
 		}
 		else{
 			$id_technote = $technote->id_technote;
@@ -101,6 +78,15 @@ class TechnoteDAO extends DAO{
 			return $this->pdo->exec($req);
 		}
 	}
+	
+	public function delete($technote){
+		return $this->pdo->exec("DELETE FROM technote 
+								WHERE id_technote = '$technote->id_technote'");
+	}
+
+	// #######################################
+	// ######## MÉTHODES PERSONNELLES ########
+	// #######################################
 
 	/**
 	 * Récupère le nombre de technotes d'un membre

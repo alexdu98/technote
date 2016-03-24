@@ -22,7 +22,7 @@
 						<div class="form-group">
 							<label for="contenu" class="col-md-2 control-label">Contenu*</label>
 							<div class="col-md-10">
-								<textarea name="contenu" id="contenu" class="form-control" rows="25" cols="6"></textarea>
+								<textarea name="contenu" id="contenu" class="form-control" rows="25" cols="10">{{ post.contenu }}</textarea>
 							</div>
 							<script>
 				                CKEDITOR.replace('contenu');
@@ -31,9 +31,9 @@
 						<div class="form-group">
 							<label for="mots-cles" class="col-md-2 control-label">Mots-clés</label>
 							<div class="col-md-10">
-								<select name="mots-cles[]" class="form-control" id="mots-cles" multiple="multiple">
+								<select name="id_mot_cle[]" class="form-control" id="mots-cles" multiple="multiple">
 									{% for motCle in motsCles %}
-										<option value="{{ motCle.id_mot_cle }}">{{ motCle.label }}</option>
+										<option value="{{ motCle.id_mot_cle }}" {% if motCle.id_mot_cle in post.id_mot_cle %}selected{% endif %}>{{ motCle.label }}</option>
 									{% endfor %}
 								</select>
 							</div>
