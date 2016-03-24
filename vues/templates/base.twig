@@ -50,7 +50,7 @@
 								<div class="col-md-12 text-right conteneurLiensCo">
 									<div class="col-md-9 text-right liensCo">
 										• <a href="/membre/add">S'inscrire</a>
-										• <a href="/membre/edit?mdp=1">Mot de passe oublié</a> •
+										• <a href="/membre/edit">Mot de passe oublié</a> •
 									</div>
 									<div class="col-md-3 liensCo">
 										<div class="checkbox">
@@ -98,7 +98,7 @@
 								</ul>
 							</li>
 							{% if session.user %}
-								<li class="{% if active_profile %}active{% endif %}"><a href="/membre">Profil</a></li>
+								<li class="{% if active_profil %}active{% endif %}"><a href="/membre">Profil</a></li>
 							{% endif %}
 							<li class="{% if active_contact %}active{% endif %}"><a href="/contact">Contact</a></li>
 						</ul>
