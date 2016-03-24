@@ -4,6 +4,7 @@
  * Fichier de configuration
  */
 
+// Indique l'encodage locale à PHP
 mb_internal_encoding("UTF-8");
 
 // BASE DE DONNEES
