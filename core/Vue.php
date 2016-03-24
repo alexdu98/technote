@@ -2,8 +2,15 @@
 
 class Vue{
 
+	/**
+	 * @var \Twig_Environment La vue Twig
+	 */
 	protected $twig;
 
+	/**
+	 * Constructeur de Vue
+	 * Charge la vue Twig, et rempli les variables server, session, post, get
+	 */
 	public function __construct(){
 		// Défini le dossier des templates pour Twig
 		$loader = new Twig_Loader_Filesystem('vues');
@@ -15,6 +22,9 @@ class Vue{
 		$this->twig->addGlobal('get', $_GET);
 	}
 
+	/**
+	 * @return \Twig_Environment La vue Twig
+	 */
 	public function get(){
 		return $this->twig;
 	}

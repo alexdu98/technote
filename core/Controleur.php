@@ -2,8 +2,15 @@
 
 class Controleur{
 
+	/**
+	 * @var \Twig_Environment La vue Twig
+	 */
 	protected $vue;
 
+	/**
+	 * Constructeur de Controleur
+	 * Charge une vue Twig
+	 */
 	public function __construct(){
 		$twig = new Vue();
 		$this->vue = $twig->get();

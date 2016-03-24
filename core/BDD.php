@@ -22,7 +22,7 @@ class BDD{
 				self::$pdo = new PDO('mysql:dbname=' . DB_NAME . ';host=' . DB_HOST, DB_USER, DB_PASS);
 				self::$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ); // le fetch() retourne des objets std par défaut
 				self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Les erreurs sont traitées comme exception
-				self::$pdo->exec("SET NAMES UTF8");
+				self::$pdo->exec("SET NAMES UTF8"); // Les échanges se font en UTF8
 			}catch(PDOException $e){
 				die('Problème de base de données');
 			}
