@@ -5,6 +5,10 @@
  */
 class MotCleDAO extends DAO{
 
+	// #######################################
+	// ########## MÉTHODES HÉRITÉES ##########
+	// #######################################
+
 	public function getOne(array $id){
 		$req = $this->pdo->prepare('SELECT * FROM mot_cle WHERE id_mot_cle = :id_mot_cle');
 		$req->execute(array(
@@ -58,5 +62,9 @@ class MotCleDAO extends DAO{
 	public function delete($motCle){
 		return $this->pdo->exec("DELETE FROM mot_cle WHERE id_mot_cle = '$motCle->id_mot_cle'");
 	}
+
+	// #######################################
+	// ######## MÉTHODES PERSONNELLES ########
+	// #######################################
 
 }

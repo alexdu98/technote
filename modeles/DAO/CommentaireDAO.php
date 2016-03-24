@@ -5,6 +5,10 @@
  */
 class CommentaireDAO extends DAO{
 
+	// #######################################
+	// ########## MÉTHODES HÉRITÉES ##########
+	// #######################################
+
 	public function getOne(array $id){
 		$req = $this->pdo->prepare('SELECT * FROM commentaire WHERE id_commentaire = :id_commentaire');
 		$req->execute(array(
@@ -59,6 +63,15 @@ class CommentaireDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM commentaire WHERE id_commentaire = '$commentaire->id_commentaire'");
 	}
 
+	// #######################################
+	// ######## MÉTHODES PERSONNELLES ########
+	// #######################################
+
+	/**
+	 * Récupère le nombre de commentaires d'un membre
+	 * @param int $id_auteur L'identifiant du membre
+	 * @return int Le nombre de commentaires du membre
+	 */
 	public function getNbRedige($id_auteur){
 		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM commentaire WHERE id_auteur = :id_auteur');
 		$req->execute(array(

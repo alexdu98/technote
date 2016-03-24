@@ -5,6 +5,10 @@
  */
 class VisiteDAO extends DAO{
 
+	// #######################################
+	// ########## MÉTHODES HÉRITÉES ##########
+	// #######################################
+
 	public function getOne(array $id){
 		$req = $this->pdo->prepare('SELECT * FROM visite WHERE id_visite = :id_visite');
 		$req->execute(array(
@@ -65,29 +69,16 @@ class VisiteDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM visite WHERE id_visite = '$visite->id_visite'");
 	}
 
+	// #######################################
+	// ######## MÉTHODES PERSONNELLES ########
+	// #######################################
 
-
-	public function checkVisite($visite){
-		/*
-		 * @param : Un objet de la classe Visite.
-		 * 
-		 * @action : Sauvegarde la visite dans la BDD, si
-		 * celle-ci remonte a plus d'une heure.
-		 */
-		$lastVisite = $this->getLastVisite($visite->ip);
-		$timeStamp1Heure = time() - NB_SEC_ENTRE_2_VISITES;
-		
-		if($lastVisite === false){
-			// Si c'est la premiere fois que le client vient sur le site
-			$lastVisite = new stdClass();
-			$lastVisite->date_visite = 1;
-		}
-		if(strtotime($lastVisite->date_visite) <= $timeStamp1Heure){
-			$this->save($visite);
-		}
-	}
-
-	private function getLastVisite($ip){
+	/**
+	 * Récupère la dernière visite d'une IP
+	 * @param string $ip L'IP
+	 * @return bool|Visite False si première visite, la dernière Visite sinon
+	 */
+	public function getLastVisite($ip){
 		$req = $this->pdo->prepare('SELECT * FROM visite WHERE ip = :ip ORDER BY date_visite DESC LIMIT 1');
 		$req->execute(array(
 			'ip' => $ip

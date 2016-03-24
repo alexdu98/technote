@@ -5,6 +5,10 @@
  */
 class MembreDAO extends DAO{
 
+	// #######################################
+	// ########## MÉTHODES HÉRITÉES ##########
+	// #######################################
+
 	public function getOne(array $id){
 		$req = $this->pdo->prepare('SELECT * FROM membre WHERE id_membre = :id_membre');
 		$req->execute(array(
@@ -14,16 +18,6 @@ class MembreDAO extends DAO{
 			unset($res->password, $res->cle_reset_pass);
 			return new Membre(get_object_vars($res));
 		}
-		return false;
-	}
-
-	public function getOneByPseudo($pseudo){
-		$req = $this->pdo->prepare('SELECT id_membre, pseudo, email, g.libelle groupe, bloquer, DATE_FORMAT(date_inscription, "%d/%m/%Y à %Hh%i") date_inscription, DATE_FORMAT(date_connexion, "%d/%m/%Y à %Hh%i") date_connexion FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE pseudo = :pseudo');
-		$req->execute(array(
-			'pseudo' => $pseudo
-		));
-		if(($res = $req->fetch()) !== false)
-			return new Membre(get_object_vars($res));
 		return false;
 	}
 
@@ -76,6 +70,31 @@ class MembreDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM membre WHERE id_membre = '$membre->id_membre'");
 	}
 
+	// #######################################
+	// ######## MÉTHODES PERSONNELLES ########
+	// #######################################
+
+	/**
+	 * Récupère un Membre grâce à son pseudo
+	 * @param string $pseudo Le pseudo du membre à récupérer
+	 * @return bool|\Membre False si aucun membre avec ce pseudo, Membre sinon
+	 */
+	public function getOneByPseudo($pseudo){
+		$req = $this->pdo->prepare('SELECT id_membre, pseudo, email, g.libelle groupe, bloquer, DATE_FORMAT(date_inscription, "%d/%m/%Y à %Hh%i") date_inscription, DATE_FORMAT(date_connexion, "%d/%m/%Y à %Hh%i") date_connexion FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE pseudo = :pseudo');
+		$req->execute(array(
+			'pseudo' => $pseudo
+		));
+		if(($res = $req->fetch()) !== false)
+			return new Membre(get_object_vars($res));
+		return false;
+	}
+
+	/**
+	 * Vérifie le mot de passe d'un membre
+	 * @param string $pseudo Le pseudo du membre
+	 * @param string $pass Le mot de passe du membre
+	 * @return bool False si le mot de passe ne correspond pas, True sinon
+	 */
 	public function checkUserPass($pseudo, $pass){
 		$req = $this->pdo->prepare('SELECT password FROM membre WHERE pseudo = :pseudo');
 		$req->execute(array(
@@ -86,11 +105,21 @@ class MembreDAO extends DAO{
 		return false;
 	}
 
+	/**
+	 * Modifie la date de dernière connexion d'un membre
+	 * @param string $pseudo Le pseudo du membre que l'on doit mettre à jour
+	 * @return bool|Membre False si aucun membre avec ce pseudo, Membre sinon
+	 */
 	public function connexion($pseudo){
 		$this->pdo->exec("UPDATE membre SET date_connexion = NOW() WHERE pseudo = '$pseudo'");
 		return $this->getOneByPseudo($pseudo);
 	}
 
+	/**
+	 * Vérifie qu'un pseudo ou email existe
+	 * @param string $pseudoEmail Un pseudo ou un email
+	 * @return bool|\Membre False si aucun membre avec ce pseudo ou email, Membre sinon
+	 */
 	public function checkMembreExiste($pseudoEmail){
 		$req = $this->pdo->prepare('SELECT id_membre, pseudo, email FROM membre WHERE pseudo = :pseudoEmail OR email = :pseudoEmail');
 		$req->execute(array(
@@ -102,6 +131,11 @@ class MembreDAO extends DAO{
 			return false;
 	}
 
+	/**
+	 * Vérifie la clé de réinitialisation du mot de passe
+	 * @param string $cle La clé de réinitialisation
+	 * @return bool|\Membre False si aucun membre avec cette clé, le Membre de la clé sinon
+	 */
 	public function checkCleResetPass($cle){
 		$req = $this->pdo->prepare('SELECT id_membre FROM membre WHERE cle_reset_pass = :cle_reset_pass');
 		$req->execute(array(

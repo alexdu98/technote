@@ -5,6 +5,10 @@
  */
 class ActionDAO extends DAO{
 
+	// #######################################
+	// ########## MÉTHODES HÉRITÉES ##########
+	// #######################################
+
 	public function getOne(array $id){
 		$req = $this->pdo->prepare('SELECT * FROM action WHERE id_action = :id_action');
 		$req->execute(array(
@@ -62,6 +66,15 @@ class ActionDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM action WHERE id_action = '$action->id_action'");
 	}
 
+	// #######################################
+	// ######## MÉTHODES PERSONNELLES ########
+	// #######################################
+
+	/**
+	 * Récupère les dernières actions d'un membre
+	 * @param int $id_membre L'identifiant du membre
+	 * @return array Le tableau des dernières actions du membre
+	 */
 	public function getLast($id_membre){
 		$res = array();
 		$req = $this->pdo->prepare('SELECT libelle, DATE_FORMAT(date_action, "%d/%m/%Y à %Hh%i") date_action FROM action WHERE id_membre = :id_membre ORDER BY date_action DESC LIMIT 10');

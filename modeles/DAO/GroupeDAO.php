@@ -5,6 +5,10 @@
  */
 class GroupeDAO extends DAO{
 
+	// #######################################
+	// ########## MÉTHODES HÉRITÉES ##########
+	// #######################################
+
 	public function getOne(array $id){
 		$req = $this->pdo->prepare('SELECT * FROM groupe WHERE id_groupe = :id_groupe');
 		$req->execute(array(
@@ -59,6 +63,15 @@ class GroupeDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM groupe WHERE id_groupe = '$groupe->id_groupe'");
 	}
 
+	// #######################################
+	// ######## MÉTHODES PERSONNELLES ########
+	// #######################################
+
+	/**
+	 * Récupère un Groupe
+	 * @param string $libelle Le libellé du groupe
+	 * @return Groupe Le Groupe
+	 */
 	public function getOneByLibelle($libelle){
 		$req = $this->pdo->prepare('SELECT * FROM groupe WHERE libelle = :libelle');
 		$req->execute(array(

@@ -23,9 +23,8 @@ if(empty($_SESSION['jetonCSRF']))
 	$_SESSION['jetonCSRF'] = hash('sha1', uniqid(rand(), true) . SALT_JETON_CSRF);
 
 // Enregistre la visite si c'est la premiere de cette heure
-$visiteDAO = new VisiteDAO(BDD::getInstancePDO());
 $visite = new Visite(array('id_visite' => DAO::UNKNOWN_ID, 'ip' => $_SERVER['REMOTE_ADDR']));
-$visiteDAO->checkVisite($visite);
+$visite->checkVisite($visite);
 
 // Récupération de l'URL
 $controleur = $_GET['url_controleur'];

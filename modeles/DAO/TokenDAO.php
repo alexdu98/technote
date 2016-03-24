@@ -5,6 +5,10 @@
  */
 class TokenDAO extends DAO{
 
+	// #######################################
+	// ########## MÉTHODES HÉRITÉES ##########
+	// #######################################
+
 	public function getOne(array $id){
 		$req = $this->pdo->prepare('SELECT * FROM token WHERE id_token = :id_token');
 		$req->execute(array(
@@ -59,6 +63,14 @@ class TokenDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM token WHERE id_token = '$token->id_token'");
 	}
 
+	// #######################################
+	// ######## MÉTHODES PERSONNELLES ########
+	// #######################################
+
+	/**
+	 * Vérifie si un cookie de connexion est présent et est valide
+	 * Si oui remplie la variable de session avec un Membre, sinon session = False et destruction cookie
+	 */
 	public function checkToken(){
 		if(!empty($_COOKIE['token'])){
 			$req = $this->pdo->prepare('SELECT M.id_membre, pseudo, email, bloquer, G.libelle 
@@ -78,6 +90,11 @@ class TokenDAO extends DAO{
 		$_SESSION['user'] = false;
 	}
 
+	/**
+	 * Récupère le nombre de token actif d'un membre
+	 * @param int $id_membre L'identifiant du membre
+	 * @return int Le nombre de token actif du membre
+	 */
 	public function getNbActif($id_membre){
 		$req = $this->pdo->prepare('SELECT COUNT(*) nbActif FROM token WHERE id_membre = :id_membre AND date_expiration > NOW()');
 		$req->execute(array(
@@ -87,6 +104,11 @@ class TokenDAO extends DAO{
 		return $res->nbActif;
 	}
 
+	/**
+	 * Récupère les tokens actifs
+	 * @param int $id_membre L'identifiant du membre
+	 * @return array|bool False si aucun token actif, un tableau de Token sinon
+	 */
 	public function getActif($id_membre){
 		$req = $this->pdo->prepare('SELECT ip, DATE_FORMAT(date_expiration, "%d/%m/%Y à %Hh%i") date_expiration FROM token WHERE id_membre = :id_membre AND date_expiration > NOW() LIMIT 5');
 		$req->execute(array(

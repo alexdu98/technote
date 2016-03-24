@@ -5,6 +5,10 @@
  */
 class ReponseDAO extends DAO{
 
+	// #######################################
+	// ########## MÉTHODES HÉRITÉES ##########
+	// #######################################
+
 	public function getOne(array $id){
 		$req = $this->pdo->prepare('SELECT * FROM reponse WHERE id_reponse = :id_reponse');
 		$req->execute(array(
@@ -59,6 +63,15 @@ class ReponseDAO extends DAO{
 		return $this->pdo->exec("DELETE FROM reponse WHERE id_reponse = '$reponse->id_reponse'");
 	}
 
+	// #######################################
+	// ######## MÉTHODES PERSONNELLES ########
+	// #######################################
+
+	/**
+	 * Récupère le nombre de réponses d'un membre
+	 * @param int $id_auteur L'identifiant du membre
+	 * @return int Le nombre de réponses du membre
+	 */
 	public function getNbRedige($id_auteur){
 		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM reponse WHERE id_auteur = :id_auteur');
 		$req->execute(array(

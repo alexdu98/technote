@@ -153,7 +153,7 @@ class Main extends Controleur{
 					// On créé la pagination
 					$vars['pagination'] = new Pagination($page, $count, '/technotes/get?page=');
 					// On récupère les technotes
-					$vars['technotes'] = $technoteDAO->getNTechnotes($vars['pagination']->debut, NB_TECHNOTE_PAGE);
+					$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
 
 					$this->vue->display('technotes.twig', $vars);
 				}
