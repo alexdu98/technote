@@ -9,26 +9,22 @@ class GroupeDAO extends DAO{
 	// ########## MÉTHODES HÉRITÉES ##########
 	// #######################################
 
-	public function getOne(array $id){
+	public function getOne($id){
 		$req = $this->pdo->prepare('SELECT * FROM groupe WHERE id_groupe = :id_groupe');
 		$req->execute(array(
-			'id_groupe' => $id['id_groupe']
+			'id_groupe' => $id
 		));
-		$res = $req->fetch();
-		return new Groupe($res);
+		if(($res = $req->fetch()) !== false)
+			return new Groupe(get_object_vars($res));
+		return false;
 	}
 
 	public function getAll(){
 		$res = array();
 		$req = $this->pdo->prepare('SELECT * FROM groupe');
 		$req->execute();
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Groupe($ligne);
-		}
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new Groupe(get_object_vars($ligne));
 		return $res;
 	}
 

@@ -28,7 +28,7 @@ abstract class DAO{
 	 * Récupère une ligne grâce à ses identifiants
 	 * @param array $id
 	 */
-	abstract public function getOne(array $id);
+	abstract public function getOne($id);
 
 	/**
 	 * Récupèrer toutes les lignes

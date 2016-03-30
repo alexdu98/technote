@@ -9,27 +9,19 @@ class TechnoteDAO extends DAO{
 	// ########## MÉTHODES HÉRITÉES ##########
 	// #######################################
 
-	public function getOne(array $id){
-		$req = $this->pdo->prepare('SELECT * 
-									FROM technote 
-									WHERE id_technote = :id_technote');
+	public function getOne($id){
+		$req = $this->pdo->prepare('SELECT * FROM technote WHERE id_technote = :id_technote');
 		$req->execute(array(
-			'id_technote' => $id['id_technote']
+			'id_technote' => $id
 		));
-		$res = $req->fetch(PDO::FETCH_ASSOC);
-		if(!$res)
+		if(($res = $req->fetch()) === false)
 			return false;
-		$req = $this->pdo->prepare('SELECT label
-										FROM mot_cle mc
-										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle
-										WHERE d.id_technote = :id_technote');
-			
+
+		$req = $this->pdo->prepare('SELECT label FROM mot_cle mc INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle WHERE d.id_technote = :id_technote');
 		$req->execute(array(
-				'id_technote' => $res['id_technote']
+			'id_technote' => $res->id_technote
 		));
-		
 		$res['mot_cle'] = $req->fetchAll();
-		
 		return new Technote($res);
 	}
 
@@ -37,13 +29,8 @@ class TechnoteDAO extends DAO{
 		$res = array();
 		$req = $this->pdo->prepare('SELECT * FROM technote');
 		$req->execute();
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Technote($ligne);
-		}
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new Technote(get_object_vars($ligne));
 		return $res;
 	}
 

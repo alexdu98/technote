@@ -9,26 +9,22 @@ class ActionDAO extends DAO{
 	// ########## MÉTHODES HÉRITÉES ##########
 	// #######################################
 
-	public function getOne(array $id){
+	public function getOne($id){
 		$req = $this->pdo->prepare('SELECT * FROM action WHERE id_action = :id_action');
 		$req->execute(array(
-			'id_action' => $id['id_action']
+			'id_action' => $id
 		));
-		$res = $req->fetch();
-		return new Action($res);
+		if(($res = $req->fetch()) !== false)
+			return new Action(get_object_vars($res));
+		return false;
 	}
 
 	public function getAll(){
 		$res = array();
 		$req = $this->pdo->prepare('SELECT * FROM action');
 		$req->execute();
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Action($ligne);
-		}
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new Action(get_object_vars($ligne));
 		return $res;
 	}
 

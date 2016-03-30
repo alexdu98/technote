@@ -9,28 +9,22 @@ class MotCleDAO extends DAO{
 	// ########## MÉTHODES HÉRITÉES ##########
 	// #######################################
 
-	public function getOne(array $id){
+	public function getOne($id){
 		$req = $this->pdo->prepare('SELECT * FROM mot_cle WHERE id_mot_cle = :id_mot_cle');
 		$req->execute(array(
-			'id_mot_cle' => $id['id_mot_cle']
+			'id_mot_cle' => $id
 		));
 		if(($res = $req->fetch()) !== false)
 			return new MotCle(get_object_vars($res));
-		else
-			return false;
+		return false;
 	}
 
 	public function getAll(){
 		$res = array();
 		$req = $this->pdo->prepare('SELECT * FROM mot_cle');
 		$req->execute();
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new MotCle($ligne);
-		}
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new MotCle(get_object_vars($ligne));
 		return $res;
 	}
 

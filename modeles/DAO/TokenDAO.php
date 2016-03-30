@@ -9,26 +9,22 @@ class TokenDAO extends DAO{
 	// ########## MÉTHODES HÉRITÉES ##########
 	// #######################################
 
-	public function getOne(array $id){
+	public function getOne($id){
 		$req = $this->pdo->prepare('SELECT * FROM token WHERE id_token = :id_token');
 		$req->execute(array(
-			'id_token' => $id['id_token']
+			'id_token' => $id
 		));
-		$res = $req->fetch();
-		return new Token($res);
+		if(($res = $req->fetch()) !== false)
+			return new Token(get_object_vars($res));
+		return false;
 	}
 
 	public function getAll(){
 		$res = array();
 		$req = $this->pdo->prepare('SELECT * FROM token');
 		$req->execute();
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Token($ligne);
-		}
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new Token(get_object_vars($ligne));
 		return $res;
 	}
 

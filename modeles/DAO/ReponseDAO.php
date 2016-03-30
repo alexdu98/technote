@@ -9,26 +9,22 @@ class ReponseDAO extends DAO{
 	// ########## MÉTHODES HÉRITÉES ##########
 	// #######################################
 
-	public function getOne(array $id){
+	public function getOne($id){
 		$req = $this->pdo->prepare('SELECT * FROM reponse WHERE id_reponse = :id_reponse');
 		$req->execute(array(
-			'id_reponse' => $id['id_reponse']
+			'id_reponse' => $id
 		));
-		$res = $req->fetch();
-		return new Reponse($res);
+		if(($res = $req->fetch()) !== false)
+			return new Reponse(get_object_vars($res));
+		return false;
 	}
 
 	public function getAll(){
 		$res = array();
 		$req = $this->pdo->prepare('SELECT * FROM reponse');
 		$req->execute();
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Reponse($ligne);
-		}
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new Reponse(get_object_vars($ligne));
 		return $res;
 	}
 

@@ -9,26 +9,22 @@ class CommentaireDAO extends DAO{
 	// ########## MÉTHODES HÉRITÉES ##########
 	// #######################################
 
-	public function getOne(array $id){
+	public function getOne($id){
 		$req = $this->pdo->prepare('SELECT * FROM commentaire WHERE id_commentaire = :id_commentaire');
 		$req->execute(array(
-			'id_commentaire' => $id['id_commentaire']
+			'id_commentaire' => $id
 		));
-		$res = $req->fetch();
-		return new Commentaire($res);
+		if(($res = $req->fetch()) !== false)
+			return new Commentaire(get_object_vars($res));
+		return false;
 	}
 
 	public function getAll(){
 		$res = array();
 		$req = $this->pdo->prepare('SELECT * FROM commentaire');
 		$req->execute();
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Commentaire($ligne);
-		}
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new Commentaire(get_object_vars($ligne));
 		return $res;
 	}
 

@@ -9,26 +9,22 @@ class VisiteDAO extends DAO{
 	// ########## MÉTHODES HÉRITÉES ##########
 	// #######################################
 
-	public function getOne(array $id){
+	public function getOne($id){
 		$req = $this->pdo->prepare('SELECT * FROM visite WHERE id_visite = :id_visite');
 		$req->execute(array(
-			'id_visite' => $id['id_visite']
+			'id_visite' => $id
 		));
-		$res = $req->fetch();
-		return new Visite($res);
+		if(($res = $req->fetch()) !== false)
+			return new Visite(get_object_vars($res));
+		return false;
 	}
 
 	public function getAll(){
 		$res = array();
 		$req = $this->pdo->prepare('SELECT * FROM visite');
 		$req->execute();
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Visite($ligne);
-		}
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new Visite(get_object_vars($ligne));
 		return $res;
 	}
 

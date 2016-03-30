@@ -9,10 +9,10 @@ class MembreDAO extends DAO{
 	// ########## MÉTHODES HÉRITÉES ##########
 	// #######################################
 
-	public function getOne(array $id){
+	public function getOne($id){
 		$req = $this->pdo->prepare('SELECT * FROM membre WHERE id_membre = :id_membre');
 		$req->execute(array(
-			'id_membre' => $id['id_membre']
+			'id_membre' => $id
 		));
 		if(($res = $req->fetch()) !== false){
 			unset($res->password, $res->cle_reset_pass);
@@ -25,12 +25,9 @@ class MembreDAO extends DAO{
 		$res = array();
 		$req = $this->pdo->prepare('SELECT * FROM membre');
 		$req->execute();
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Membre($ligne);
+		foreach($req->fetchAll() as $ligne){
+			unset($ligne->password, $ligne->cle_reset_pass);
+			$res[] = new Membre(get_object_vars($ligne));
 		}
 		return $res;
 	}

@@ -9,27 +9,23 @@ class DecrireDAO extends DAO{
 	// ########## MÉTHODES HÉRITÉES ##########
 	// #######################################
 
-	public function getOne(array $id){
+	public function getOne($id){
 		$req = $this->pdo->prepare('SELECT * FROM decrire WHERE id_technote = :id_technote AND id_mot_cle = :id_mot_cle');
 		$req->execute(array(
 			'id_technote' => $id['id_technote'],
 			'id_mot_cle' => $id['id_mot_cle']
 		));
-		$res = $req->fetch();
-		return new Decrire($res);
+		if(($res = $req->fetch()) !== false)
+			return new Decrire(get_object_vars($res));
+		return false;
 	}
 
 	public function getAll(){
 		$res = array();
 		$req = $this->pdo->prepare('SELECT * FROM decrire');
 		$req->execute();
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Decrire($ligne);
-		}
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new Decrire(get_object_vars($ligne));
 		return $res;
 	}
 

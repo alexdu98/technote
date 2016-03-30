@@ -9,26 +9,22 @@ class QuestionDAO extends DAO{
 	// ########## MÉTHODES HÉRITÉES ##########
 	// #######################################
 
-	public function getOne(array $id){
+	public function getOne($id){
 		$req = $this->pdo->prepare('SELECT * FROM question WHERE id_question = :id_question');
 		$req->execute(array(
-			'id_question' => $id['id_question']
+			'id_question' => $id
 		));
-		$res = $req->fetch();
-		return new Question($res);
+		if(($res = $req->fetch()) !== false)
+			return new Question(get_object_vars($res));
+		return false;
 	}
 
 	public function getAll(){
 		$res = array();
 		$req = $this->pdo->prepare('SELECT * FROM question');
 		$req->execute();
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Question($ligne);
-		}
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new Question(get_object_vars($ligne));
 		return $res;
 	}
 
