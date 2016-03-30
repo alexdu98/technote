@@ -2,6 +2,11 @@
 
 class Visite extends TableObject{
 
+	/**
+	 * Vérifie si une visite est nouvelle (< NB_SEC_ENTRE_2_VISITES)
+	 * Si c'est inférieur enregistrement dans la BDD, sinon rien
+	 * @param Visite $visite La viste à vérifier
+	 */
 	public function checkVisite($visite){
 		$visiteDAO = new VisiteDAO(BDD::getInstancePDO());
 		$lastVisite = $visiteDAO->getLastVisite($visite->ip);

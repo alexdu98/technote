@@ -2,6 +2,12 @@
 
 class Technote extends TableObject{
 
+	/**
+	 * Vérifie et ajoute une technote
+	 * @param array $param Les attributs de la technotes
+	 * @return object 2 attributs, bool success et array string msg
+	 * @static
+	 */
 	static public function addTechnote(&$param) {
 		$resCheck = self::checkTechnote($param);
 		$res = $resCheck;
@@ -38,6 +44,12 @@ class Technote extends TableObject{
 		return $res;
 	}
 
+	/**
+	 * Vérifie les attributs d'une technote
+	 * @param array $param Les attributs à vérifier
+	 * @return object 2 attributs, bool success et array string msg
+	 * @static
+	 */
 	static private function checkTechnote(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
@@ -57,6 +69,12 @@ class Technote extends TableObject{
 		return $std;
 	}
 
+	/**
+	 * Vérifie le titre d'une technote
+	 * @param string $titre Le titre à vérifier
+	 * @return bool|string True si le titre est valide, un message sinon
+	 * @static
+	 */
 	static public function checkTitre($titre){
 		if(!empty($titre)){
 			if(mb_strlen(strip_tags($titre)) == mb_strlen($titre)){
@@ -70,6 +88,12 @@ class Technote extends TableObject{
 		return 'Le titre n\'est pas renseigné';
 	}
 
+	/**
+	 * Vérifie le contenu d'une technote
+	 * @param string $contneu Le contenu à vérifier
+	 * @return bool|string True si le contenu est valide, un message sinon
+	 * @static
+	 */
 	static public function checkContenu($contenu){
 		if(!empty($contenu)){
 			if(mb_strlen($contenu) >= 15 && mb_strlen($contenu) <= 65535){
@@ -80,6 +104,12 @@ class Technote extends TableObject{
 		return 'Le contenu n\'est pas renseigné';
 	}
 
+	/**
+	 * Vérifie le lien de l'image d'une technote
+	 * @param string $url L'URL de l'image à vérifier
+	 * @return bool|string True si l'URL de l'image est valide, un message sinon
+	 * @static
+	 */
 	static public function checkURLImage($url){
 		if(!empty($url)){
 			if(filter_var($url, FILTER_VALIDATE_URL))

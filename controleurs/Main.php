@@ -151,7 +151,7 @@ class Main extends Controleur{
 					// On récupère le nombre total de technotes
 					$count = $technoteDAO->getCount();
 					// On créé la pagination
-					$vars['pagination'] = new Pagination($page, $count, '/technotes/get?page=');
+					$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE,'/technotes/get?page=');
 					// On récupère les technotes
 					$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
 

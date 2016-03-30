@@ -2,6 +2,10 @@
 
 class Token extends TableObject{
 
+	/**
+	 * Créer le token pour rester connecté et le sauvegarde en BDD et en cookie client
+	 * @static
+	 */
 	static public function createToken(){
 		$cle = hash('sha256', uniqid(rand(), true) . SALT_TOKEN);
 		$token = new self(array(

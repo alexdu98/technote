@@ -2,6 +2,9 @@
 
 class Membre extends TableObject{
 
+	/**
+	 * @return \stdClass Objet Contient les informations du profil d'un membre
+	 */
 	public function getProfil(){
 		$tokenDAO = new TokenDAO(BDD::getInstancePDO());
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
@@ -9,16 +12,23 @@ class Membre extends TableObject{
 		$questionDAO = new QuestionDAO(BDD::getInstancePDO());
 		$reponseDAO = new ReponseDAO(BDD::getInstancePDO());
 		$actionDAO = new ActionDAO(BDD::getInstancePDO());
-		$res['nbTokenActif'] = $tokenDAO->getNbActif($this->id_membre);
-		$res['tokenActif'] = $tokenDAO->getActif($this->id_membre);
-		$res['nbTechnoteRedige'] = $technoteDAO->getNbRedige($this->id_membre);
-		$res['nbCommentaireRedige'] = $commentaireDAO->getNbRedige($this->id_membre);
-		$res['nbQuestionRedige'] = $questionDAO->getNbRedige($this->id_membre);
-		$res['nbReponseRedige'] = $reponseDAO->getNbRedige($this->id_membre);
-		$res['actions'] = $actionDAO->getLast($this->id_membre);
+		$res = new stdClass();
+		$res->nbTokenActif = $tokenDAO->getNbActif($this->id_membre);
+		$res->tokenActif = $tokenDAO->getActif($this->id_membre);
+		$res->nbTechnoteRedige = $technoteDAO->getNbRedige($this->id_membre);
+		$res->nbCommentaireRedige = $commentaireDAO->getNbRedige($this->id_membre);
+		$res->nbQuestionRedige = $questionDAO->getNbRedige($this->id_membre);
+		$res->nbReponseRedige = $reponseDAO->getNbRedige($this->id_membre);
+		$res->actions = $actionDAO->getLast($this->id_membre);
 		return $res;
 	}
 
+	/**
+	 * Connecte un membre
+	 * @param array $param Les attributs pour se connecter
+	 * @return object 2 attributs, bool success et string msg
+	 * @static
+	 */
 	static public function connexion(&$param){
 		$std = (object) array('success' => false, 'message' => '');
 
@@ -59,6 +69,12 @@ class Membre extends TableObject{
 		return $std;
 	}
 
+	/**
+	 * Vérifie et inscrit un membre
+	 * @param array $param Les attributs de l'inscription d'un membre
+	 * @return object 2 attributs, bool success et array string msg
+	 * @static
+	 */
 	static public function inscription(&$param){
 		// Verification sur les champs du formulaire
 		$resCheck = self::checkInscription($param);
@@ -100,6 +116,12 @@ class Membre extends TableObject{
 		return $res;
 	}
 
+	/**
+	 * Vérifie les attributs de l'inscription
+	 * @param array $param Les attributs à vérifier
+	 * @return object 2 attributs, bool success et array string msg
+	 * @static
+	 */
 	static private function checkInscription(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
@@ -122,6 +144,11 @@ class Membre extends TableObject{
 		return $std;
 	}
 
+	/**
+	 * Édite le profil d'un membre
+	 * @param array $param Les attributs de l'édition de profil
+	 * @return object 2 attributs, bool success et array string msg
+	 */
 	public function editProfil(&$param){
 		$resCheck = $this->checkEdit($param);
 		$res = $resCheck;
@@ -153,6 +180,11 @@ class Membre extends TableObject{
 		return $res;
 	}
 
+	/**
+	 * Vérifie les attributs de l'édition d'un membre
+	 * @param array $param Les attributs à vérifier
+	 * @return object 2 attributs, bool success et array string msg
+	 */
 	private function checkEdit(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
@@ -174,6 +206,11 @@ class Membre extends TableObject{
 		return $std;
 	}
 
+	/**
+	 * Vérifie et réinitialise un mot de passe perdu
+	 * @param array $param Les attributs de la réinitialisation du mot de passe
+	 * @return object 2 attributs, bool success et array string msg
+	 */
 	public function resetLostPass(&$param){
 		$resCheck = $this->checkResetPassword($param);
 		$res = $resCheck;
@@ -203,6 +240,11 @@ class Membre extends TableObject{
 		return $res;
 	}
 
+	/**
+	 * Vérifie la demande de réinitialisation du mot de passe
+	 * @param array $param  Les attributs de la demande de réinitialisation du mot de passe
+	 * @return object 2 attributs, bool success et array string msg
+	 */
 	private function checkResetPassword(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
@@ -219,6 +261,13 @@ class Membre extends TableObject{
 		return $std;
 	}
 
+
+	/**
+	 * Vérifie la validité du mot de passe d'un membre
+	 * @param string $pass Le mot de passe à vérifier
+	 * @return bool|string  True si le mot de passe correspond au membre, un message sinon
+	 * @static
+	 */
 	static public function checkPassUser($pass){
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
 		if($membreDAO->checkUserPass($_SESSION['user']->pseudo, $pass) !== false)
@@ -226,6 +275,12 @@ class Membre extends TableObject{
 		return 'Le mot de passe actuel est incorrect';
 	}
 
+	/**
+	 * Vérifie la validité d'un pseudo
+	 * @param string $pseudo Le pseudo à vérifier
+	 * @return bool|string  True si le pseudo est valide, un message sinon
+	 * @static
+	 */
 	static public function checkPseudo($pseudo){
 		if(!empty($pseudo)){
 			if(mb_strlen($pseudo) >= 3 && mb_strlen($pseudo) <= 31){
@@ -239,6 +294,12 @@ class Membre extends TableObject{
 		return 'Le pseudo n\'est pas renseigné';
 	}
 
+	/**
+	 * Vérifie la validité d'un email
+	 * @param string $email L'email à vérifier
+	 * @return bool|string  True si l'email est valide, un message sinon
+	 * @static
+	 */
 	static public function checkEmail($email){
 		if(!empty($email)){
 			if(filter_var($email, FILTER_VALIDATE_EMAIL))
@@ -248,6 +309,13 @@ class Membre extends TableObject{
 		return 'L\'email n\'est pas renseigné';
 	}
 
+	/**
+	 * Vérifie un mot de passe et sa confirmation
+	 * @param string $pass Le mot de passe à vérifier
+	 * @param string $passConfirm La confirmation du mot de passe à vérifier
+	 * @return bool|string True si le mot de passe est valide, un message sinon
+	 * @static
+	 */
 	static public function checkPass($pass, $passConfirm){
 		if(!empty($pass) && !empty($passConfirm)){
 			if($pass == $passConfirm){
@@ -264,16 +332,34 @@ class Membre extends TableObject{
 		return 'Le mot de passe et/ou sa confirmation n\'est pas renseigné';
 	}
 
+	/**
+	 * Hashe un mot de passe
+	 * @param string $pass Le mot de passe à hashé
+	 * @return bool|string False si erreur de hashage, le mot de passe hashé sinon
+	 * @static
+	 */
 	static public function cryptMDP($pass){
 		return password_hash($pass, PASSWORD_BCRYPT, array('cost' => 12));
 	}
 
+	/**
+	 * Vérifie que les conditions d'utilisation soient acceptées
+	 * @param string $conditions Les conditions à vérifier
+	 * @return bool|string True si les conditions sont acceptées, un message sinon
+	 * @static
+	 */
 	static public function checkConditions($conditions){
 		if(!empty($conditions) && $conditions == 'on')
 			return true;
 		return 'Les conditions d\'utilisation ne sont pas acceptées';
 	}
 
+	/**
+	 * Vérifie que l'email d'oubli de mot de passe peut etre envoyé
+	 * @param array $param Les attributs de la demande d'envoi d'email
+	 * @return object True si l'email peut etre envoyé, un message sinon
+	 * @static
+	 */
 	static public function checkSendMailLostPass(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
@@ -295,6 +381,12 @@ class Membre extends TableObject{
 		return $std;
 	}
 
+	/**
+	 * Vérifie que le mot de passe peut etre modifié par oublie
+	 * @param array $param Les attributs de la demande de réinitialisation du mot de passe
+	 * @return object 2 attributs, bool success et array string msg
+	 * @static
+	 */
 	static public function sendMailLostPass(&$param){
 		$resCheck = self::checkSendMailLostPass($param);
 		$res = $resCheck;
