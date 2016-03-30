@@ -130,7 +130,7 @@ class Main extends Controleur{
 				// Si on veut voir une technote précise
 				if(!empty($id)){
 					// On récupère la technote
-					$vars['technote'] = $technoteDAO->getOne(array('id_technote' => $id));
+					$vars['technote'] = $technoteDAO->getOne($id);
 					// Si la technote existe
 					if($vars['technote'] !== false){
 						$vars['titrePage'] = $vars['technote']->titre; // <h1> de la page

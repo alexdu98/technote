@@ -21,8 +21,11 @@ class TechnoteDAO extends DAO{
 		$req->execute(array(
 			'id_technote' => $res->id_technote
 		));
-		$res['mot_cle'] = $req->fetchAll();
-		return new Technote($res);
+		$motsCles = array();
+		foreach($req->fetchAll() as $ligne)
+			$motsCles[] = new MotCle(get_object_vars($ligne));
+		$res->motsCles = $motsCles;
+		return new Technote(get_object_vars($res));
 	}
 
 	public function getAll(){
