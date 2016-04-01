@@ -21,6 +21,9 @@
                 {% for motCle in technote.mot_cle %}
                     <a href="motscles/get/{{ motCle.id_mot_cle }}">{{ motCle.label }}</a>
                 {% endfor %}
+                <div class="text-right">
+                	par <a href="#">{{ technote.pseudo_auteur }}</a>
+                </div>
             </div>
         </div>
     </div>

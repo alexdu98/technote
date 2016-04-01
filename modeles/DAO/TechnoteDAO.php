@@ -17,7 +17,10 @@ class TechnoteDAO extends DAO{
 		if(($res = $req->fetch()) === false)
 			return false;
 
-		$req = $this->pdo->prepare('SELECT label FROM mot_cle mc INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle WHERE d.id_technote = :id_technote');
+		$req = $this->pdo->prepare('SELECT label 
+									FROM mot_cle mc 
+									INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle 
+									WHERE d.id_technote = :id_technote');
 		$req->execute(array(
 			'id_technote' => $res->id_technote
 		));
@@ -25,6 +28,17 @@ class TechnoteDAO extends DAO{
 		foreach($req->fetchAll() as $ligne)
 			$motsCles[] = new MotCle(get_object_vars($ligne));
 		$res->motsCles = $motsCles;
+		
+		// Recuperation du pseudo de l'auteur de la technote
+		$req = $this->pdo->prepare('SELECT pseudo
+										FROM membre
+										WHERE id_membre = :id_membre');
+			
+		$req->execute(array(
+				'id_membre' => $res->id_auteur
+		));
+		$res->pseudo_auteur = $req->fetch()->pseudo;
+		
 		return new Technote(get_object_vars($res));
 	}
 
@@ -115,6 +129,8 @@ class TechnoteDAO extends DAO{
 
 		foreach($req->fetchAll() as $obj){
 			$ligne = array();
+			
+			// Recuperation des mot-cles correspondant a la technote
 			$req = $this->pdo->prepare('SELECT mc.id_mot_cle, label
 										FROM mot_cle mc
 										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle
@@ -125,6 +141,19 @@ class TechnoteDAO extends DAO{
 			));
 			$res_mc = $req->fetchAll();
 			$ligne['mot_cle'] = $res_mc;
+			
+			// Recuperation du pseudo de l'auteur de la technote
+			$req = $this->pdo->prepare('SELECT pseudo
+										FROM membre 
+										WHERE id_membre = :id_membre');
+			
+			$req->execute(array(
+					'id_membre' => $obj->id_auteur
+			));
+			$res_pseudo = $req->fetch();
+			$ligne['pseudo_auteur'] = $res_pseudo->pseudo;
+			
+			
 			foreach($obj as $nomChamp => $valeur){
 				$ligne[$nomChamp] = $valeur;
 			}
@@ -147,4 +176,40 @@ class TechnoteDAO extends DAO{
 		return $res->nbTechnotes;
 	}
 
+	public function getTechnotesByAuthor($authorName) {
+		$req = $this->pdo->prepare('SELECT *
+									FROM technote t
+									JOIN membre m ON m.id_membre = t.id_auteur
+									WHERE m.pseudo = :authorName');
+		
+		$req->execute(array(
+				'authorName' => $authorName
+		));
+		
+		foreach($req->fetchAll() as $obj){
+			$ligne = array();
+				
+			// Recuperation des mot-cles correspondant a la technote
+			$req = $this->pdo->prepare('SELECT mc.id_mot_cle, label
+										FROM mot_cle mc
+										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle
+										WHERE d.id_technote = :id_technote');
+		
+			$req->execute(array(
+					'id_technote' => $obj->id_technote
+			));
+			$res_mc = $req->fetchAll();
+			$ligne['mot_cle'] = $res_mc;
+				
+			$ligne['pseudo_auteur'] = $authorName;
+				
+			foreach($obj as $nomChamp => $valeur){
+				$ligne[$nomChamp] = $valeur;
+			}
+			$res[] = new Technote($ligne);
+		}
+		
+		return $res;
+		
+	}
 }

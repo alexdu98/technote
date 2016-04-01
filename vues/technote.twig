@@ -2,6 +2,9 @@
 {% block contenu %}
 	<section class="row">
 		<div class="panel panel-default">
+			<div class="panel-heading">
+				par <a href="#">{{ technote.pseudo_auteur }}</a>			
+			</div>	
 			<div class="panel-body">
 				{{ technote.contenu | raw }}
 			</div>
