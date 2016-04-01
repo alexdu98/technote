@@ -4,7 +4,10 @@
  * Classe du controleur principal
  */
 class Main extends Controleur{
-
+	
+	/*------------------------
+			ACCUEIL
+	--------------------------*/
 	public function accueil($action, $id, $vars){
 		switch($action){
 
@@ -25,10 +28,14 @@ class Main extends Controleur{
 		}
 	}
 
+	/*------------------------
+	 		MEMBRE
+	 --------------------------*/
 	public function membre($action, $id, $vars){
 		$membreDAO = new MembreDAO(BDD::getInstancePDO());
 		switch($action){
 
+			/**** GET ****/
 			case 'get':
 				$vars['titrePage'] = 'Profil'; // <h1> de la page
 				$vars['active_profil'] = 1; // Active le style dans le menu profil
@@ -45,6 +52,7 @@ class Main extends Controleur{
 				header('Location: /');
 				exit();
 
+			/**** ADD ****/
 			case 'add':
 				$vars['titrePage'] = 'Inscription'; // <h1> de la page
 				$vars['active_profile'] = 1; // Active le style dans le menu profil
@@ -67,6 +75,7 @@ class Main extends Controleur{
 				header('Location: /');
 				exit();
 				
+			/**** EDIT ****/
 			case 'edit':
 				$vars['active_profile'] = 1; // Active le style dans le menu profil
 
@@ -110,6 +119,7 @@ class Main extends Controleur{
 				}
 				exit();
 
+			/**** DROP ****/
 			case 'drop':
 				$vars['active_profile'] = 1; // Active le style dans le menu profil
 				exit();
@@ -120,10 +130,14 @@ class Main extends Controleur{
 		}
 	}
 	
+	/*------------------------
+	 		TECHNOTES
+	 --------------------------*/
 	public function technotes($action, $id, $vars) {
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		switch($action){
-
+			
+			/**** GET ****/
 			case 'get':
 				$vars['active_technotes'] = 1; // Active le style dans le menu technotes
 
@@ -158,7 +172,8 @@ class Main extends Controleur{
 					$this->vue->display('technotes.twig', $vars);
 				}
 				exit();
-				
+			
+			/**** ADD ****/
 			case 'add':
 				$vars['active_technotes'] = 1; // Active le style dans le menu technotes
 				$vars['active_technotes_add'] = 1; // Active le style dans le sous menu ajout de technote
@@ -185,11 +200,13 @@ class Main extends Controleur{
 				else
 					$this->technotes('403.twig', NULL, $vars);
 				exit();
-				
+			
+			/**** EDIT ****/
 			case 'edit':
 				$vars['active_technotes'] = 1;
 				exit();
 
+			/**** DROP ****/
 			case 'drop':
 				$vars['active_technotes'] = 1;
 				exit();
@@ -200,6 +217,9 @@ class Main extends Controleur{
 		}
 	}
 
+	/*------------------------
+	 		CONNEXION
+	 --------------------------*/
 	public function connexion($action, $id, $vars){
 		// Si l'utilisateur n'est pas connecté
 		if(!$_SESSION['user']){
@@ -232,6 +252,9 @@ class Main extends Controleur{
 		exit();
 	}
 
+	/*------------------------
+	 		CONTACT
+	 --------------------------*/
 	public function contact($action, $id, $vars){
 		switch($action){
 
@@ -265,6 +288,9 @@ class Main extends Controleur{
 		}
 	}
 
+	/*------------------------
+	 		CONDITIONS
+	 --------------------------*/
 	public function conditions($action, $id, $vars){
 		switch($action){
 
@@ -279,6 +305,9 @@ class Main extends Controleur{
 		}
 	}
 
+	/*------------------------
+	 		MENTIONS
+	 --------------------------*/
 	public function mentions($action, $id, $vars){
 		switch($action){
 
@@ -293,6 +322,9 @@ class Main extends Controleur{
 		}
 	}
 
+	/*------------------------
+	 		DECONNEXION
+	 --------------------------*/
 	public function deconnexion($action, $id, $vars){
 		session_destroy(); // Détruit la session
 		setcookie('token', '', time() - 10); // Détruit le cookie de connexion

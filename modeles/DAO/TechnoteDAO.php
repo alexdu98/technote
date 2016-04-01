@@ -176,14 +176,21 @@ class TechnoteDAO extends DAO{
 		return $res->nbTechnotes;
 	}
 
-	public function getTechnotesByAuthor($authorName) {
+	
+	/**
+	 * Récupère les $limit dernières technotes
+	 * @param string $author Le nom de l'auteur pour lequel on veut récupérer
+	 * les technotes
+	 * @return array Le tableau des technotes écries par $author
+	 */
+	public function getTechnotesByAuthor($author) {
 		$req = $this->pdo->prepare('SELECT *
 									FROM technote t
 									JOIN membre m ON m.id_membre = t.id_auteur
 									WHERE m.pseudo = :authorName');
 		
 		$req->execute(array(
-				'authorName' => $authorName
+				'authorName' => $autho
 		));
 		
 		foreach($req->fetchAll() as $obj){
@@ -192,7 +199,7 @@ class TechnoteDAO extends DAO{
 			// Recuperation des mot-cles correspondant a la technote
 			$req = $this->pdo->prepare('SELECT mc.id_mot_cle, label
 										FROM mot_cle mc
-										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle
+										INNER JOIN decrire d ON d.id_mot_cle = mc.id_mot_cle
 										WHERE d.id_technote = :id_technote');
 		
 			$req->execute(array(
@@ -201,7 +208,7 @@ class TechnoteDAO extends DAO{
 			$res_mc = $req->fetchAll();
 			$ligne['mot_cle'] = $res_mc;
 				
-			$ligne['pseudo_auteur'] = $authorName;
+			$ligne['pseudo_auteur'] = $author;
 				
 			foreach($obj as $nomChamp => $valeur){
 				$ligne[$nomChamp] = $valeur;
@@ -211,5 +218,53 @@ class TechnoteDAO extends DAO{
 		
 		return $res;
 		
+	}
+	
+	public function getTechnotesByKeyWord($keyWord) {
+		
+		$req = $this->pdo->prepare('SELECT *
+									FROM technote t
+									JOIN decrire d ON t.id_technote = d.id_technote
+									JOIN mot_cle mc ON mc.id_mot_cle = d.id_mot_cle
+									WHERE mc.label = :keyWord');
+	
+		$req->execute(array(
+				'keyWord' => $keyWord
+		));
+	
+		foreach($req->fetchAll() as $obj){
+			$ligne = array();
+	
+			// Recuperation des mot-cles correspondant a la technote
+			$req = $this->pdo->prepare('SELECT mc.id_mot_cle, label
+										FROM mot_cle mc
+										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle
+										WHERE d.id_technote = :id_technote');
+	
+			$req->execute(array(
+					'id_technote' => $obj->id_technote
+			));
+			$res_mc = $req->fetchAll();
+			$ligne['mot_cle'] = $res_mc;
+			
+			// Recuperation du pseudo de l'auteur de la technote
+			$req = $this->pdo->prepare('SELECT pseudo
+										FROM membre
+										WHERE id_membre = :id_membre');
+				
+			$req->execute(array(
+					'id_membre' => $obj->id_auteur
+			));
+			$res_pseudo = $req->fetch();
+			$ligne['pseudo_auteur'] = $res_pseudo->pseudo;
+	
+			foreach($obj as $nomChamp => $valeur){
+				$ligne[$nomChamp] = $valeur;
+			}
+			$res[] = new Technote($ligne);
+		}
+	
+		return $res;
+	
 	}
 }
