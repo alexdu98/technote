@@ -1,13 +1,8 @@
-{% if res %}
-<div class="alert alert-{% if res.success %}success{% else %}danger{% endif %} alert-dismissible" role="alert">
+<div id="divResultatAJAX" class="alert alert-dismissible" role="alert" hidden>
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	<div class="flex">
 		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-		<ul>
-			{% for message in res.msg %}
-				<li>{{ message }}</li>
-			{% endfor %}
+		<ul id="messagesResultatAJAX">
 		</ul>
 	</div>
 </div>
-{% endif %}

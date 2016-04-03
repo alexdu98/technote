@@ -218,6 +218,19 @@ class Main extends Controleur{
 	}
 
 	/*------------------------
+	 		COMMENTAIRE
+	 --------------------------*/
+	public function commentaires($action, $id, $vars){
+		switch($action){
+			case 'add':
+				if(!empty($_POST)){
+					// On essaye d'enregistrer le commentaire
+					echo json_encode(Commentaire::addCommentaire($_POST));
+				}
+		}
+	}
+
+	/*------------------------
 	 		CONNEXION
 	 --------------------------*/
 	public function connexion($action, $id, $vars){

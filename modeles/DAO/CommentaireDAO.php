@@ -33,14 +33,22 @@ class CommentaireDAO extends DAO{
 			$champs = $valeurs = '';
 			foreach($commentaire as $nomChamp => $valeur){
 				$champs .= $nomChamp . ', ';
-				$valeurs .= "'$valeur', ";
+				if($nomChamp == 'id_commentaire_parent' && $valeur == NULL){
+					$valeurs .= "NULL, ";
+				}
+				else{
+					$valeurs .= ":$nomChamp, ";
+				}
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			$req = 'INSERT INTO commentaire(' . $champs .') VALUES(' . $valeurs .')';
-			$res = $this->pdo->exec($req);
-			$commentaire->id_technote = $this->pdo->lastInsertId();
-			return $res;
+			$sql = 'INSERT INTO commentaire(' . $champs .') VALUES(' . $valeurs .')';
+			$req = $this->pdo->prepare($sql);
+			if($req->execute($commentaire->getFields())){
+				$commentaire->id_technote = $this->pdo->lastInsertId();
+				return $commentaire;
+			}
+			return false;
 		}
 		else{
 			$id_commentaire = $commentaire->id_commentaire;
@@ -75,6 +83,17 @@ class CommentaireDAO extends DAO{
 		));
 		$res = $req->fetch();
 		return $res->nbRedige;
+	}
+
+	public function getAllForOneTechnote($id_technote){
+		$res = array();
+		$req = $this->pdo->prepare('SELECT c.*, m.pseudo FROM commentaire c INNER JOIN membre m ON m.id_membre=c.id_auteur WHERE id_technote = :id_technote');
+		$req->execute(array(
+			'id_technote' => $id_technote
+		));
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new Commentaire(get_object_vars($ligne));
+		return $res;
 	}
 
 }

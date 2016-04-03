@@ -25,7 +25,10 @@ class TechnoteDAO extends DAO{
 			return false;
 
 		$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
-		$res->motsCles = $decrireDAO->getAllByTechnote($id);
+		$res->motsCles = $decrireDAO->getAllForOneTechnote($id);
+
+		$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
+		$res->commentaires = $commentaireDAO->getAllForOneTechnote($id);
 		
 		return new Technote(get_object_vars($res));
 	}
@@ -120,7 +123,7 @@ class TechnoteDAO extends DAO{
 		foreach($req->fetchAll() as $ligne){
 			// Recuperation des mot-cles correspondant a la technote
 			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
-			$ligne->motsCles  = $decrireDAO->getAllByTechnote($ligne->id_technote);
+			$ligne->motsCles  = $decrireDAO->getAllForOneTechnote($ligne->id_technote);
 
 			$res[] = new Technote(get_object_vars($ligne));
 		}
@@ -163,7 +166,7 @@ class TechnoteDAO extends DAO{
 
 			// Recuperation des mot-cles correspondant a la technote
 			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
-			$ligne->motsCles  = $decrireDAO->getAllByTechnote($ligne->id_technote);
+			$ligne->motsCles  = $decrireDAO->getAllForOneTechnote($ligne->id_technote);
 
 			$res[] = new Technote(get_object_vars($ligne));
 		}
@@ -187,7 +190,7 @@ class TechnoteDAO extends DAO{
 
 			// Recuperation des mot-cles correspondant a la technote
 			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
-			$ligne->motsCles  = $decrireDAO->getAllByTechnote($ligne->id_technote);
+			$ligne->motsCles  = $decrireDAO->getAllForOneTechnote($ligne->id_technote);
 
 			$res[] = new Technote(get_object_vars($ligne));
 		}
