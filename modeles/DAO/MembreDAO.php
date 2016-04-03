@@ -77,7 +77,7 @@ class MembreDAO extends DAO{
 	 * @return bool|\Membre False si aucun membre avec ce pseudo, Membre sinon
 	 */
 	public function getOneByPseudo($pseudo){
-		$req = $this->pdo->prepare('SELECT id_membre, pseudo, email, g.libelle groupe, bloquer, DATE_FORMAT(date_inscription, "%d/%m/%Y à %Hh%i") date_inscription, DATE_FORMAT(date_connexion, "%d/%m/%Y à %Hh%i") date_connexion FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE pseudo = :pseudo');
+		$req = $this->pdo->prepare('SELECT m.*, g.libelle groupe FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE pseudo = :pseudo');
 		$req->execute(array(
 			'pseudo' => $pseudo
 		));

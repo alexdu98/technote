@@ -31,7 +31,7 @@
 								<a href="/membre">{{ session.user.pseudo | capitalize }}</a> • <a href="/deconnexion">Déconnexion</a>
 							</div>
 						{% else %}
-							<form action="/connexion" method="POST" class="form-inline text-right">
+							<form action="/connexion" method="POST" class="form-inline text-right" name="connexion">
 								<div class="col-md-12">
 									<div class="form-group">
 										<div class="input-group">
@@ -60,11 +60,9 @@
 										</div>
 									</div>
 								</div>
-								{% if msgCo %}
-									<div class="col-md-12 text-center">
-										<div class="badLogin">{{ msgCo.message }}</div>
-									</div>
-								{% endif %}
+								<div class="col-md-12 text-center">
+									<div id="badLogin" hidden></div>
+								</div>
 							</form>
 						{% endif %}
 					</div>

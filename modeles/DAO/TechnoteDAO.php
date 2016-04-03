@@ -10,34 +10,22 @@ class TechnoteDAO extends DAO{
 	// #######################################
 
 	public function getOne($id){
-		$req = $this->pdo->prepare('SELECT * FROM technote WHERE id_technote = :id_technote');
+		$req = $this->pdo->prepare('
+			SELECT t.*, ma.pseudo auteur, mm.pseudo modificateur
+			FROM technote t
+			INNER JOIN membre ma ON ma.id_membre=t.id_auteur
+			LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
+			WHERE id_technote = :id_technote
+		');
+
 		$req->execute(array(
 			'id_technote' => $id
 		));
 		if(($res = $req->fetch()) === false)
 			return false;
 
-		$req = $this->pdo->prepare('SELECT label 
-									FROM mot_cle mc 
-									INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle 
-									WHERE d.id_technote = :id_technote');
-		$req->execute(array(
-			'id_technote' => $res->id_technote
-		));
-		$motsCles = array();
-		foreach($req->fetchAll() as $ligne)
-			$motsCles[] = new MotCle(get_object_vars($ligne));
-		$res->motsCles = $motsCles;
-		
-		// Recuperation du pseudo de l'auteur de la technote
-		$req = $this->pdo->prepare('SELECT pseudo
-										FROM membre
-										WHERE id_membre = :id_membre');
-			
-		$req->execute(array(
-				'id_membre' => $res->id_auteur
-		));
-		$res->pseudo_auteur = $req->fetch()->pseudo;
+		$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
+		$res->motsCles = $decrireDAO->getAllByTechnote($id);
 		
 		return new Technote(get_object_vars($res));
 	}
@@ -114,53 +102,29 @@ class TechnoteDAO extends DAO{
 	 * @param int $limit Le nombre de technotes à récupérer
 	 * @return array Le tableau des $limit dernières Technote
 	 */
-	public function getLastNTechnotes($limit, $offset = 0){
+	public function getLastNTechnotes($max, $debut = 0){
 		$res = array();
 
-		$req = $this->pdo->prepare('SELECT *
+		$req = $this->pdo->prepare('SELECT t.*, ma.pseudo auteur, mm.pseudo modificateur
 									FROM technote t
+									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
+									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
 									ORDER BY date_creation DESC
-									LIMIT :limit OFFSET :offset');
+									LIMIT :max OFFSET :debut');
 
-		$req->bindValue(':limit', $limit, PDO::PARAM_INT);
-		$req->bindValue(':offset', $offset, PDO::PARAM_INT);
+		$req->bindParam(':debut', $debut, PDO::PARAM_INT);
+		$req->bindParam(':max', $max, PDO::PARAM_INT);
+
 		$req->execute();
 
-
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-			
+		foreach($req->fetchAll() as $ligne){
 			// Recuperation des mot-cles correspondant a la technote
-			$req = $this->pdo->prepare('SELECT mc.id_mot_cle, label
-										FROM mot_cle mc
-										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle
-										WHERE d.id_technote = :id_technote');
+			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
+			$ligne->motsCles  = $decrireDAO->getAllByTechnote($ligne->id_technote);
 
-			$req->execute(array(
-				'id_technote' => $obj->id_technote
-			));
-			$res_mc = $req->fetchAll();
-			$ligne['mot_cle'] = $res_mc;
-			
-			// Recuperation du pseudo de l'auteur de la technote
-			$req = $this->pdo->prepare('SELECT pseudo
-										FROM membre 
-										WHERE id_membre = :id_membre');
-			
-			$req->execute(array(
-					'id_membre' => $obj->id_auteur
-			));
-			$res_pseudo = $req->fetch();
-			$ligne['pseudo_auteur'] = $res_pseudo->pseudo;
-			
-			
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Technote($ligne);
+			$res[] = new Technote(get_object_vars($ligne));
 		}
 		return $res;
-
 	}
 
 	/**
@@ -184,84 +148,48 @@ class TechnoteDAO extends DAO{
 	 * @return array Le tableau des technotes écries par $author
 	 */
 	public function getTechnotesByAuthor($author) {
-		$req = $this->pdo->prepare('SELECT *
+		$res = array();
+
+		$req = $this->pdo->prepare('SELECT t.*, m.pseudo auteur
 									FROM technote t
 									JOIN membre m ON m.id_membre = t.id_auteur
 									WHERE m.pseudo = :authorName');
 		
 		$req->execute(array(
-				'authorName' => $autho
+				'authorName' => $author
 		));
 		
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-				
+		foreach($req->fetchAll() as $ligne){
+
 			// Recuperation des mot-cles correspondant a la technote
-			$req = $this->pdo->prepare('SELECT mc.id_mot_cle, label
-										FROM mot_cle mc
-										INNER JOIN decrire d ON d.id_mot_cle = mc.id_mot_cle
-										WHERE d.id_technote = :id_technote');
-		
-			$req->execute(array(
-					'id_technote' => $obj->id_technote
-			));
-			$res_mc = $req->fetchAll();
-			$ligne['mot_cle'] = $res_mc;
-				
-			$ligne['pseudo_auteur'] = $author;
-				
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Technote($ligne);
+			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
+			$ligne->motsCles  = $decrireDAO->getAllByTechnote($ligne->id_technote);
+
+			$res[] = new Technote(get_object_vars($ligne));
 		}
-		
 		return $res;
-		
 	}
 	
 	public function getTechnotesByKeyWord($keyWord) {
-		
-		$req = $this->pdo->prepare('SELECT *
+		$res = array();
+		$req = $this->pdo->prepare('SELECT t.*, m.pseudo auteur
 									FROM technote t
 									JOIN decrire d ON t.id_technote = d.id_technote
 									JOIN mot_cle mc ON mc.id_mot_cle = d.id_mot_cle
+									INNER JOIN membre m ON m.id_membre=t.id_auteur
 									WHERE mc.label = :keyWord');
 	
 		$req->execute(array(
 				'keyWord' => $keyWord
 		));
 	
-		foreach($req->fetchAll() as $obj){
-			$ligne = array();
-	
+		foreach($req->fetchAll() as $ligne){
+
 			// Recuperation des mot-cles correspondant a la technote
-			$req = $this->pdo->prepare('SELECT mc.id_mot_cle, label
-										FROM mot_cle mc
-										INNER JOIN decrire d ON d.id_mot_cle=mc.id_mot_cle
-										WHERE d.id_technote = :id_technote');
-	
-			$req->execute(array(
-					'id_technote' => $obj->id_technote
-			));
-			$res_mc = $req->fetchAll();
-			$ligne['mot_cle'] = $res_mc;
-			
-			// Recuperation du pseudo de l'auteur de la technote
-			$req = $this->pdo->prepare('SELECT pseudo
-										FROM membre
-										WHERE id_membre = :id_membre');
-				
-			$req->execute(array(
-					'id_membre' => $obj->id_auteur
-			));
-			$res_pseudo = $req->fetch();
-			$ligne['pseudo_auteur'] = $res_pseudo->pseudo;
-	
-			foreach($obj as $nomChamp => $valeur){
-				$ligne[$nomChamp] = $valeur;
-			}
-			$res[] = new Technote($ligne);
+			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
+			$ligne->motsCles  = $decrireDAO->getAllByTechnote($ligne->id_technote);
+
+			$res[] = new Technote(get_object_vars($ligne));
 		}
 	
 		return $res;

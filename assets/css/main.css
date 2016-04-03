@@ -79,7 +79,7 @@ header .liensCo{
 header .liensCo label{
     color: #FFF;
 }
-header .badLogin{
+header #badLogin{
     color: #a94442;
     font-weight: bold;
     background: rgba(255,255,255,0.7);

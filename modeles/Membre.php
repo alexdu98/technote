@@ -47,7 +47,7 @@ class Membre extends TableObject{
 				if(!$res->bloquer){
 					$_SESSION['user'] = $res;
 					$jeton = '';
-					if($param['autoConnexion'] == 'on'){
+					if(isset($param['autoConnexion']) && $param['autoConnexion'] == 'on'){
 						Token::createToken();
 						$jeton = ' avec jeton';
 					}

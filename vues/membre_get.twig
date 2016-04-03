@@ -12,7 +12,7 @@
 						<p>
 							Connexion automatique sur {{ profil.nbTokenActif }} navigateur(s) <br>
 							{% for token in profil.tokenActif %}
-								IP de création : {{ token.ip }} / Expire le {{ token.date_expiration }} : <a class="deleteToken">se déconnecter</a><br>
+								IP de création : {{ token.ip }} / Expire le {{ token.date_expiration | date('d/m/Y à H:i') }} : <a class="deleteToken">se déconnecter</a><br>
 							{% endfor %}
 						</p>
 						<br>
@@ -27,14 +27,14 @@
 						</p>
 					</div>
 					<div class="col-md-4 text-right">
-						<p><b>Date inscription :</b> {{ session.user.date_inscription }}</p>
-						<p><b>Dernière connexion :</b> {{ session.user.date_connexion }}</p>
+						<p><b>Date d'inscription :</b> {{ session.user.date_inscription | date('d/m/Y à H:i') }}</p>
+						<p><b>Dernière connexion :</b> {{ session.user.date_connexion | date('d/m/Y à H:i') }}</p>
 						<p><b>Groupe :</b> {{ session.user.groupe }}</p>
 					</div>
 					<div class="col-md-12 text-center"><hr>
 						<h4>Dernières actions</h4>
 						{% for action in profil.actions %}
-							<p>{{ action.date_action }} : <b>{{ action.libelle }}</b></p>
+							<p>{{ action.date_action | date('d/m/Y à H:i') }} : <b>{{ action.libelle }}</b></p>
 						{% endfor %}
 					</div>
 				</div>

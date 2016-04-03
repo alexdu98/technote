@@ -72,7 +72,7 @@ class ActionDAO extends DAO{
 	 */
 	public function getLast($id_membre){
 		$res = array();
-		$req = $this->pdo->prepare('SELECT libelle, DATE_FORMAT(date_action, "%d/%m/%Y à %Hh%i") date_action FROM action WHERE id_membre = :id_membre ORDER BY date_action DESC LIMIT 10');
+		$req = $this->pdo->prepare('SELECT * FROM action WHERE id_membre = :id_membre ORDER BY date_action DESC LIMIT 10');
 		$req->execute(array(
 			'id_membre' => $id_membre
 		));

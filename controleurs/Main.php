@@ -231,11 +231,10 @@ class Main extends Controleur{
 						// On essaye de se connecter
 						$res = Membre::connexion($_POST);
 						if($res->success === true){
-							header('Location: /membre');
-							exit();
+							$res->message = "/membre";
 						}
 
-						$this->accueil('get', NULL, array('msgCo' => $res));
+						echo json_encode($res);
 						exit();
 					}
 

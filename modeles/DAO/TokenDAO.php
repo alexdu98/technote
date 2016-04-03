@@ -106,7 +106,7 @@ class TokenDAO extends DAO{
 	 * @return array|bool False si aucun token actif, un tableau de Token sinon
 	 */
 	public function getActif($id_membre){
-		$req = $this->pdo->prepare('SELECT ip, DATE_FORMAT(date_expiration, "%d/%m/%Y à %Hh%i") date_expiration FROM token WHERE id_membre = :id_membre AND date_expiration > NOW() LIMIT 5');
+		$req = $this->pdo->prepare('SELECT * FROM token WHERE id_membre = :id_membre AND date_expiration > NOW() LIMIT 5');
 		$req->execute(array(
 			'id_membre' => $id_membre
 		));
