@@ -25,6 +25,7 @@ $(document).ready(function(){
  * Traite le résultat d'un formulaire
  */
 function treatResponse(data, status, xhr, form){
+    grecaptcha.reset();
     var alert = '';
     if(data.success){
         if(form[0].name == "connexion"){
@@ -35,7 +36,7 @@ function treatResponse(data, status, xhr, form){
     }
     else{
         if(form[0].name == "connexion"){
-            $('#badLogin').append(data.message).show();
+            $('#badLogin').empty().append(data.message).show();
             form.find('input[type=password]').val('');
         }
         alert = 'danger';

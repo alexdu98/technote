@@ -283,13 +283,18 @@ class Membre extends TableObject{
 	 */
 	static public function checkPseudo($pseudo){
 		if(!empty($pseudo)){
-			if(mb_strlen($pseudo) >= 3 && mb_strlen($pseudo) <= 31){
-				if(preg_match('#[a-zA-Z0-9]+#', $pseudo)){
-					return true;
+			$membreDAO = new MembreDAO(BDD::getInstancePDO());
+			if($membreDAO->checkMembreExiste($pseudo) === false){
+				if(mb_strlen($pseudo) >= 3 && mb_strlen($pseudo) <= 31){
+					if(preg_match('#[a-zA-Z0-9]+#', $pseudo)){
+						return true;
+					}
+					return 'Le pseudo ne respecte pas les règles de composition (alphanumérique)';
 				}
-				return 'Le pseudo ne respecte pas les règles de composition (alphanumérique)';
+				return 'Le pseudo ne respecte pas les règles de longueur (3 à 31 caractères)';
 			}
-			return 'Le pseudo ne respecte pas les règles de longueur (3 à 31 caractères)';
+			else
+				return 'Le pseudo est déjà utilisé';
 		}
 		return 'Le pseudo n\'est pas renseigné';
 	}
@@ -302,9 +307,14 @@ class Membre extends TableObject{
 	 */
 	static public function checkEmail($email){
 		if(!empty($email)){
-			if(filter_var($email, FILTER_VALIDATE_EMAIL))
-				return true;
-			return 'L\'email n\'est pas valide';
+			$membreDAO = new MembreDAO(BDD::getInstancePDO());
+			if($membreDAO->checkMembreExiste($email) === false){
+				if(filter_var($email, FILTER_VALIDATE_EMAIL))
+					return true;
+				return 'L\'email n\'est pas valide';
+			}
+			else
+				return 'L\'email est déjà utilisé';
 		}
 		return 'L\'email n\'est pas renseigné';
 	}

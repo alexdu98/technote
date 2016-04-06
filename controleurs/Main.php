@@ -62,11 +62,8 @@ class Main extends Controleur{
 					// Si un formulaire a été envoyé
 					if(!empty($_POST)){
 						// On essaye d'inscrire l'utilisateur
-						$vars['res'] = Membre::inscription($_POST);
-						if($vars['res']->success === true){
-							$_POST = NULL;
-							$this->vue->addGlobal('post', $_POST);
-						}
+						echo json_encode(Membre::inscription($_POST));
+						exit();
 					}
 					$this->vue->display('membre_add.twig', $vars);
 					exit();
@@ -226,6 +223,7 @@ class Main extends Controleur{
 				if(!empty($_POST)){
 					// On essaye d'enregistrer le commentaire
 					echo json_encode(Commentaire::addCommentaire($_POST));
+					exit();
 				}
 		}
 	}
