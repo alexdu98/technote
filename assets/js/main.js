@@ -19,32 +19,63 @@ $(document).ready(function(){
         $(this).remove();
     });
 
+    $("[data-hide]").on("click", function(){
+        $("." + $(this).attr("data-hide")).hide();
+    });
+
 });
 
 /**
  * Traite le résultat d'un formulaire
  */
 function treatResponse(data, status, xhr, form){
-    grecaptcha.reset();
+
+    // S'il y a un ordre de redirection, redirection
+    $(location).attr('href', data.redirect);
+
+    // S'il y avait un captcha on le reset
+    if($(form[0]).find('.g-recaptcha').length)
+        grecaptcha.reset();
+
+    // Traitement du résultat de la requête AJAX
+    if(form[0].name == "connexion") {
+        treatConnexion(data, form);
+        return;
+    }
+    else if(form[0].name == "updateEmail")
+        treatUpdateEmail(data, form);
+
+    // Traiment générique selon si c'est un succès ou un échec
     var alert = '';
     if(data.success){
-        if(form[0].name == "connexion"){
-            $(location).attr('href', data.message);
-        }
         form[0].reset();
         alert = 'success';
     }
     else{
-        if(form[0].name == "connexion"){
-            $('#badLogin').empty().append(data.message).show();
-            form.find('input[type=password]').val('');
-        }
         alert = 'danger';
     }
+
+    // Construit la liste des messages
     var messagesHTML = '';
     $.each(data.msg, function(key, value){
         messagesHTML += '<li>' + value + '</li>'
     });
+
+    // Affiche les messages
     $('#messagesResultatAJAX').empty().append(messagesHTML);
     $('#divResultatAJAX').removeClass('alert-success alert-danger').addClass('alert-' + alert).show();
+}
+
+function treatConnexion(data, form){
+    if(data.success){
+
+    }
+    else{
+        $('#badLogin').empty().append(data.message).show();
+        form.find('input[type=password]').val('');
+    }
+}
+
+function treatUpdateEmail(data, form){
+    $('#email').attr('placeholder', data.update.email);
 }
