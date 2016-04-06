@@ -104,7 +104,8 @@ class Main extends Controleur{
 						// Réinitialisation du mot de passe
 						if(!empty($_POST)){
 							$res = $membre->resetLostPass($_POST);
-							$res->redirect = '/accueil';
+							if($res->success)
+								$res->redirect = '/accueil';
 							echo json_encode($res);
 							exit();
 						}
@@ -244,10 +245,8 @@ class Main extends Controleur{
 					if(!empty($_POST)){
 						// On essaye de se connecter
 						$res = Membre::connexion($_POST);
-						if($res->success === true){
+						if($res->success)
 							$res->redirect = "/membre";
-						}
-
 						echo json_encode($res);
 						exit();
 					}
@@ -283,12 +282,10 @@ class Main extends Controleur{
 						$contact = new Contact($_POST);
 						// On essaye d'envoyé le mail
 						$res = $contact->sendMail();
-						if($res->success === true){
+						if($res->success)
 							$res->msg[0] .= ', nous vous répondrons dès que possible';
-							$_POST = NULL;
-							$this->vue->addGlobal('post', $_POST);
-						}
-						$vars['res'] = $res;
+						echo json_encode($res);
+						exit();
 					}
 				}
 
