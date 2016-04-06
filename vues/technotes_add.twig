@@ -6,7 +6,7 @@
 				<div class="panel-body">
 					<p class="text-center text-danger text">* champs obligatoires</p>
 					{% include 'templates/messages.twig' %}
-					<form method="POST" class="form-horizontal">
+					<form method="POST" class="form-horizontal" name="addTechnote">
 						<div class="form-group">
 							<label for="titre" class="col-md-2 control-label">Titre*</label>
 							<div class="col-md-10">
@@ -22,7 +22,7 @@
 						<div class="form-group">
 							<label for="contenu" class="col-md-2 control-label">Contenu*</label>
 							<div class="col-md-10">
-								<textarea name="contenu" id="contenu" class="form-control" rows="25" cols="10">{{ post.contenu }}</textarea>
+								<textarea name="contenu" id="contenu" class="form-control" rows="25" cols="10" required>{{ post.contenu }}</textarea>
 							</div>
 							<script>
 				                CKEDITOR.replace('contenu');

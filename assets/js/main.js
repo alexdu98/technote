@@ -1,6 +1,11 @@
 $(document).ready(function(){
 
     var optionsAJAXFORM = {
+        beforeSerialize: function(arr, form, options){
+            for(instance in CKEDITOR.instances){
+                CKEDITOR.instances[instance].updateElement();
+            }
+        },
         'success' : treatResponse,
         'dataType' : 'json'
     };
@@ -44,6 +49,8 @@ function treatResponse(data, status, xhr, form){
     }
     else if(form[0].name == "updateEmail")
         treatUpdateEmail(data, form);
+    else if(form[0].name == "addTechnote")
+        treatAddTechnote(data, form);
 
     // Traiment générique selon si c'est un succès ou un échec
     var alert = '';
@@ -77,5 +84,15 @@ function treatConnexion(data, form){
 }
 
 function treatUpdateEmail(data, form){
-    $('#email').attr('placeholder', data.update.email);
+    if(data.success)
+        $('#email').attr('placeholder', data.update.email);
+}
+
+function treatAddTechnote(data, form){
+    if(data.success){
+        for(instance in CKEDITOR.instances){
+            CKEDITOR.instances[instance].updateElement();
+            CKEDITOR.instances[instance].setData('');
+        }
+    }
 }

@@ -22,9 +22,11 @@ class Technote extends TableObject{
 			));
 			if(($resSaveTechnote = $technoteDAO->save($technote)) !== false){
 				$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
-				foreach($param['id_mot_cle'] as $id_mot_cle){
-					$decrire = new Decrire(array('id_technote' => $resSaveTechnote->id_technote, 'id_mot_cle' => $id_mot_cle));
-					$decrireDAO->save($decrire);
+				if(!empty($param['id_mot_cle'])){
+					foreach($param['id_mot_cle'] as $id_mot_cle){
+						$decrire = new Decrire(array('id_technote' => $resSaveTechnote->id_technote, 'id_mot_cle' => $id_mot_cle));
+						$decrireDAO->save($decrire);
+					}
 				}
 				$actionDAO = new ActionDAO(BDD::getInstancePDO());
 				$action = new Action(array(
@@ -59,9 +61,11 @@ class Technote extends TableObject{
 			$std->msg[] = $res;
 		if(($res = Technote::checkURLImage($param['url_image'])) !== true)
 			$std->msg[] = $res;
-		foreach($param['id_mot_cle'] as $id_mot_cle){
-			if(($res = MotCle::checkExiste($id_mot_cle)) !== true)
-				$std->msg[] = $res;
+		if(!empty($param['id_mot_cle'])){
+			foreach($param['id_mot_cle'] as $id_mot_cle){
+				if(($res = MotCle::checkExiste($id_mot_cle)) !== true)
+					$std->msg[] = $res;
+			}
 		}
 
 		if(empty($std->msg))

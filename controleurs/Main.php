@@ -189,11 +189,8 @@ class Main extends Controleur{
 					// Si un formulaire a été envoyé
 					if(!empty($_POST)){
 						// On essaye d'enregistrer la technote
-						$vars['res'] = Technote::addTechnote($_POST);
-						if($vars['res']->success === true){
-							$_POST = NULL;
-							$this->vue->addGlobal('post', $_POST);
-						}
+						echo json_encode(Technote::addTechnote($_POST));
+						exit();
 					}
 					$this->vue->display('technotes_add.twig', $vars);
 					exit();
