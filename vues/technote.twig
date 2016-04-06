@@ -25,24 +25,11 @@
 			<div class="panel panel-default">
 				<div class="panel-body">
 					{% include 'templates/messages.twig' %}
-					<div id="divCommentaires">
-						{% for commentaire in technote.commentaires %}
-							<div class="commentaire">
-								<span class="id_commentaire" hidden>{{ commentaire.id_commentaire }}</span>
-								<b class="texte-bleu">{{ commentaire.pseudo | capitalize }}</b> : {{ commentaire.commentaire }}<br>
-								<div class="container-fluid">
-									<div class="row">
-										<div class="col-md-6">
-											<a class="repondreCommentaire">Répondre</a>
-										</div>
-										<div class="col-md-6 text-right">
-											{{ commentaire.date_creation | date('d/m/Y à H:i') }}
-										</div>
-									</div>
-								</div>
-							</div>
-						{% endfor %}
-					</div>
+					{% if technote.commentaires %}
+						<div id="divCommentaires">
+							{% include 'templates/commentaire.twig' with {'commentaires': technote.commentaires} %}
+						</div>
+					{% endif %}
 					{% if session.user %}
 						<div>
 							<form method="POST" action="/commentaires/add/" class="form-horizontal" name="commentaire">
@@ -60,6 +47,16 @@
 								<input type="hidden" name="id_technote" value="{{ technote.id_technote }}">
 								<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
 							</form>
+						</div>
+					{% else %}
+						<div class="alert alert-info" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<div class="flex">
+								<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+								<ul>
+									<li>Vous devez être connecté pour laisser un commentaire</li>
+								</ul>
+							</div>
 						</div>
 					{% endif %}
 				</div>

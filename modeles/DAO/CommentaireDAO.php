@@ -31,10 +31,12 @@ class CommentaireDAO extends DAO{
 	public function save($commentaire){
 		if($commentaire->id_commentaire == DAO::UNKNOWN_ID){
 			$champs = $valeurs = '';
+			$fields = $commentaire->getFields();
 			foreach($commentaire as $nomChamp => $valeur){
 				$champs .= $nomChamp . ', ';
 				if($nomChamp == 'id_commentaire_parent' && $valeur == NULL){
 					$valeurs .= "NULL, ";
+					unset($fields['id_commentaire_parent']);
 				}
 				else{
 					$valeurs .= ":$nomChamp, ";
@@ -44,7 +46,7 @@ class CommentaireDAO extends DAO{
 			$valeurs = substr($valeurs, 0, -2);
 			$sql = 'INSERT INTO commentaire(' . $champs .') VALUES(' . $valeurs .')';
 			$req = $this->pdo->prepare($sql);
-			if($req->execute($commentaire->getFields())){
+			if($req->execute($fields)){
 				$commentaire->id_technote = $this->pdo->lastInsertId();
 				return $commentaire;
 			}
@@ -85,14 +87,19 @@ class CommentaireDAO extends DAO{
 		return $res->nbRedige;
 	}
 
-	public function getAllForOneTechnote($id_technote){
+	public function getTreeForOneTechnote($id_technote, $id_commentaire_parent){
 		$res = array();
-		$req = $this->pdo->prepare('SELECT c.*, m.pseudo FROM commentaire c INNER JOIN membre m ON m.id_membre=c.id_auteur WHERE id_technote = :id_technote');
+		$op = empty($id_commentaire_parent) ? 'IS' : '=';
+		$req = $this->pdo->prepare('SELECT c.*, m.pseudo FROM commentaire c INNER JOIN membre m ON m.id_membre=c.id_auteur WHERE id_technote = :id_technote AND id_commentaire_parent ' . $op . ' :id_commentaire_parent');
 		$req->execute(array(
-			'id_technote' => $id_technote
+			'id_technote' => $id_technote,
+			'id_commentaire_parent' => $id_commentaire_parent
 		));
-		foreach($req->fetchAll() as $ligne)
+		$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
+		foreach($req->fetchAll() as $ligne){
+			$ligne->commentaires = $commentaireDAO->getTreeForOneTechnote($id_technote, $ligne->id_commentaire);
 			$res[] = new Commentaire(get_object_vars($ligne));
+		}
 		return $res;
 	}
 

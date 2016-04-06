@@ -1,0 +1,19 @@
+{% for commentaire in commentaires %}
+	<div class="commentaire">
+		<span class="id_commentaire" hidden>{{ commentaire.id_commentaire }}</span>
+		<b class="texte-bleu">{{ commentaire.pseudo | capitalize }}</b> : {{ commentaire.commentaire }}<br>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-6">
+					<a class="repondreCommentaire">Répondre</a>
+				</div>
+				<div class="col-md-6 text-right">
+					<span class="dateCommentaire">{{ commentaire.date_creation | date('d/m/Y à H:i') }}</span>
+				</div>
+			</div>
+		</div>
+		{% if commentaire.commentaires is not null %}
+			{% include 'templates/commentaire.twig' with {'commentaires': commentaire.commentaires} %}
+		{% endif %}
+	</div>
+{% endfor %}

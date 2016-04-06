@@ -28,8 +28,8 @@ class TechnoteDAO extends DAO{
 		$res->motsCles = $decrireDAO->getAllForOneTechnote($id);
 
 		$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
-		$res->commentaires = $commentaireDAO->getAllForOneTechnote($id);
-		
+		$res->commentaires = $commentaireDAO->getTreeForOneTechnote($id, NULL);
+
 		return new Technote(get_object_vars($res));
 	}
 
