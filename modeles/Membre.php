@@ -188,17 +188,16 @@ class Membre extends TableObject{
 	private function checkEdit(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
-		if(!empty($param['email']) && ($res = Membre::checkEmail($param['email'])) !== true)
+		if(!empty($param['updateEmail']) && ($res = Membre::checkEmail($param['email'])) !== true)
 			$std->msg[] = $res;
-		elseif(!empty($param['passwordNow']) || !empty($param['password']) || !empty($param['passwordConfirm'])){
+		elseif(!empty($param['updateMDP'])){
 			if(($res = Membre::checkPassUser($param['passwordNow'])) !== true)
 				$std->msg[] = $res;
-			if(($res = Membre::checkPass($param['password'], $param['passwordConfirm'])) !== true)
+			if(($res = Membre::checkPass($param['passwordNew'], $param['passwordNewConfirm'])) !== true)
 				$std->msg[] = $res;
 		}
-		if(empty($param['email']) && empty($param['passwordNow']) && empty($param['password']) && empty($param['passwordConfirm'])){
+		else{
 			$std->msg[] = 'Aucun formulaire rempli';
-			return $std;
 		}
 
 		if(empty($std->msg))
@@ -268,11 +267,15 @@ class Membre extends TableObject{
 	 * @return bool|string  True si le mot de passe correspond au membre, un message sinon
 	 * @static
 	 */
-	static public function checkPassUser($pass){
-		$membreDAO = new MembreDAO(BDD::getInstancePDO());
-		if($membreDAO->checkUserPass($_SESSION['user']->pseudo, $pass) !== false)
-			return true;
-		return 'Le mot de passe actuel est incorrect';
+	static public function checkPassUser(&$pass){
+		if(!empty($pass)){
+			$membreDAO = new MembreDAO(BDD::getInstancePDO());
+			if($membreDAO->checkUserPass($_SESSION['user']->pseudo, $pass) !== false)
+				return true;
+			return 'Le mot de passe actuel est incorrect';
+		}
+		else
+			return 'Le mot de passe actuel n\'est pas renseigné';
 	}
 
 	/**
@@ -281,7 +284,7 @@ class Membre extends TableObject{
 	 * @return bool|string  True si le pseudo est valide, un message sinon
 	 * @static
 	 */
-	static public function checkPseudo($pseudo){
+	static public function checkPseudo(&$pseudo){
 		if(!empty($pseudo)){
 			$membreDAO = new MembreDAO(BDD::getInstancePDO());
 			if($membreDAO->checkMembreExiste($pseudo) === false){
@@ -305,7 +308,7 @@ class Membre extends TableObject{
 	 * @return bool|string  True si l'email est valide, un message sinon
 	 * @static
 	 */
-	static public function checkEmail($email){
+	static public function checkEmail(&$email){
 		if(!empty($email)){
 			$membreDAO = new MembreDAO(BDD::getInstancePDO());
 			if($membreDAO->checkMembreExiste($email) === false){
@@ -326,7 +329,7 @@ class Membre extends TableObject{
 	 * @return bool|string True si le mot de passe est valide, un message sinon
 	 * @static
 	 */
-	static public function checkPass($pass, $passConfirm){
+	static public function checkPass(&$pass, &$passConfirm){
 		if(!empty($pass) && !empty($passConfirm)){
 			if($pass == $passConfirm){
 				if(mb_strlen($pass) >= 6 && mb_strlen($pass) <= 32){
@@ -358,7 +361,7 @@ class Membre extends TableObject{
 	 * @return bool|string True si les conditions sont acceptées, un message sinon
 	 * @static
 	 */
-	static public function checkConditions($conditions){
+	static public function checkConditions(&$conditions){
 		if(!empty($conditions) && $conditions == 'on')
 			return true;
 		return 'Les conditions d\'utilisation ne sont pas acceptées';

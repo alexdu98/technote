@@ -84,10 +84,14 @@ class Main extends Controleur{
 						// Si le formulaire est valide au niveau faille CSRF
 						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
 							// On essaye de faire les modifications
-							$vars['res'] = $_SESSION['user']->editProfil($_POST);
-							if($vars['res']->success === true)
-								$this->vue->addGlobal('session', $_SESSION);
+							$res = $_SESSION['user']->editProfil($_POST);
+							if(!empty($_POST['updateEmail']) && $res->success)
+								$res->update['email'] = $_SESSION['user']->email;
+							echo json_encode($res);
+							exit();
 						}
+						echo 'wtf';
+						var_dump($_POST['jetonCSRF'], $_SESSION['jetonCSRF']);
 					}
 					$this->vue->display('membre_edit.twig', $vars);
 				}
@@ -99,11 +103,10 @@ class Main extends Controleur{
 					if(!empty($_GET['cle']) && ($membre = $membreDAO->checkCleResetPass($_GET['cle'])) !== false){
 						// Réinitialisation du mot de passe
 						if(!empty($_POST)){
-							$vars['res'] = $membre->resetLostPass($_POST);
-							if($vars['res']->success === true){
-								$this->accueil('get', NULL, $vars);
-								exit();
-							}
+							$res = $membre->resetLostPass($_POST);
+							$res->redirect = '/accueil';
+							echo json_encode($res);
+							exit();
 						}
 						$vars['etape'] = 'formMDP';
 					}
@@ -242,7 +245,7 @@ class Main extends Controleur{
 						// On essaye de se connecter
 						$res = Membre::connexion($_POST);
 						if($res->success === true){
-							$res->message = "/membre";
+							$res->redirect = "/membre";
 						}
 
 						echo json_encode($res);

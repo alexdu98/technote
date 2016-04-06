@@ -10,7 +10,7 @@
 					</ul>
 					<p class="text-center text-danger text">* champs obligatoires</p>
 					{% include 'templates/messages.twig' %}
-					<form method="POST" class="form-horizontal">
+					<form method="POST" class="form-horizontal" name="updateEmail">
 						<div class="form-group">
 							<label for="email" class="col-sm-2 control-label">Email*</label>
 							<div class="col-sm-10">
@@ -19,13 +19,13 @@
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-2 col-sm-10">
-								<input type="submit" class="btn btn-default" value="Valider">
+								<input type="submit" name="updateEmail" class="btn btn-default" value="Valider">
 							</div>
 						</div>
 						<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
 					</form>
 					<hr>
-					<form method="POST" class="form-horizontal">
+					<form method="POST" class="form-horizontal" name="updateMDP">
 						<div class="form-group">
 							<label for="passwordNow" class="col-sm-2 control-label">Mot de passe actuel*</label>
 							<div class="col-sm-10">
@@ -46,10 +46,10 @@
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-2 col-sm-10">
-								<input type="submit" class="btn btn-default" value="Valider">
+								<input type="submit" name="updateMDP" class="btn btn-default" value="Valider">
 							</div>
 						</div>
-						<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}>">
+						<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
 					</form>
 				</div>
 			</div>

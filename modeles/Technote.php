@@ -75,7 +75,7 @@ class Technote extends TableObject{
 	 * @return bool|string True si le titre est valide, un message sinon
 	 * @static
 	 */
-	static public function checkTitre($titre){
+	static public function checkTitre(&$titre){
 		if(!empty($titre)){
 			if(mb_strlen(strip_tags($titre)) == mb_strlen($titre)){
 				if(mb_strlen($titre) >= 3 && mb_strlen($titre) <= 63){
@@ -94,7 +94,7 @@ class Technote extends TableObject{
 	 * @return bool|string True si le contenu est valide, un message sinon
 	 * @static
 	 */
-	static public function checkContenu($contenu){
+	static public function checkContenu(&$contenu){
 		if(!empty($contenu)){
 			if(mb_strlen($contenu) >= 15 && mb_strlen($contenu) <= 65535){
 				return true;
@@ -110,7 +110,7 @@ class Technote extends TableObject{
 	 * @return bool|string True si l'URL de l'image est valide, un message sinon
 	 * @static
 	 */
-	static public function checkURLImage($url){
+	static public function checkURLImage(&$url){
 		if(!empty($url)){
 			if(filter_var($url, FILTER_VALIDATE_URL))
 				return true;

@@ -50,7 +50,7 @@ class Commentaire extends TableObject{
 		return $std;
 	}
 
-	static private function checkCommentaire($commentaire){
+	static private function checkCommentaire(&$commentaire){
 		if(!empty($commentaire)){
 			if(mb_strlen(strip_tags($commentaire)) == mb_strlen($commentaire)){
 				if(mb_strlen($commentaire) >= 1 && mb_strlen($commentaire) <= 2047)

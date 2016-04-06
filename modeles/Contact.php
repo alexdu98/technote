@@ -72,7 +72,7 @@ class Contact{
 		return $std;
 	}
 
-	private function checkMessage($message){
+	private function checkMessage(&$message){
 		if(!empty($message)){
 			if(mb_strlen(strip_tags($message)) == mb_strlen($message)){
 				if(mb_strlen($message) >= 8 && mb_strlen($message) <= 2047)
@@ -84,7 +84,7 @@ class Contact{
 		return 'Le message n\'est pas renseigné';
 	}
 
-	private function checkSujet($sujet){
+	private function checkSujet(&$sujet){
 		if(!empty($sujet)){
 			if(mb_strlen(strip_tags($sujet)) == mb_strlen($sujet)){
 				if(mb_strlen($sujet) >= 3 && mb_strlen($sujet) <= 63)

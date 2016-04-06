@@ -4,7 +4,7 @@ class Captcha{
 
 	static private $clePrivee = PRIVATE_KEY_RECAPTCHA;
 
-	static public function check($captcha){
+	static public function check(&$captcha){
 		if(!empty($captcha)){
 			$res = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . self::$clePrivee . "&response=" . $captcha . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
 			$res = json_decode($res);
