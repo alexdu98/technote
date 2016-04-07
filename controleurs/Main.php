@@ -223,7 +223,11 @@ class Main extends Controleur{
 			case 'add':
 				if(!empty($_POST)){
 					// On essaye d'enregistrer le commentaire
-					echo json_encode(Commentaire::addCommentaire($_POST));
+					$res = Commentaire::addCommentaire($_POST);
+					if($res->success){
+						$res->add['commentaire'] = $this->vue->render('templates/commentaire.twig', array('commentaires' => $res->add));
+					}
+					echo json_encode($res);
 					exit();
 				}
 		}

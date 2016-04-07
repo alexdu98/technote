@@ -2,20 +2,19 @@
 
 class Commentaire extends TableObject{
 
-	static public function addCommentaire(&$param) {
+	static public function addCommentaire(&$param){
 		$resCheck = self::check($param);
 		$res = $resCheck;
 		if($resCheck->success === true){
 			$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
 			$commentaire = new Commentaire(array(
 				'id_commentaire' => DAO::UNKNOWN_ID,
-				'commentaire' => $param['commentaire'],
+				'commentaire' => nl2br($param['commentaire']),
 				'id_auteur' => $_SESSION['user']->id_membre,
 				'id_technote' => $param['id_technote'],
 				'id_commentaire_parent' => $param['id_commentaire_parent']
 			));
-			if(($resSaveTechnote = $commentaireDAO->save($commentaire)) !== false){
-				$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
+			if(($resSaveCommentaire = $commentaireDAO->save($commentaire)) !== false){
 				$actionDAO = new ActionDAO(BDD::getInstancePDO());
 				$action = new Action(array(
 					'id_action' => DAO::UNKNOWN_ID,
@@ -25,6 +24,7 @@ class Commentaire extends TableObject{
 				$actionDAO->save($action);
 				$res->success = true;
 				$res->msg[] = 'Ajout du commentaire réussie';
+				$res->add['commentaires'] = $commentaireDAO->getOne($resSaveCommentaire->id_commentaire);
 			}
 			else{
 				$res->success = false;

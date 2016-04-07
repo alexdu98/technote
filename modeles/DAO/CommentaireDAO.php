@@ -10,7 +10,7 @@ class CommentaireDAO extends DAO{
 	// #######################################
 
 	public function getOne($id){
-		$req = $this->pdo->prepare('SELECT * FROM commentaire WHERE id_commentaire = :id_commentaire');
+		$req = $this->pdo->prepare('SELECT c.*, m.pseudo FROM commentaire c INNER JOIN membre m ON m.id_membre=c.id_auteur WHERE id_commentaire = :id_commentaire');
 		$req->execute(array(
 			'id_commentaire' => $id
 		));
@@ -47,7 +47,7 @@ class CommentaireDAO extends DAO{
 			$sql = 'INSERT INTO commentaire(' . $champs .') VALUES(' . $valeurs .')';
 			$req = $this->pdo->prepare($sql);
 			if($req->execute($fields)){
-				$commentaire->id_technote = $this->pdo->lastInsertId();
+				$commentaire->id_commentaire = $this->pdo->lastInsertId();
 				return $commentaire;
 			}
 			return false;

@@ -17,10 +17,14 @@ $(document).ready(function(){
 
     $('.repondreCommentaire').on('click', function(){
         var id_commentaire_parent = $(this).closest('.commentaire').find('.id_commentaire').html();
-        var form = $('form[name=commentaire]').clone().attr('name', 'commentaire' + id_commentaire_parent);
-        $(this).closest('.row').append(form);
-        $(form).append('<input type="hidden" name="id_commentaire_parent" value="' + id_commentaire_parent + '">');
-        $(form).ajaxForm(optionsAJAXFORM);
+        var clone = $('form[name=addCommentaire]').parent().clone();
+        console.log(clone);
+        $(this).closest('.commentaire').append(clone);
+        $(clone).find('form').attr('name', 'addCommentaireImbrique');
+        $(clone).find('label').attr('for', 'commentaire' + id_commentaire_parent);
+        $(clone).find('#commentaire').attr('id', 'commentaire' + id_commentaire_parent);
+        $(clone).find('form').append('<input type="hidden" name="id_commentaire_parent" value="' + id_commentaire_parent + '">');
+        $(clone).find('form').ajaxForm(optionsAJAXFORM);
         $(this).remove();
     });
 
@@ -51,6 +55,8 @@ function treatResponse(data, status, xhr, form){
         treatUpdateEmail(data, form);
     else if(form[0].name == "addTechnote")
         treatAddTechnote(data, form);
+    else if(form[0].name == "addCommentaire" || form[0].name == "addCommentaireImbrique")
+        treatAddCommentaire(data, form);
 
     // Traiment générique selon si c'est un succès ou un échec
     var alert = '';
@@ -94,5 +100,12 @@ function treatAddTechnote(data, form){
             CKEDITOR.instances[instance].updateElement();
             CKEDITOR.instances[instance].setData('');
         }
+    }
+}
+
+function treatAddCommentaire(data, form){
+    if(data.success){
+        $(form[0]).parent().before(data.add.commentaire);
+        $(form[0]).parent().prev().find('.repondreCommentaire').remove();
     }
 }
