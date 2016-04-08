@@ -55,8 +55,11 @@ class TokenDAO extends DAO{
 		}
 	}
 
-	public function delete($token){
-		return $this->pdo->exec("DELETE FROM token WHERE id_token = '$token->id_token'");
+	public function delete($id){
+		$req = $this->pdo->prepare('DELETE FROM token WHERE id_token = :id_token');
+		return $req->execute(array(
+			'id_token' => $id
+		));
 	}
 
 	// #######################################

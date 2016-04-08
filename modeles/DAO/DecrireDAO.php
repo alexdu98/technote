@@ -42,8 +42,12 @@ class DecrireDAO extends DAO{
 		return $res;
 	}
 
-	public function delete($decrire){
-		return $this->pdo->exec("DELETE FROM decrire WHERE id_technote = '$decrire->id_technote' AND id_mot_cle = '$decrire->id_mot_cle'");
+	public function delete($id){
+		$req = $this->pdo->prepare('DELETE FROM decrire WHERE id_technote = :id_technote AND id_mot_cle = :id_mot_cle');
+		return $req->execute(array(
+			'id_technote' => $id['id_technote'],
+			'id_mot_cle' => $id['id_mot_cle']
+		));
 	}
 
 	// #######################################

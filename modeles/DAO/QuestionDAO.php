@@ -55,8 +55,11 @@ class QuestionDAO extends DAO{
 		}
 	}
 
-	public function delete($question){
-		return $this->pdo->exec("DELETE FROM question WHERE id_question = '$question->id_question'");
+	public function delete($id){
+		$req = $this->pdo->prepare('DELETE FROM question WHERE id_question = :id_question');
+		return $req->execute(array(
+			'id_question' => $id
+		));
 	}
 
 	// #######################################

@@ -26,7 +26,7 @@ abstract class DAO{
 
 	/**
 	 * Récupère une ligne grâce à ses identifiants
-	 * @param array $id
+	 * @param mixed $id L'identifiant de la ligne à récupérer
 	 */
 	abstract public function getOne($id);
 
@@ -45,8 +45,8 @@ abstract class DAO{
 
 	/**
 	 * Supprime une ligne grâce à ses identifiants
-	 * @param mixed $obj L'objet à supprimer
+	 * @param mixed $id L'identifiant de la ligne à supprimer
 	 */
-	abstract public function delete($obj);
+	abstract public function delete($id);
 
 }

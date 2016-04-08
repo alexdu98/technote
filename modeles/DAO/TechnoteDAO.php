@@ -73,10 +73,12 @@ class TechnoteDAO extends DAO{
 			return $this->pdo->exec($req);
 		}
 	}
-	
-	public function delete($technote){
-		return $this->pdo->exec("DELETE FROM technote 
-								WHERE id_technote = '$technote->id_technote'");
+
+	public function delete($id){
+		$req = $this->pdo->prepare('DELETE FROM technote WHERE id_technote = :id_technote');
+		return $req->execute(array(
+			'id_technote' => $id
+		));
 	}
 
 	// #######################################

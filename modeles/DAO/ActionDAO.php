@@ -57,8 +57,11 @@ class ActionDAO extends DAO{
 		}
 	}
 
-	public function delete($action){
-		return $this->pdo->exec("DELETE FROM action WHERE id_action = '$action->id_action'");
+	public function delete($id){
+		$req = $this->pdo->prepare('DELETE FROM action WHERE id_action = :id_action');
+		return $req->execute(array(
+			'id_action' => $id
+		));
 	}
 
 	// #######################################

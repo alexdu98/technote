@@ -55,8 +55,11 @@ class GroupeDAO extends DAO{
 		}
 	}
 
-	public function delete($groupe){
-		return $this->pdo->exec("DELETE FROM groupe WHERE id_groupe = '$groupe->id_groupe'");
+	public function delete($id){
+		$req = $this->pdo->prepare('DELETE FROM groupe WHERE id_groupe = :id_groupe');
+		return $req->execute(array(
+			'id_groupe' => $id
+		));
 	}
 
 	// #######################################

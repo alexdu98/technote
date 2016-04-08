@@ -55,8 +55,11 @@ class MotCleDAO extends DAO{
 		}
 	}
 
-	public function delete($motCle){
-		return $this->pdo->exec("DELETE FROM mot_cle WHERE id_mot_cle = '$motCle->id_mot_cle'");
+	public function delete($id){
+		$req = $this->pdo->prepare('DELETE FROM mot_cle WHERE id_mot_cle = :id_mot_cle');
+		return $req->execute(array(
+			'id_mot_cle' => $id
+		));
 	}
 
 	// #######################################

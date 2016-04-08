@@ -55,8 +55,11 @@ class ReponseDAO extends DAO{
 		}
 	}
 
-	public function delete($reponse){
-		return $this->pdo->exec("DELETE FROM reponse WHERE id_reponse = '$reponse->id_reponse'");
+	public function delete($id){
+		$req = $this->pdo->prepare('DELETE FROM reponse WHERE id_reponse = :id_reponse');
+		return $req->execute(array(
+			'id_reponse' => $id
+		));
 	}
 
 	// #######################################

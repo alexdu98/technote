@@ -61,8 +61,11 @@ class VisiteDAO extends DAO{
 		}
 	}
 
-	public function delete($visite){
-		return $this->pdo->exec("DELETE FROM visite WHERE id_visite = '$visite->id_visite'");
+	public function delete($id){
+		$req = $this->pdo->prepare('DELETE FROM visite WHERE id_visite = :id_visite');
+		return $req->execute(array(
+			'id_visite' => $id
+		));
 	}
 
 	// #######################################
