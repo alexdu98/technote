@@ -29,18 +29,29 @@ class TokenDAO extends DAO{
 	}
 
 	public function save($token){
+		$fields = $token->getFields();
 		if($token->id_token == DAO::UNKNOWN_ID){
+			unset($fields['id_token']);
 			$champs = $valeurs = '';
 			foreach($token as $nomChamp => $valeur){
+				if($nomChamp == 'id_token') continue;
 				$champs .= $nomChamp . ', ';
-				$valeurs .= "'$valeur', ";
+				if($valeur === NULL){
+					$valeurs .= 'NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$valeurs .= ":$nomChamp, ";
+				}
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			$req = 'INSERT INTO token(' . $champs .', date_expiration) VALUES(' . $valeurs .', DATE_ADD(NOW(), INTERVAL ' . DUREE_COOKIE_AUTOCONNECT_JOURS . ' DAY))';
-			$res = $this->pdo->exec($req);
-			$token->id_token = $this->pdo->lastInsertId();
-			return $res;
+			$req = $this->pdo->prepare('INSERT INTO token(' . $champs . ', date_expiration) VALUES(' . $valeurs . ', DATE_ADD(NOW(), INTERVAL ' . DUREE_COOKIE_AUTOCONNECT_JOURS . ' DAY))');
+			if($req->execute($fields)){
+				$token->id_token = $this->pdo->lastInsertId();
+				return $token;
+			}
+			return false;
 		}
 		else{
 			$id_token = $token->id_token;
@@ -72,16 +83,17 @@ class TokenDAO extends DAO{
 	 */
 	public function checkToken(){
 		if(!empty($_COOKIE['token'])){
-			$req = $this->pdo->prepare('SELECT M.id_membre, pseudo, email, bloquer, G.libelle 
+			$req = $this->pdo->prepare('SELECT M.*, G.libelle groupe
 					FROM token T 
 					JOIN membre M ON M.id_membre=T.id_membre 
 					JOIN groupe G ON G.id_groupe=M.id_groupe 
-					WHERE cle = :token');
+					WHERE cle = :token AND date_expiration > NOW() AND actif = 1');
 			$req->execute(array(
 				'token' => $_COOKIE['token']
 			));
 			if($res = $req->fetch()){
-				$_SESSION['user'] = $res;
+				unset($res->password, $res->cle_reset_pass);
+				$_SESSION['user'] = new Membre(get_object_vars($res));
 				return;
 			}
 		}
@@ -95,7 +107,7 @@ class TokenDAO extends DAO{
 	 * @return int Le nombre de token actif du membre
 	 */
 	public function getNbActif($id_membre){
-		$req = $this->pdo->prepare('SELECT COUNT(*) nbActif FROM token WHERE id_membre = :id_membre AND date_expiration > NOW()');
+		$req = $this->pdo->prepare('SELECT COUNT(*) nbActif FROM token WHERE id_membre = :id_membre AND date_expiration > NOW() AND actif = 1');
 		$req->execute(array(
 			'id_membre' => $id_membre
 		));
@@ -109,7 +121,7 @@ class TokenDAO extends DAO{
 	 * @return array|bool False si aucun token actif, un tableau de Token sinon
 	 */
 	public function getActif($id_membre){
-		$req = $this->pdo->prepare('SELECT * FROM token WHERE id_membre = :id_membre AND date_expiration > NOW() LIMIT 5');
+		$req = $this->pdo->prepare('SELECT * FROM token WHERE id_membre = :id_membre AND date_expiration > NOW() AND actif = 1 LIMIT 5');
 		$req->execute(array(
 			'id_membre' => $id_membre
 		));
@@ -126,6 +138,13 @@ class TokenDAO extends DAO{
 		}
 		else
 			return false;
+	}
+
+	public function desactiver($id){
+		$req = $this->pdo->prepare('UPDATE token SET actif = 0 WHERE id_token = :id_token');
+		return $req->execute(array(
+			'id_token' => $id
+		));
 	}
 
 }

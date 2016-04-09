@@ -112,4 +112,11 @@ class CommentaireDAO extends DAO{
 		return $res;
 	}
 
+	public function desactiver($id){
+		$req = $this->pdo->prepare('UPDATE commentaire SET visible = 0 WHERE id_commentaire = :id_commentaire');
+		return $req->execute(array(
+			'id_commentaire' => $id
+		));
+	}
+
 }

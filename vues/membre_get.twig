@@ -8,11 +8,16 @@
 						<li role="presentation" class="active"><a href="/membre/get">Profil</a></li>
 						<li role="presentation"><a href="/membre/edit">Modifier</a></li>
 					</ul>
+					<br>
+					{% include 'templates/messages.twig' %}
 					<div class="col-md-8">
 						<p>
-							Connexion automatique sur {{ profil.nbTokenActif }} navigateur(s) <br>
+							Connexion automatique sur <span id="nbNavCoAuto">{{ profil.nbTokenActif }}</span> navigateur(s) <br>
 							{% for token in profil.tokenActif %}
-								IP de création : {{ token.ip }} / Expire le {{ token.date_expiration | date('d/m/Y à H:i') }} : <a class="deleteToken">se déconnecter</a><br>
+								<form method="POST" action="/token/drop/{{ token.id_token }}" class="form-horizontal" name="dropToken">
+									<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+									IP de création : {{ token.ip }} / Expire le {{ token.date_expiration | date('d/m/Y à H:i') }} : <input type="submit" class="btn btn-link" value="Déconnecter">
+								</form>
 							{% endfor %}
 						</p>
 						<br>

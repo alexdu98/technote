@@ -44,11 +44,14 @@ $(document).ready(function(){
         $(this).remove();
     });
 
+    $('.lienSendAjax').on('click', dropCommentaireForm);
+
+    function dropCommentaireForm(){
+        $(this).next().ajaxSubmit(optionsAJAXFORM);
+    }
+
     // Au clic sur un lien pour modifier un commentaire, on appelle le callback
     $('.modifierCommentaire').on('click', editCommentaireForm);
-
-    // Au clic sur un lien pour supprimer un commentaire, on appelle le callback
-    $('.supprimerCommentaire').on('click', dropCommentaireForm);
 
     // Au clic sur un lien pour modifier une technote
     $('#modifierTechnote').on('click', function(){
@@ -97,6 +100,8 @@ $(document).ready(function(){
             treatEditCommentaire(data, form);
         else if(form[0].name == "dropCommentaire")
             treatDropCommentaire(data, form);
+        else if(form[0].name == "dropToken")
+            treatDropToken(data, form);
 
         // Affiche les messages
         $('#messagesResultatAJAX').empty().append(constructMessagesHTML(data, form));
@@ -149,15 +154,12 @@ $(document).ready(function(){
         $(this).hide();
     }
 
-    function dropCommentaireForm(){
-
-    }
-
     function treatConnexion(data, form){
         if(!data.success){
-            $('#badLogin').empty().append(data.message).show();
+            $('#badLogin').empty().append(data.msg).show();
             form.find('input[type=password]').val('');
         }
+        $(location).attr('href', data.redirect);
     }
 
     function treatUpdateEmail(data, form){
@@ -181,10 +183,16 @@ $(document).ready(function(){
         $('h1').after(messages);
     }
 
+    function treatDropToken(data, form){
+        $(form).remove();
+        $('#nbNavCoAuto').html(($('#nbNavCoAuto').html()) - 1);
+    }
+
     function treatAddCommentaire(data, form){
         if(data.success){
             $(form[0]).parent().before(data.add.commentaire);
             $(form[0]).parent().prev().find('.modifierCommentaire').on('click', editCommentaireForm);
+            $(form[0]).parent().prev().find('.lienSendAjax').on('click', dropCommentaireForm);
             $(form[0]).parent().prev().find('.repondreCommentaire').remove();
         }
     }
@@ -202,7 +210,8 @@ $(document).ready(function(){
 
     function treatDropCommentaire(data, form){
         if(data.success){
-
+            $(form[0]).closest('.commentaire').find('.texteCommentaire').html('<span class="commentaireSupprimer">// Commentaire supprimé</span>');
+            $(form[0]).closest('.container-fluid').prev().nextAll().remove();
         }
     }
 

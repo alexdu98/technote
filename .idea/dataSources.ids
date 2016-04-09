@@ -472,105 +472,109 @@ id_mot_cle</columns>
         <mandatory>1</mandatory>
         <data-type>varchar(15)</data-type>
       </column>
-      <index id="120" parent="11" name="FK_ID_MEMBRE_idx">
-        <columns>id_membre</columns>
-        <desc-columns></desc-columns>
-      </index>
-      <key id="121" parent="11" name="PRIMARY">
-        <columns>id_token</columns>
-        <primary>1</primary>
-      </key>
-      <foreign-key id="122" parent="11" name="FK_ID_MEMBRE_TOKEN">
-        <columns>id_membre</columns>
-        <ref-key>~.membre.PRIMARY</ref-key>
-        <cascade-update-rule>restrict</cascade-update-rule>
-        <cascade-delete-rule>restrict</cascade-delete-rule>
-      </foreign-key>
-      <column id="123" parent="12" name="id_visite">
-        <mandatory>1</mandatory>
-        <data-type>int(10) unsigned</data-type>
-      </column>
-      <column id="124" parent="12" name="ip">
-        <mandatory>1</mandatory>
-        <data-type>varchar(15)</data-type>
-      </column>
-      <column id="125" parent="12" name="date_visite">
-        <mandatory>1</mandatory>
-        <data-type>datetime</data-type>
-        <default-expression>&apos;CURRENT_TIMESTAMP&apos;</default-expression>
-      </column>
-      <key id="126" parent="12" name="PRIMARY">
-        <columns>id_visite</columns>
-        <primary>1</primary>
-      </key>
-      <column id="127" parent="13" name="id_action">
-        <mandatory>1</mandatory>
-        <data-type>int(10) unsigned</data-type>
-      </column>
-      <column id="128" parent="13" name="libelle">
-        <mandatory>1</mandatory>
-        <data-type>varchar(255)</data-type>
-      </column>
-      <column id="129" parent="13" name="date_action">
-        <mandatory>1</mandatory>
-        <data-type>datetime</data-type>
-        <default-expression>&apos;CURRENT_TIMESTAMP&apos;</default-expression>
-      </column>
-      <column id="130" parent="13" name="id_membre">
-        <mandatory>1</mandatory>
-        <data-type>int(10) unsigned</data-type>
-      </column>
-      <index id="131" parent="13" name="FK_IDMEMBRE_ACTION_idx">
-        <columns>id_membre</columns>
-        <desc-columns></desc-columns>
-      </index>
-      <key id="132" parent="13" name="PRIMARY">
-        <columns>id_action</columns>
-        <primary>1</primary>
-      </key>
-      <foreign-key id="133" parent="13" name="FK_MEMBRE_ACTION">
-        <columns>id_membre</columns>
-        <ref-key>~.membre.PRIMARY</ref-key>
-        <cascade-update-rule>restrict</cascade-update-rule>
-        <cascade-delete-rule>restrict</cascade-delete-rule>
-      </foreign-key>
-      <column id="134" parent="14" name="type">
-        <mandatory>1</mandatory>
-        <data-type>enum(&apos;get&apos;, &apos;add&apos;, &apos;edit&apos;, &apos;drop&apos;)</data-type>
-      </column>
-      <column id="135" parent="14" name="cible">
-        <mandatory>1</mandatory>
-        <data-type>varchar(31)</data-type>
-      </column>
-      <column id="136" parent="14" name="autoriser">
+      <column id="120" parent="11" name="actif">
         <mandatory>1</mandatory>
         <data-type>tinyint(1)</data-type>
       </column>
-      <column id="137" parent="14" name="id_groupe">
-        <data-type>int(10) unsigned</data-type>
-      </column>
-      <column id="138" parent="14" name="id_membre">
-        <data-type>int(10) unsigned</data-type>
-      </column>
-      <index id="139" parent="14" name="FK_DROIT_ID_GROUPE_idx">
-        <columns>id_groupe</columns>
-        <desc-columns></desc-columns>
-      </index>
-      <index id="140" parent="14" name="FK_DROIT_ID_MEMBRE_idx">
+      <index id="121" parent="11" name="FK_ID_MEMBRE_idx">
         <columns>id_membre</columns>
         <desc-columns></desc-columns>
       </index>
-      <key id="141" parent="14" name="PRIMARY">
+      <key id="122" parent="11" name="PRIMARY">
+        <columns>id_token</columns>
+        <primary>1</primary>
+      </key>
+      <foreign-key id="123" parent="11" name="FK_ID_MEMBRE_TOKEN">
+        <columns>id_membre</columns>
+        <ref-key>~.membre.PRIMARY</ref-key>
+        <cascade-update-rule>restrict</cascade-update-rule>
+        <cascade-delete-rule>restrict</cascade-delete-rule>
+      </foreign-key>
+      <column id="124" parent="12" name="id_visite">
+        <mandatory>1</mandatory>
+        <data-type>int(10) unsigned</data-type>
+      </column>
+      <column id="125" parent="12" name="ip">
+        <mandatory>1</mandatory>
+        <data-type>varchar(15)</data-type>
+      </column>
+      <column id="126" parent="12" name="date_visite">
+        <mandatory>1</mandatory>
+        <data-type>datetime</data-type>
+        <default-expression>&apos;CURRENT_TIMESTAMP&apos;</default-expression>
+      </column>
+      <key id="127" parent="12" name="PRIMARY">
+        <columns>id_visite</columns>
+        <primary>1</primary>
+      </key>
+      <column id="128" parent="13" name="id_action">
+        <mandatory>1</mandatory>
+        <data-type>int(10) unsigned</data-type>
+      </column>
+      <column id="129" parent="13" name="libelle">
+        <mandatory>1</mandatory>
+        <data-type>varchar(255)</data-type>
+      </column>
+      <column id="130" parent="13" name="date_action">
+        <mandatory>1</mandatory>
+        <data-type>datetime</data-type>
+        <default-expression>&apos;CURRENT_TIMESTAMP&apos;</default-expression>
+      </column>
+      <column id="131" parent="13" name="id_membre">
+        <mandatory>1</mandatory>
+        <data-type>int(10) unsigned</data-type>
+      </column>
+      <index id="132" parent="13" name="FK_IDMEMBRE_ACTION_idx">
+        <columns>id_membre</columns>
+        <desc-columns></desc-columns>
+      </index>
+      <key id="133" parent="13" name="PRIMARY">
+        <columns>id_action</columns>
+        <primary>1</primary>
+      </key>
+      <foreign-key id="134" parent="13" name="FK_MEMBRE_ACTION">
+        <columns>id_membre</columns>
+        <ref-key>~.membre.PRIMARY</ref-key>
+        <cascade-update-rule>restrict</cascade-update-rule>
+        <cascade-delete-rule>restrict</cascade-delete-rule>
+      </foreign-key>
+      <column id="135" parent="14" name="type">
+        <mandatory>1</mandatory>
+        <data-type>enum(&apos;get&apos;, &apos;add&apos;, &apos;edit&apos;, &apos;drop&apos;)</data-type>
+      </column>
+      <column id="136" parent="14" name="cible">
+        <mandatory>1</mandatory>
+        <data-type>varchar(31)</data-type>
+      </column>
+      <column id="137" parent="14" name="autoriser">
+        <mandatory>1</mandatory>
+        <data-type>tinyint(1)</data-type>
+      </column>
+      <column id="138" parent="14" name="id_groupe">
+        <data-type>int(10) unsigned</data-type>
+      </column>
+      <column id="139" parent="14" name="id_membre">
+        <data-type>int(10) unsigned</data-type>
+      </column>
+      <index id="140" parent="14" name="FK_DROIT_ID_GROUPE_idx">
+        <columns>id_groupe</columns>
+        <desc-columns></desc-columns>
+      </index>
+      <index id="141" parent="14" name="FK_DROIT_ID_MEMBRE_idx">
+        <columns>id_membre</columns>
+        <desc-columns></desc-columns>
+      </index>
+      <key id="142" parent="14" name="PRIMARY">
         <columns>type</columns>
         <primary>1</primary>
       </key>
-      <foreign-key id="142" parent="14" name="FK_DROIT_ID_GROUPE">
+      <foreign-key id="143" parent="14" name="FK_DROIT_ID_GROUPE">
         <columns>id_groupe</columns>
         <ref-key>~.groupe.PRIMARY</ref-key>
         <cascade-update-rule>restrict</cascade-update-rule>
         <cascade-delete-rule>restrict</cascade-delete-rule>
       </foreign-key>
-      <foreign-key id="143" parent="14" name="FK_DROIT_ID_MEMBRE">
+      <foreign-key id="144" parent="14" name="FK_DROIT_ID_MEMBRE">
         <columns>id_membre</columns>
         <ref-key>~.membre.PRIMARY</ref-key>
         <cascade-update-rule>restrict</cascade-update-rule>

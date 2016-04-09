@@ -274,28 +274,49 @@ class Main extends Controleur{
 	public function commentaires($action, $id, $vars){
 		switch($action){
 			case 'add':
-				if(!empty($_POST)){
-					// Si le formulaire est valide au niveau faille CSRF
-					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-						// On essaye d'enregistrer le commentaire
-						$res = Commentaire::addCommentaire($_POST);
-						if($res->success){
-							$res->add['commentaire'] = $this->vue->render('templates/commentaire.twig', array('commentaires' => $res->add));
+				// Si l'utilisateur est connecté
+				if($_SESSION['user']){
+					if(!empty($_POST)){
+						// Si le formulaire est valide au niveau faille CSRF
+						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+							// On essaye d'enregistrer le commentaire
+							$res = Commentaire::addCommentaire($_POST);
+							if($res->success){
+								$res->add['commentaire'] = $this->vue->render('templates/commentaire.twig', array('commentaires' => $res->add));
+							}
+							echo json_encode($res);
 						}
-						echo json_encode($res);
 					}
-					exit();
 				}
 				exit();
 			case 'edit':
-				if(!empty($_POST)){
-					// Si le formulaire est valide au niveau faille CSRF
-					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-						// On essaye d'enregistrer le commentaire
-						$res = Commentaire::editCommentaire($_POST, $id);
-						echo json_encode($res);
+				// Si l'utilisateur est connecté
+				if($_SESSION['user']){
+					if(!empty($_POST)){
+						// Si le formulaire est valide au niveau faille CSRF
+						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+							// On essaye d'enregistrer le commentaire
+							$res = Commentaire::editCommentaire($_POST, $id);
+							echo json_encode($res);
+						}
 					}
 				}
+				exit();
+			case 'drop':
+				// Si l'utilisateur est connecté
+				if($_SESSION['user']){
+					if(!empty($_POST)){
+						// Si le formulaire est valide au niveau faille CSRF
+						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+							// On essaye d'enregistrer le commentaire
+							$res = Commentaire::dropCommentaire($_POST, $id);
+							echo json_encode($res);
+						}
+					}
+				}
+				exit();
+			default:
+				$this->vue->display('404.twig', $vars);
 				exit();
 		}
 	}
@@ -377,6 +398,31 @@ class Main extends Controleur{
 				$this->vue->display('conditions.twig', $vars);
 				exit();
 
+			default:
+				$this->vue->display('404.twig', $vars);
+				exit();
+		}
+	}
+
+	/*------------------------
+	 		TOKEN
+	 --------------------------*/
+	public function token($action, $id, $vars){
+		switch($action){
+
+			case 'drop':
+				// Si l'utilisateur est connecté
+				if($_SESSION['user']){
+					if(!empty($_POST)){
+						// Si le formulaire est valide au niveau faille CSRF
+						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+							// On essaye d'enregistrer le commentaire
+							$res = Token::dropToken($_POST, $id);
+							echo json_encode($res);
+						}
+					}
+				}
+				exit();
 			default:
 				$this->vue->display('404.twig', $vars);
 				exit();

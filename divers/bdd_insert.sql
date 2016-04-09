@@ -1395,3 +1395,5 @@ INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, da
 VALUES ('26', 'Trop d''accord avec toi !', '5', '2016-04-09 10:07:48', '19', '25', NULL, NULL, '1');
 INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
 VALUES ('27', 'Fantastique technote !', '2', '2016-04-09 10:07:54', '19', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('28', 'Il sera supprimer', '2', '2016-04-09 10:08:24', '19', NULL, NULL, NULL, '0');

@@ -30,14 +30,14 @@ class Membre extends TableObject{
 	 * @static
 	 */
 	static public function connexion(&$param){
-		$std = (object) array('success' => false, 'message' => '');
+		$std = (object) array('success' => false, 'msg' => array());
 
 		if(empty($param['pseudo'])){
-			$std->message = 'Le pseudo n\'est pas renseigné';
+			$std->msg[] = 'Le pseudo n\'est pas renseigné';
 			return $std;
 		}
 		elseif(empty($param['password'])){
-			$std->message = 'Le mot de passe n\'est pas renseigné';
+			$std->msg[] = 'Le mot de passe n\'est pas renseigné';
 			return $std;
 		}
 
@@ -61,11 +61,14 @@ class Membre extends TableObject{
 					$std->success = true;
 					return $std;
 				}
-				$std->message = 'Votre compte a été bloqué';
+				else
+					$std->msg[] = 'Votre compte a été bloqué';
 			}
-			$std->message = 'Erreur BDD';
+			else
+				$std->msg[] = 'Erreur BDD';
 		}
-		$std->message = 'Couple login / mot de passe incorrect';
+		else
+			$std->msg[] = 'Couple login / mot de passe incorrect';
 		return $std;
 	}
 

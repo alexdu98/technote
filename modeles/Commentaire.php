@@ -2,6 +2,25 @@
 
 class Commentaire extends TableObject{
 
+	static public function dropCommentaire(&$param, $id_commentaire){
+		$std = (object) array('success' => false, 'msg' => array());
+
+		$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
+		$commentaire = $commentaireDAO->getOne($id_commentaire);
+		if($commentaire->id_auteur == $_SESSION['user']->id_membre){
+			if($commentaireDAO->desactiver($id_commentaire)){
+				$std->msg[] = 'Commentaire supprimé';
+				$std->success = true;
+				return $std;
+			}
+			else
+				$std->msg[] = 'Erreur BDD';
+		}
+		else
+			$std->msg[] = 'Vous n\'avez pas le droit de supprimer ce commentaire';
+		return $std;
+	}
+
 	static public function editCommentaire(&$param, $id_commentaire){
 		$resCheck = self::checkEdit($param, $id_commentaire);
 		$res = $resCheck;
