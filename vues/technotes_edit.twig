@@ -20,6 +20,12 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<label for="description" class="col-sm-2 control-label">Description*</label>
+							<div class="col-sm-10">
+								<textarea class="form-control col-md-12" rows="3" name="description" id="description" placeholder="Description" maxlength="383" required>{{ technote.description }}</textarea>
+							</div>
+						</div>
+						<div class="form-group">
 							<label for="contenu" class="col-md-2 control-label">Contenu*</label>
 							<div class="col-md-10">
 								<textarea name="contenu" id="contenu" class="form-control" rows="25" cols="10" required>{{ technote.contenu }}</textarea>
@@ -54,6 +60,17 @@
 									});
 								});
 							</script>
+						</div>
+						<div class="form-group">
+							<label for="publieOui" class="col-md-2 control-label">Publié*</label>
+							<div class="col-md-10">
+								<label class="radio-inline">
+									<input type="radio" name="publie" id="publieOui" value="1" required {% if technote.publie %}checked{% endif %}> Oui
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="publie" id="publieNon" value="0" required {% if not technote.publie %}checked{% endif %}> Non
+								</label>
+							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-md-offset-2 col-md-10">

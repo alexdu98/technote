@@ -32,7 +32,9 @@ class Technote extends TableObject{
 				'titre' => $param['titre'],
 				'contenu' => $param['contenu'],
 				'id_modificateur' => $_SESSION['user']->id_membre,
-				'url_image' => $param['url_image']
+				'url_image' => $param['url_image'],
+				'description' => $param['description'],
+				'publie' => $param['publie']
 			));
 			if(($resSaveTechnote = $technoteDAO->save($technote)) !== false){
 				$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
@@ -76,7 +78,10 @@ class Technote extends TableObject{
 				'titre' => $param['titre'],
 				'contenu' => $param['contenu'],
 				'id_auteur' => $_SESSION['user']->id_membre,
-				'url_image' => $param['url_image']
+				'url_image' => $param['url_image'],
+				'description' => $param['description'],
+				'publie' => $param['publie'],
+				'visible' => '1'
 			));
 			if(($resSaveTechnote = $technoteDAO->save($technote)) !== false){
 				$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
@@ -114,6 +119,10 @@ class Technote extends TableObject{
 	static private function checkTechnote(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
+		if(($res = Technote::checkDescription($param['description'])) !== true)
+			$std->msg[] = $res;
+		if(($res = Technote::checkPublie($param['publie'])) !== true)
+			$std->msg[] = $res;
 		if(($res = Technote::checkTitre($param['titre'])) !== true)
 			$std->msg[] = $res;
 		if(($res = Technote::checkContenu($param['contenu'])) !== true)
@@ -130,6 +139,29 @@ class Technote extends TableObject{
 		if(empty($std->msg))
 			$std->success = true;
 		return $std;
+	}
+
+	static public function checkPublie(&$publie){
+		if(isset($publie)){
+			if($publie == 0 || $publie == 1)
+				return true;
+			else
+				return 'La valeur de publié n\'est pas correcte';
+		}
+		return 'La valeur de publié n\'est pas renseigné';
+	}
+
+	static public function checkDescription(&$description){
+		if(!empty($description)){
+			if(mb_strlen(strip_tags($description)) == mb_strlen($description)){
+				if(mb_strlen($description) >= 15 && mb_strlen($description) <= 383){
+					return true;
+				}
+				return 'La description ne respecte pas les règles de longueur (15 à 383 caractères)';
+			}
+			return 'Les balises HTML sont interdites dans la description (un espace est nécessaire après un \'<\')';
+		}
+		return 'La description n\'est pas renseigné';
 	}
 
 	/**

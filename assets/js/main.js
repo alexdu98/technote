@@ -68,7 +68,7 @@ $(document).ready(function(){
     function treatResponse(data, status, xhr, form){
 
         // S'il y a un ordre de redirection, redirection après 3 secondes
-        if(data.redirect.length > 0){
+        if(data.redirect){
             form[0].reset();
             data.msg.push('Vous allez être redirectionné dans 3 secondes');
             setTimeout(function(){
@@ -147,6 +147,10 @@ $(document).ready(function(){
 
         // On cache le lien pour éditer le commentaire
         $(this).hide();
+    }
+
+    function dropCommentaireForm(){
+
     }
 
     function treatConnexion(data, form){

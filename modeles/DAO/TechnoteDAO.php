@@ -103,13 +103,14 @@ class TechnoteDAO extends DAO{
 	 * @param int $id_auteur L'identifiant du membre
 	 * @return int Le nombre de technotes du membre
 	 */
-	public function getNbRedige($id_auteur){
+	public function getNbRedige($id_auteur, $publie = 1){
 		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige 
 									FROM technote 
-									WHERE id_auteur = :id_auteur');
+									WHERE id_auteur = :id_auteur AND publie = :publie');
 		
 		$req->execute(array(
-			'id_auteur' => $id_auteur
+			'id_auteur' => $id_auteur,
+			'publie' => $publie
 		));
 		$res = $req->fetch();
 		return $res->nbRedige;
@@ -120,18 +121,20 @@ class TechnoteDAO extends DAO{
 	 * @param int $limit Le nombre de technotes à récupérer
 	 * @return array Le tableau des $limit dernières Technote
 	 */
-	public function getLastNTechnotes($max, $debut = 0){
+	public function getLastNTechnotes($max, $debut = 0, $publie = 1){
 		$res = array();
 
 		$req = $this->pdo->prepare('SELECT t.*, ma.pseudo auteur, mm.pseudo modificateur
 									FROM technote t
 									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
+									WHERE publie = :publie
 									ORDER BY date_creation DESC
 									LIMIT :max OFFSET :debut');
 
 		$req->bindParam(':debut', $debut, PDO::PARAM_INT);
 		$req->bindParam(':max', $max, PDO::PARAM_INT);
+		$req->bindParam(':publie', $publie, PDO::PARAM_INT);
 
 		$req->execute();
 
@@ -149,10 +152,13 @@ class TechnoteDAO extends DAO{
 	 * Récupère le nombre de technotes total
 	 * @return int Le nombre de technotes total
 	 */
-	public function getCount(){
+	public function getCount($publie = 1){
 		$req = $this->pdo->prepare('SELECT COUNT(*) AS nbTechnotes
-									FROM technote');
-		$req->execute();
+									FROM technote
+									WHERE publie = :publie');
+		$req->execute(array(
+			'publie' => $publie
+		));
 		$res = $req->fetch();
 
 		return $res->nbTechnotes;

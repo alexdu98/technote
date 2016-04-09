@@ -145,7 +145,7 @@ class Main extends Controleur{
 					// On récupère la technote
 					$vars['technote'] = $technoteDAO->getOne($id);
 					// Si la technote existe
-					if($vars['technote'] !== false){
+					if($vars['technote'] !== false && $vars['technote']->visible && ($vars['technote']->publie || $vars['technote']->id_auteur == $_SESSION['user']->id_membre || $_SESSION['user']->groupe == 'Administrateur' || $_SESSION['user']->groupe == 'Modérateur')){
 						$vars['titrePage'] = $vars['technote']->titre; // <h1> de la page
 						$this->vue->display('technote.twig', $vars);
 					}
@@ -155,19 +155,33 @@ class Main extends Controleur{
 				}
 				// si on veut voir toutes les technotes
 				else{
-					$vars['titrePage'] = 'Toutes les technotes'; // <h1> de la page
-					$vars['active_technotes_all'] = 1; // Active le style dans le sous menu toutes les technotes
-
 					// On récupère la page
 					$page = !empty($_GET['page']) ? $_GET['page'] : 1;
 					$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
-					// On récupère le nombre total de technotes
-					$count = $technoteDAO->getCount();
-					// On créé la pagination
-					$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE,'/technotes/get?page=');
-					// On récupère les technotes
-					$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
 
+					// Si on veut que les technotes non publié de l'utilisateur
+					if(isset($_GET['nonpublie'])){
+						$vars['titrePage'] = 'Mes technotes non publié'; // <h1> de la page
+						$vars['active_technotes_non_publie'] = 1; // Active le style dans le sous menu toutes les technotes
+
+						// On récupère le nombre total de technotes non publié par l'
+						$count = $technoteDAO->getNbRedige($_SESSION['user']->id_membre, 0);
+						// On créé la pagination
+						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/technotes/get?nonpublie&page=');
+						// On récupère les technotes
+						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut, 0);
+					}
+					else{
+						$vars['titrePage'] = 'Toutes les technotes'; // <h1> de la page
+						$vars['active_technotes_all'] = 1; // Active le style dans le sous menu toutes les technotes
+
+						// On récupère le nombre total de technotes
+						$count = $technoteDAO->getCount();
+						// On créé la pagination
+						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/technotes/get?page=');
+						// On récupère les technotes
+						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
+					}
 					$this->vue->display('technotes.twig', $vars);
 				}
 				exit();

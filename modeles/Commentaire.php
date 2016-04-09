@@ -59,7 +59,8 @@ class Commentaire extends TableObject{
 				'commentaire' => nl2br($param['commentaire']),
 				'id_auteur' => $_SESSION['user']->id_membre,
 				'id_technote' => $param['id_technote'],
-				'id_commentaire_parent' => $param['id_commentaire_parent']
+				'id_commentaire_parent' => $param['id_commentaire_parent'],
+				'visible' => '1'
 			));
 			if(($resSaveCommentaire = $commentaireDAO->save($commentaire)) !== false){
 				$actionDAO = new ActionDAO(BDD::getInstancePDO());
@@ -86,12 +87,14 @@ class Commentaire extends TableObject{
 		$std = (object) array('success' => false, 'msg' => array());
 
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
-		if(($res = $technoteDAO->getOne($param['id_technote'])) === false)
+		if(($res = $technoteDAO->getOne($param['id_technote'])) !== false){
+			if(($res = self::checkCommentaire($param['commentaire'])) !== true)
+				$std->msg[] = $res;
+			if(($res = self::checkCommentaireParent($param['id_commentaire_parent'], $param['id_technote'])) !== true)
+				$std->msg[] = $res;
+		}
+		else
 			$std->msg[] = 'La technote n\'existe pas';
-		if(($res = self::checkCommentaire($param['commentaire'])) !== true)
-			$std->msg[] = $res;
-		if(($res = self::checkCommentaireParent($param['id_commentaire_parent'])) !== true)
-			$std->msg[] = $res;
 
 		if(empty($std->msg))
 			$std->success = true;
@@ -110,12 +113,17 @@ class Commentaire extends TableObject{
 		return 'Le commentaire n\'est pas renseigné';
 	}
 
-	static private function checkCommentaireParent(&$id_commentaire_parent){
+	static private function checkCommentaireParent(&$id_commentaire_parent, $id_technote){
 		if(!empty($id_commentaire_parent)){
 			$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
-			if($commentaireDAO->getOne($id_commentaire_parent))
-				return true;
-			return 'Le commentaire parent n\'existe pas ou plus';
+			if(($res = $commentaireDAO->getOne($id_commentaire_parent)) !== false){
+				if($res->id_technote == $id_technote)
+					return true;
+				else
+					return 'Le commentaire parent n\'appartient pas à la même technote';
+			}
+			else
+				return 'Le commentaire parent n\'existe pas ou plus';
 		}
 		$id_commentaire_parent = NULL;
 		return true;

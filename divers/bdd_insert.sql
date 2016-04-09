@@ -1,12 +1,12 @@
 USE technote;
 
 # Insertion pour la table groupe
-INSERT IGNORE INTO `technote`.`groupe` (`id_groupe`, `libelle`) VALUES (1, 'Administrateur');
-INSERT IGNORE INTO `technote`.`groupe` (`id_groupe`, `libelle`) VALUES (2, 'Modérateur');
-INSERT IGNORE INTO `technote`.`groupe` (`id_groupe`, `libelle`) VALUES (3, 'Membre');
+INSERT IGNORE INTO `technote`.`groupe` (id_groupe, libelle) VALUES (1, 'Administrateur');
+INSERT IGNORE INTO `technote`.`groupe` (id_groupe, libelle) VALUES (2, 'Modérateur');
+INSERT IGNORE INTO `technote`.`groupe` (id_groupe, libelle) VALUES (3, 'Membre');
 
 #Insertion pour la table membre
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('alex', 'alexdu98@gmx.fr', '$2y$12$baWf8sziCXcnYb875dCoKe708LxeQI7AQoO8fskrRcQiQO2jyquSC', '1', '0');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Alex', 'alexdu98@gmx.fr', '$2y$12$baWf8sziCXcnYb875dCoKe708LxeQI7AQoO8fskrRcQiQO2jyquSC', '1', '0');
 INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('modo', 'modo@outlook.fr', 'mdp', '2', '0');
 INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('membre', 'membre@outlook.fr', 'mdp', '3', '0');
 INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Tinnarra', 'Tinnarra@live.fr', 'mdp', '3', '0');
@@ -20,9 +20,10 @@ INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloq
 INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Gasclyr', 'Gasclyr@sfr.fr', 'mdp', '2', '0');
 
 #Insertion pour la table technote
-INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image) VALUES (
-'Post enim Chrysippum eum non sane', '2016-03-11 09:05:23',
-'<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Quis Aristidem non mortuum diligit?</a> <a href=''http://loripsum.net/'' target=''_blank''>Bonum patria: miserum exilium.</a> Eam stabilem appellas. Illis videtur, qui illud non dubitant bonum dicere -; <i>Sed nimis multa.</i> Duo Reges: constructio interrete. Neque enim civitas in seditione beata esse potest nec in discordia dominorum domus; Quasi vero, inquit, perpetua oratio rhetorum solum, non etiam philosophorum sit. </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Post enim Chrysippum eum non sane',
+  '2016-03-11 09:05:23',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Quis Aristidem non mortuum diligit?</a> <a href=''http://loripsum.net/'' target=''_blank''>Bonum patria: miserum exilium.</a> Eam stabilem appellas. Illis videtur, qui illud non dubitant bonum dicere -; <i>Sed nimis multa.</i> Duo Reges: constructio interrete. Neque enim civitas in seditione beata esse potest nec in discordia dominorum domus; Quasi vero, inquit, perpetua oratio rhetorum solum, non etiam philosophorum sit. </p>
 
 <ul>
 	<li>Quonam, inquit, modo?</li>
@@ -31,6 +32,16 @@ INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_aute
 	<li>Et si in ipsa gubernatione neglegentia est navis eversa, maius est peccatum in auro quam in palea.</li>
 </ul>
 
+<pre><code class="language-php-brief">// la fonction strtolower renvoie en minuscules la chaîne de caractères passée en paramètre
+$lang = strtolower($_POST[''lang'']);
+
+if ($lang === ''fr'')
+    echo ''Vous parlez français !'';
+elseif ($lang === ''en'')
+    echo ''You speak English!'';
+else
+    echo ''Je ne vois pas quelle est votre langue !'';
+</code></pre>
 
 <p>Ergo, inquit, tibi Q. Summum a vobis bonum voluptas dicitur. <i>An hoc usque quaque, aliter in vita?</i> Torquatus, is qui consul cum Cn. <a href=''http://loripsum.net/'' target=''_blank''>Sed virtutem ipsam inchoavit, nihil amplius.</a> </p>
 
@@ -71,17 +82,19 @@ dum in pulvere quaedam describit attentius, ne patriam
 quidem captam esse senserit?
 
 Sed ad bona praeterita redeamus.
-</pre>
-
-
-
-',
-'1',
-'http://www.zdnet.fr/i/edit/ne/2014/09/ngn-intro-hub-140x105.jpg'
+</pre>',
+  '1',
+  'http://www.zdnet.fr/i/edit/ne/2014/09/ngn-intro-hub-140x105.jpg',
+  '2016-03-11 09:06:23',
+  '1',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vel sagittis leo. Cras ullamcorper, dolor in venenatis porta, ex odio vehicula est, tempor vestibulum nisl felis sed metus. Mauris sed nibh ut ipsum pharetra laoreet non vitae nisl. Morbi at eros facilisis, ultrices turpis a cras amet.',
+  '1',
+  '1'
 );
 
-INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image) VALUES (
-  'Tamen a proposito', '2016-03-11 15:05:10',
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Tamen a proposito',
+  '2016-03-11 15:05:10',
   '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Satisne vobis videor pro meo iure in vestris auribus commentatus? Duo Reges: constructio interrete. Mihi enim satis est, ipsis non satis. <a href=''http://loripsum.net/'' target=''_blank''>Avaritiamne minuis?</a> <b>Non semper, inquam;</b> Hoc etsi multimodis reprehendi potest, tamen accipio, quod dant. Sed ad rem redeamus; An est aliquid, quod te sua sponte delectet? </p>
 
 <ul>
@@ -106,6 +119,17 @@ INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_aute
 <h2>Dic in quovis conventu te omnia facere, ne doleas.</h2>
 
 <p><i>Videamus animi partes, quarum est conspectus illustrior;</i> Refert tamen, quo modo. Vos autem cum perspicuis dubia debeatis illustrare, dubiis perspicua conamini tollere. Unum est sine dolore esse, alterum cum voluptate. <code>Haec quo modo conveniant, non sane intellego.</code> <a href=''http://loripsum.net/'' target=''_blank''>Sequitur disserendi ratio cognitioque naturae;</a> Quae hic rei publicae vulnera inponebat, eadem ille sanabat. </p>
+
+<pre><code class="language-php-brief">// la fonction strtolower renvoie en minuscules la chaîne de caractères passée en paramètre
+$lang = strtolower($_POST[''lang'']);
+
+if ($lang === ''fr'')
+    echo ''Vous parlez français !'';
+elseif ($lang === ''en'')
+    echo ''You speak English!'';
+else
+    echo ''Je ne vois pas quelle est votre langue !'';
+</code></pre>
 
 <h3>Praeteritis, inquit, gaudeo.</h3>
 
@@ -134,17 +158,19 @@ cogitemus.
 	<dd>Quare attendo te studiose et, quaecumque rebus iis, de quibus hic sermo est, nomina inponis, memoriae mando;</dd>
 	<dt><dfn>Quibusnam praeteritis?</dfn></dt>
 	<dd>Iam id ipsum absurdum, maximum malum neglegi.</dd>
-</dl>
-
-
-
-',
+</dl>',
   '1',
-  'http://news360x.fr/wp-content/uploads/2015/12/Internet1.jpg'
+  'http://news360x.fr/wp-content/uploads/2015/12/Internet1.jpg',
+  NULL,
+  NULL,
+  'Ita multo sanguine profuso in laetitia et in victoria est mortuus. Quod autem ratione actum est, id officium appellamus. Nondum autem explanatum satis, erat, quid maxime natura vellet.',
+  '1',
+  '1'
 );
 
-INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image) VALUES (
-  'Quamquam te quidem video minime esse deterritum', '2016-03-12 10:25:48',
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Quamquam te quidem video minime esse deterritum',
+  '2016-03-12 10:25:48',
   '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Pauca mutat vel plura sane;</a> Neque solum ea communia, verum etiam paria esse dixerunt. Duo Reges: constructio interrete. <i>Quid sequatur, quid repugnet, vident.</i> Videamus igitur sententias eorum, tum ad verba redeamus. De quibus cupio scire quid sentias. Haec bene dicuntur, nec ego repugno, sed inter sese ipsa pugnant. Tum Quintus: Est plane, Piso, ut dicis, inquit. Ut optime, secundum naturam affectum esse possit. Indicant pueri, in quibus ut in speculis natura cernitur. Et quod est munus, quod opus sapientiae? Nam ista vestra: Si gravis, brevis; </p>
 
 <p><a href=''http://loripsum.net/'' target=''_blank''>Certe non potest.</a> Hic nihil fuit, quod quaereremus. Huic mori optimum esse propter desperationem sapientiae, illi propter spem vivere. Sin tantum modo ad indicia veteris memoriae cognoscenda, curiosorum. <a href=''http://loripsum.net/'' target=''_blank''>Paria sunt igitur.</a> Hunc vos beatum; </p>
@@ -189,17 +215,20 @@ puerum diligis.
 
 <p>Vitiosum est enim in dividendo partem in genere numerare. Sed tamen enitar et, si minus multa mihi occurrent, non fugiam ista popularia. Nescio quo modo praetervolavit oratio. <a href=''http://loripsum.net/'' target=''_blank''>Quodsi ipsam honestatem undique pertectam atque absolutam.</a> <mark>Vide, quantum, inquam, fallare, Torquate.</mark> </p>
 
-<p><a href=''http://loripsum.net/'' target=''_blank''>Nam Pyrrho, Aristo, Erillus iam diu abiecti.</a> Si quicquam extra virtutem habeatur in bonis. Nullus est igitur cuiusquam dies natalis. <a href=''http://loripsum.net/'' target=''_blank''>Beatum, inquit.</a> <code>Ecce aliud simile dissimile.</code> Si qua in iis corrigere voluit, deteriora fecit. <b>Erit enim mecum, si tecum erit.</b> Dat enim intervalla et relaxat. <i>Comprehensum, quod cognitum non habet?</i> Virtutibus igitur rectissime mihi videris et ad consuetudinem nostrae orationis vitia posuisse contraria. </p>
-
-
-',
+<p><a href=''http://loripsum.net/'' target=''_blank''>Nam Pyrrho, Aristo, Erillus iam diu abiecti.</a> Si quicquam extra virtutem habeatur in bonis. Nullus est igitur cuiusquam dies natalis. <a href=''http://loripsum.net/'' target=''_blank''>Beatum, inquit.</a> <code>Ecce aliud simile dissimile.</code> Si qua in iis corrigere voluit, deteriora fecit. <b>Erit enim mecum, si tecum erit.</b> Dat enim intervalla et relaxat. <i>Comprehensum, quod cognitum non habet?</i> Virtutibus igitur rectissime mihi videris et ad consuetudinem nostrae orationis vitia posuisse contraria. </p>',
   '1',
-  'http://oleaass.com/wp-content/uploads/2014/09/PHP.png'
+  'http://oleaass.com/wp-content/uploads/2014/09/PHP.png',
+  NULL,
+  NULL,
+  'Primum in nostrane potestate est, quid meminerimus? Sint modo partes vitae beatae. Ita fit cum gravior, tum etiam splendidior oratio.',
+  '1',
+  '1'
 );
 
-INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image) VALUES (
-'Quamquam id quidem, infinitum est in hac urbe', '2016-03-12 16:25:48',
-'<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <code>Ratio quidem vestra sic cogit.</code> Respondent extrema primis, media utrisque, omnia omnibus. <a href=''http://loripsum.net/'' target=''_blank''>Magna laus.</a> <i>Non semper, inquam;</i> </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Quamquam id quidem, infinitum est in hac urbe',
+  '2016-03-12 16:25:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <code>Ratio quidem vestra sic cogit.</code> Respondent extrema primis, media utrisque, omnia omnibus. <a href=''http://loripsum.net/'' target=''_blank''>Magna laus.</a> <i>Non semper, inquam;</i> </p>
 
 <p>Primum in nostrane potestate est, quid meminerimus? Sint modo partes vitae beatae. Ita fit cum gravior, tum etiam splendidior oratio. <b>Sic consequentibus vestris sublatis prima tolluntur.</b> <i>Audeo dicere, inquit.</i> Hanc quoque iucunditatem, si vis, transfer in animum; At ille pellit, qui permulcet sensum voluptate. Vidit Homerus probari fabulam non posse, si cantiunculis tantus irretitus vir teneretur; </p>
 
@@ -245,15 +274,20 @@ intellegam;
 </ol>
 
 
-<p>Duo Reges: constructio interrete. Efficiens dici potest. Vulgo enim dicitur: Iucundi acti labores, nec male Euripidesconcludam, si potero, Latine; <i>Obsecro, inquit, Torquate, haec dicit Epicurus?</i> <mark>Id mihi magnum videtur.</mark> </p>
-
-
-',
-'2',
-'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/MVC-Process.svg/2000px-MVC-Process.svg.png'
+<p>Duo Reges: constructio interrete. Efficiens dici potest. Vulgo enim dicitur: Iucundi acti labores, nec male Euripidesconcludam, si potero, Latine; <i>Obsecro, inquit, Torquate, haec dicit Epicurus?</i> <mark>Id mihi magnum videtur.</mark> </p>',
+  '1',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/MVC-Process.svg/2000px-MVC-Process.svg.png',
+  NULL,
+  NULL,
+  'Duo Reges: constructio interrete. Id est enim, de quo quaerimus. An vero displicuit ea, quae tributa est animi virtutibus tanta praestantia? Sin dicit obscurari quaedam nec apparere, quia valde parva sint, nos quoque concedimus',
+  '1',
+  '1'
 );
 
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Quid de Platone aut de Democrito loquar', '2016-03-13 08:29:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Sedulo, inquam, faciam.</a> <b>Videsne, ut haec concinant?</b> Idem etiam dolorem saepe perpetiuntur, ne, si id non faciant, incidant in maiorem. Paulum, cum regem Persem captum adduceret, eodem flumine invectio? </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Quid de Platone aut de Democrito loquar',
+  '2016-03-13 08:29:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Sedulo, inquam, faciam.</a> <b>Videsne, ut haec concinant?</b> Idem etiam dolorem saepe perpetiuntur, ne, si id non faciant, incidant in maiorem. Paulum, cum regem Persem captum adduceret, eodem flumine invectio? </p>
 
 <p><code>Frater et T.</code> Duo Reges: constructio interrete. Id est enim, de quo quaerimus. An vero displicuit ea, quae tributa est animi virtutibus tanta praestantia? Sin dicit obscurari quaedam nec apparere, quia valde parva sint, nos quoque concedimus; <b>Sed ad bona praeterita redeamus.</b> </p>
 
@@ -277,6 +311,16 @@ INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `con
 	<dd>Ergo in gubernando nihil, in officio plurimum interest, quo in genere peccetur.</dd>
 </dl>
 
+<pre><code class="language-php-brief">// la fonction strtolower renvoie en minuscules la chaîne de caractères passée en paramètre
+$lang = strtolower($_POST[''lang'']);
+
+if ($lang === ''fr'')
+    echo ''Vous parlez français !'';
+elseif ($lang === ''en'')
+    echo ''You speak English!'';
+else
+    echo ''Je ne vois pas quelle est votre langue !'';
+</code></pre>
 
 <p><a href=''http://loripsum.net/'' target=''_blank''>Sed potestne rerum maior esse dissensio?</a> Quid ei reliquisti, nisi te, quoquo modo loqueretur, intellegere, quid diceret? <a href=''http://loripsum.net/'' target=''_blank''>Quippe: habes enim a rhetoribus;</a> Hoc non est positum in nostra actione. Quid ergo? Occultum facinus esse potuerit, gaudebit; <mark>Qualem igitur hominem natura inchoavit?</mark> Sed virtutem ipsam inchoavit, nihil amplius. </p>
 
@@ -299,11 +343,20 @@ sapienti.
 
 <h2>Quid dubitas igitur mutare principia naturae?</h2>
 
-<p>Nos commodius agimus. <b>At iam decimum annum in spelunca iacet.</b> Sic vester sapiens magno aliquo emolumento commotus cicuta, si opus erit, dimicabit. Te enim iudicem aequum puto, modo quae dicat ille bene noris. Nihil enim hoc differt. </p>
+<p>Nos commodius agimus. <b>At iam decimum annum in spelunca iacet.</b> Sic vester sapiens magno aliquo emolumento commotus cicuta, si opus erit, dimicabit. Te enim iudicem aequum puto, modo quae dicat ille bene noris. Nihil enim hoc differt. </p>',
+  '1',
+  'http://camusdevelopment.com/images/img_pub/Lorem%20Ipsum.jpg',
+  NULL,
+  NULL,
+  'Illa videamus, quae a te de amicitia dicta sunt. Si mala non sunt, iacet omnis ratio Peripateticorum. Ad quorum et cognitionem et usum iam corroborati natura ipsa praeeunte deducimur.',
+  '1',
+  '1'
+);
 
-', '1', 'http://camusdevelopment.com/images/img_pub/Lorem%20Ipsum.jpg', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Quis istud possit, inquit, negare', '2016-03-13 13:29:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Ut aliquid scire se gaudeant?</a> <mark>Quis hoc dicit?</mark> Quae qui non vident, nihil umquam magnum ac cognitione dignum amaverunt. Bonum incolumis acies: misera caecitas. Nihil enim iam habes, quod ad corpus referas; Habes, inquam, Cato, formam eorum, de quibus loquor, philosophorum. Duo Reges: constructio interrete. Sed quanta sit alias, nunc tantum possitne esse tanta. </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Quis istud possit, inquit, negare',
+  '2016-03-13 13:29:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Ut aliquid scire se gaudeant?</a> <mark>Quis hoc dicit?</mark> Quae qui non vident, nihil umquam magnum ac cognitione dignum amaverunt. Bonum incolumis acies: misera caecitas. Nihil enim iam habes, quod ad corpus referas; Habes, inquam, Cato, formam eorum, de quibus loquor, philosophorum. Duo Reges: constructio interrete. Sed quanta sit alias, nunc tantum possitne esse tanta. </p>
 
 <p>Illa videamus, quae a te de amicitia dicta sunt. Si mala non sunt, iacet omnis ratio Peripateticorum. Ad quorum et cognitionem et usum iam corroborati natura ipsa praeeunte deducimur. <a href=''http://loripsum.net/'' target=''_blank''>Satis est ad hoc responsum.</a> <b>Sed ego in hoc resisto;</b> <a href=''http://loripsum.net/'' target=''_blank''>Vide, quaeso, rectumne sit.</a> </p>
 
@@ -349,12 +402,20 @@ Itaque his sapiens semper vacabit.
 </ol>
 
 
-<p><b>Id est enim, de quo quaerimus.</b> Obsecro, inquit, Torquate, haec dicit Epicurus? Sed quid attinet de rebus tam apertis plura requirere? Serpere anguiculos, nare anaticulas, evolare merulas, cornibus uti videmus boves, nepas aculeis. Paulum, cum regem Persem captum adduceret, eodem flumine invectio? Prioris generis est docilitas, memoria; </p>
+<p><b>Id est enim, de quo quaerimus.</b> Obsecro, inquit, Torquate, haec dicit Epicurus? Sed quid attinet de rebus tam apertis plura requirere? Serpere anguiculos, nare anaticulas, evolare merulas, cornibus uti videmus boves, nepas aculeis. Paulum, cum regem Persem captum adduceret, eodem flumine invectio? Prioris generis est docilitas, memoria; </p>',
+  '1',
+  'http://1.bp.blogspot.com/--Rxqm-7Q73s/UVvDXQsVtrI/AAAAAAAAAAs/-q-dRkMtEr8/s1600/LoremIpsum.png',
+  NULL,
+  NULL,
+  'Quodsi esset in voluptate summum bonum, ut dicitis, optabile esset maxima in voluptate nullo intervallo interiecto dies noctesque versari, cum omnes sensus dulcedine omni quasi perfusi moverentur.',
+  '1',
+  '1'
+);
 
-
-', '1', 'http://1.bp.blogspot.com/--Rxqm-7Q73s/UVvDXQsVtrI/AAAAAAAAAAs/-q-dRkMtEr8/s1600/LoremIpsum.png', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Te enim iudicem aequum puto, modo quae dicat ille bene noris', '2016-03-13 15:29:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Piso, familiaris noster, et alia multa et hoc loco Stoicos irridebat: Quid enim? <mark>Non igitur bene.</mark> <a href=''http://loripsum.net/'' target=''_blank''>Eademne, quae restincta siti?</a> Id enim natura desiderat. Duo Reges: constructio interrete. <a href=''http://loripsum.net/'' target=''_blank''>Respondeat totidem verbis.</a> Quare attende, quaeso. </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Te enim iudicem aequum puto, modo quae dicat ille bene noris',
+  '2016-03-13 15:29:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Piso, familiaris noster, et alia multa et hoc loco Stoicos irridebat: Quid enim? <mark>Non igitur bene.</mark> <a href=''http://loripsum.net/'' target=''_blank''>Eademne, quae restincta siti?</a> Id enim natura desiderat. Duo Reges: constructio interrete. <a href=''http://loripsum.net/'' target=''_blank''>Respondeat totidem verbis.</a> Quare attende, quaeso. </p>
 
 <p>Cupiditates non Epicuri divisione finiebat, sed sua satietate. De quibus cupio scire quid sentias. <a href=''http://loripsum.net/'' target=''_blank''>Efficiens dici potest.</a> Quod autem principium officii quaerunt, melius quam Pyrrho; ALIO MODO. <a href=''http://loripsum.net/'' target=''_blank''>Quonam, inquit, modo?</a> </p>
 
@@ -411,11 +472,20 @@ censebant;
 	<li>Quae sequuntur igitur?</li>
 	<li>Sint ista Graecorum;</li>
 	<li>Ita relinquet duas, de quibus etiam atque etiam consideret.</li>
-</ul>
+</ul>',
+  '1',
+  'https://thenewboston.com/photos/users/27/original/f34559fb85ab31961e60e1928bf4e0ca.jpg',
+  NULL,
+  NULL,
+  'Hoc loco tenere se Triarius non potuit. Videamus animi partes, quarum est conspectus illustrior; Teneo, inquit, finem illi videri nihil dolere.',
+  '1',
+  '1'
+);
 
-', '1', 'https://thenewboston.com/photos/users/27/original/f34559fb85ab31961e60e1928bf4e0ca.jpg', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Illa argumenta propria videamus', '2016-03-13 17:29:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Numquam facies.</a> Videsne, ut haec concinant? At certe gravius. Quae quo sunt excelsiores, eo dant clariora indicia naturae. <i>Duo Reges: constructio interrete.</i> Itaque ab his ordiamur. </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Illa argumenta propria videamus',
+  '2016-03-13 17:29:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Numquam facies.</a> Videsne, ut haec concinant? At certe gravius. Quae quo sunt excelsiores, eo dant clariora indicia naturae. <i>Duo Reges: constructio interrete.</i> Itaque ab his ordiamur. </p>
 
 <p>Hoc loco tenere se Triarius non potuit. Videamus animi partes, quarum est conspectus illustrior; Teneo, inquit, finem illi videri nihil dolere. <mark>Istam voluptatem, inquit, Epicurus ignorat?</mark> <mark>Honesta oratio, Socratica, Platonis etiam.</mark> Neque solum ea communia, verum etiam paria esse dixerunt. Nam et complectitur verbis, quod vult, et dicit plane, quod intellegam; Compensabatur, inquit, cum summis doloribus laetitia. </p>
 
@@ -434,6 +504,16 @@ INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `con
 	<li>Amicitiae vero locus ubi esse potest aut quis amicus esse cuiquam, quem non ipsum amet propter ipsum?</li>
 </ul>
 
+<pre><code class="language-php-brief">// la fonction strtolower renvoie en minuscules la chaîne de caractères passée en paramètre
+$lang = strtolower($_POST[''lang'']);
+
+if ($lang === ''fr'')
+    echo ''Vous parlez français !'';
+elseif ($lang === ''en'')
+    echo ''You speak English!'';
+else
+    echo ''Je ne vois pas quelle est votre langue !'';
+</code></pre>
 
 <pre>
 Sic faciam igitur, inquit: unam rem explicabo, eamque
@@ -461,11 +541,20 @@ possit iure laudari.
 
 <h2>Teneo, inquit, finem illi videri nihil dolere.</h2>
 
-<p>Non est ista, inquam, Piso, magna dissensio. <code>Quam nemo umquam voluptatem appellavit, appellat;</code> <a href=''http://loripsum.net/'' target=''_blank''>Quonam, inquit, modo?</a> Ne in odium veniam, si amicum destitero tueri. <a href=''http://loripsum.net/'' target=''_blank''>Quid ait Aristoteles reliquique Platonis alumni?</a> Hoc Hieronymus summum bonum esse dixit. In his igitur partibus duabus nihil erat, quod Zeno commutare gestiret. </p>
+<p>Non est ista, inquam, Piso, magna dissensio. <code>Quam nemo umquam voluptatem appellavit, appellat;</code> <a href=''http://loripsum.net/'' target=''_blank''>Quonam, inquit, modo?</a> Ne in odium veniam, si amicum destitero tueri. <a href=''http://loripsum.net/'' target=''_blank''>Quid ait Aristoteles reliquique Platonis alumni?</a> Hoc Hieronymus summum bonum esse dixit. In his igitur partibus duabus nihil erat, quod Zeno commutare gestiret. </p>',
+  '1',
+  'http://naodev.fr/wp-content/uploads/2015/09/6-30-12_Git.jpg',
+  NULL,
+  NULL,
+  'Traditur, inquit, ab Epicuro ratio neglegendi doloris. Quamquam ab iis philosophiam et omnes ingenuas disciplinas habemus; Quae hic rei publicae vulnera inponebat, eadem ille sanabat.',
+  '1',
+  '1'
+);
 
-', '1', 'http://naodev.fr/wp-content/uploads/2015/09/6-30-12_Git.jpg', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Restinguet citius si ardentem', '2016-03-13 17:39:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Equidem e Cn. Illa videamus, quae a te de amicitia dicta sunt. Sed haec in pueris; <code>Duo Reges: constructio interrete.</code> Ut alios omittam, hunc appello, quem ille unum secutus est. Nondum autem explanatum satis, erat, quid maxime natura vellet. </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Restinguet citius si ardentem',
+  '2016-03-13 17:39:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Equidem e Cn. Illa videamus, quae a te de amicitia dicta sunt. Sed haec in pueris; <code>Duo Reges: constructio interrete.</code> Ut alios omittam, hunc appello, quem ille unum secutus est. Nondum autem explanatum satis, erat, quid maxime natura vellet. </p>
 
 <pre>
 Pomponius Luciusque Cicero, frater noster cognatione
@@ -517,13 +606,20 @@ deorum erat vitae simillima, sapiente visa est dignissima.
 	<li>Non minor, inquit, voluptas percipitur ex vilissimis rebus quam ex pretiosissimis.</li>
 	<li>Quid, si reviviscant Platonis illi et deinceps qui eorum auditores fuerunt, et tecum ita loquantur?</li>
 	<li>Hoc etsi multimodis reprehendi potest, tamen accipio, quod dant.</li>
-</ol>
+</ol>',
+  '1',
+  'https://s3-eu-west-1.amazonaws.com/s3.housseniawriting.com/wp-content/uploads/2015/11/langage-python.jpg',
+  '2016-03-13 17:49:48',
+  '1',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sic enim censent, oportunitatis esse beate vivere. Quod cum dixissent, ille contra. Non est enim vitium in oratione solum, sed etiam in moribus.',
+  '1',
+  '1'
+);
 
-
-
-', '1', 'https://s3-eu-west-1.amazonaws.com/s3.housseniawriting.com/wp-content/uploads/2015/11/langage-python.jpg', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'si voluptas esset bonum', '2016-03-13 17:44:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sic enim censent, oportunitatis esse beate vivere. Quod cum dixissent, ille contra. Non est enim vitium in oratione solum, sed etiam in moribus. <mark>Quis est tam dissimile homini.</mark> <code>Erat enim res aperta.</code> </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Si voluptas esset bonum',
+  '2016-03-13 17:44:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sic enim censent, oportunitatis esse beate vivere. Quod cum dixissent, ille contra. Non est enim vitium in oratione solum, sed etiam in moribus. <mark>Quis est tam dissimile homini.</mark> <code>Erat enim res aperta.</code> </p>
 
 <dl>
 	<dt><dfn>Scaevolam M.</dfn></dt>
@@ -568,11 +664,20 @@ ipsae per se expetuntur.
 </pre>
 
 
-<p>Quamquam haec quidem praeposita recte et reiecta dicere licebit. Si quicquam extra virtutem habeatur in bonis. Efficiens dici potest. Hos contra singulos dici est melius. Bestiarum vero nullum iudicium puto. </p>
+<p>Quamquam haec quidem praeposita recte et reiecta dicere licebit. Si quicquam extra virtutem habeatur in bonis. Efficiens dici potest. Hos contra singulos dici est melius. Bestiarum vero nullum iudicium puto. </p>',
+  '1',
+  'http://www.revealittech.com/img/large_html.jpg',
+  '2016-03-13 18:44:48',
+  '1',
+  'Quamquam haec quidem praeposita recte et reiecta dicere licebit. Si quicquam extra virtutem habeatur in bonis. Efficiens dici potest.',
+  '1',
+  '1'
+);
 
-', '1', 'http://www.revealittech.com/img/large_html.jpg', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Altera philosophiae parte', '2016-03-13 17:51:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Prioris generis est docilitas, memoria;</a> Sed videbimus. Duarum enim vitarum nobis erunt instituta capienda. </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Altera philosophiae parte',
+  '2016-03-13 17:51:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Prioris generis est docilitas, memoria;</a> Sed videbimus. Duarum enim vitarum nobis erunt instituta capienda. </p>
 
 <pre>
 Quo posito et omnium adsensu adprobato illud adsumitur, eum,
@@ -596,6 +701,20 @@ At ille pellit, qui permulcet sensum voluptate.
 	<li>Vos autem cum perspicuis dubia debeatis illustrare, dubiis perspicua conamini tollere.</li>
 </ul>
 
+<pre>
+<code class="language-c">void anniversaire(struct Personne * p)
+{
+    p-&gt;age++;
+    printf("Joyeux anniversaire %s !", (*p).nom);
+}
+
+int main()
+{
+    struct Personne p;
+    p.nom = "Albert";
+    p.age = 46;
+    anniversaire(&amp;p);
+}</code></pre>
 
 <ol>
 	<li>Scrupulum, inquam, abeunti;</li>
@@ -617,11 +736,20 @@ At ille pellit, qui permulcet sensum voluptate.
 </dl>
 
 
-<p>Serpere anguiculos, nare anaticulas, evolare merulas, cornibus uti videmus boves, nepas aculeis. Theophrasti igitur, inquit, tibi liber ille placet de beata vita? Cui Tubuli nomen odio non est? </p>
+<p>Serpere anguiculos, nare anaticulas, evolare merulas, cornibus uti videmus boves, nepas aculeis. Theophrasti igitur, inquit, tibi liber ille placet de beata vita? Cui Tubuli nomen odio non est? </p>',
+  '1',
+  'https://static.oc-static.com/prod/courses/illustrations/illu_ajax-et-l-echange-de-donnees-en-javascript.png',
+  NULL,
+  NULL,
+  'Serpere anguiculos, nare anaticulas, evolare merulas, cornibus uti videmus boves, nepas aculeis. Theophrasti igitur, inquit, tibi liber ille placet de beata vita',
+  '1',
+  '1'
+);
 
-', '1', 'https://static.oc-static.com/prod/courses/illustrations/illu_ajax-et-l-echange-de-donnees-en-javascript.png', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Age sane inquam', '2016-03-13 19:44:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <mark>Quod cum dixissent, ille contra.</mark> Nihil ad rem! Ne sit sane; <code>Huius, Lyco, oratione locuples, rebus ipsis ielunior.</code> <a href=''http://loripsum.net/'' target=''_blank''>Avaritiamne minuis?</a> Quonam, inquit, modo? <b>Duo Reges: constructio interrete.</b> </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Age sane inquam',
+  '2016-03-13 19:44:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <mark>Quod cum dixissent, ille contra.</mark> Nihil ad rem! Ne sit sane; <code>Huius, Lyco, oratione locuples, rebus ipsis ielunior.</code> <a href=''http://loripsum.net/'' target=''_blank''>Avaritiamne minuis?</a> Quonam, inquit, modo? <b>Duo Reges: constructio interrete.</b> </p>
 
 <h2>Quod cum dixissent, ille contra.</h2>
 
@@ -639,6 +767,10 @@ senectutem esse discenda.
 Quid dubitas igitur mutare principia naturae?
 </pre>
 
+<pre>
+<code class="language-c">/* Ceci est un commentaire
+   sur deux lignes
+   ou plus */</code></pre>
 
 <ul>
 	<li>Ergo infelix una molestia, fellx rursus, cum is ipse anulus in praecordiis piscis inventus est?</li>
@@ -670,12 +802,20 @@ Quid dubitas igitur mutare principia naturae?
 	<li>Nonne videmus quanta perturbatio rerum omnium consequatur, quanta confusio?</li>
 	<li>In eo enim positum est id, quod dicimus esse expetendum.</li>
 	<li>Quod est, ut dixi, habere ea, quae secundum naturam sint, vel omnia vel plurima et maxima.</li>
-</ol>
+</ol>',
+  '1',
+  'http://www.silicon.fr/wp-content/uploads/2012/10/Google-chrome-faille-securite-%C2%A9-drx-Fotolia.com_.jpg',
+  NULL,
+  NULL,
+  'Sapiens autem semper beatus est et est aliquando in dolore; Quae cum dixisset paulumque institisset, Quid est? Suo genere perveniant ad extremum',
+  '1',
+  '1'
+);
 
-
-', '1', 'http://www.silicon.fr/wp-content/uploads/2012/10/Google-chrome-faille-securite-%C2%A9-drx-Fotolia.com_.jpg', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Qui-vere falsone', '2016-03-13 20:29:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Conferam tecum, quam cuique verso rem subicias; Tanta vis admonitionis inest in locis; In quibus doctissimi illi veteres inesse quiddam caeleste et divinum putaverunt. <a href=''http://loripsum.net/'' target=''_blank''>Duo Reges: constructio interrete.</a> In his igitur partibus duabus nihil erat, quod Zeno commutare gestiret. Et quidem, inquit, vehementer errat; </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Qui-vere falsone',
+  '2016-03-13 20:29:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Conferam tecum, quam cuique verso rem subicias; Tanta vis admonitionis inest in locis; In quibus doctissimi illi veteres inesse quiddam caeleste et divinum putaverunt. <a href=''http://loripsum.net/'' target=''_blank''>Duo Reges: constructio interrete.</a> In his igitur partibus duabus nihil erat, quod Zeno commutare gestiret. Et quidem, inquit, vehementer errat; </p>
 
 <ol>
 	<li>Quis suae urbis conservatorem Codrum, quis Erechthei filias non maxime laudat?</li>
@@ -718,12 +858,20 @@ Ad eos igitur converte te, quaeso.
 	<li>Atque haec ita iustitiae propria sunt, ut sint virtutum reliquarum communia.</li>
 	<li>Itaque dicunt nec dubitant: mihi sic usus est, tibi ut opus est facto, fac.</li>
 	<li>Nosti, credo, illud: Nemo pius est, qui pietatem-;</li>
-</ul>
+</ul>',
+  '1',
+  'http://www.campingatlantica.com/uploads/images/Gallery/borne-internet-wifi/internet.png',
+  NULL,
+  NULL,
+  'Suavis laborum est praeteritorum memoria. Stoici autem, quod finem bonorum in una virtute ponunt, similes sunt illorum; Tuo vero id quidem, inquam, arbitratu.',
+  '1',
+  '1'
+);
 
-
-', '1', 'http://www.campingatlantica.com/uploads/images/Gallery/borne-internet-wifi/internet.png', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Ergo ita: non posse honeste vivi', '2016-03-13 20:51:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Graecum enim hunc versum nostis omnes-: Suavis laborum est praeteritorum memoria. Stoici autem, quod finem bonorum in una virtute ponunt, similes sunt illorum; Tuo vero id quidem, inquam, arbitratu. Duo Reges: constructio interrete. <i>Quare attende, quaeso.</i> Gerendus est mos, modo recte sentiat. <b>Ecce aliud simile dissimile.</b> At quicum ioca seria, ut dicitur, quicum arcana, quicum occulta omnia? Iubet igitur nos Pythius Apollo noscere nosmet ipsos. In qua quid est boni praeter summam voluptatem, et eam sempiternam? </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Ergo ita: non posse honeste vivi',
+  '2016-03-13 20:51:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Graecum enim hunc versum nostis omnes-: Suavis laborum est praeteritorum memoria. Stoici autem, quod finem bonorum in una virtute ponunt, similes sunt illorum; Tuo vero id quidem, inquam, arbitratu. Duo Reges: constructio interrete. <i>Quare attende, quaeso.</i> Gerendus est mos, modo recte sentiat. <b>Ecce aliud simile dissimile.</b> At quicum ioca seria, ut dicitur, quicum arcana, quicum occulta omnia? Iubet igitur nos Pythius Apollo noscere nosmet ipsos. In qua quid est boni praeter summam voluptatem, et eam sempiternam? </p>
 
 <p><b>Itaque contra est, ac dicitis;</b> Vitiosum est enim in dividendo partem in genere numerare. Ergo infelix una molestia, fellx rursus, cum is ipse anulus in praecordiis piscis inventus est? Sic enim censent, oportunitatis esse beate vivere. </p>
 
@@ -767,12 +915,20 @@ Tu enim ista lenius, hic Stoicorum more nos vexat.
 <ul>
 	<li>Quamvis enim depravatae non sint, pravae tamen esse possunt.</li>
 	<li>Quod est, ut dixi, habere ea, quae secundum naturam sint, vel omnia vel plurima et maxima.</li>
-</ul>
+</ul>',
+  '1',
+  'http://chalifour-assets.s3.amazonaws.com/wp-content/uploads/2014/08/https.jpg',
+  NULL,
+  NULL,
+  'Duo Reges: constructio interrete. Eam stabilem appellas. Beatus autem esse in maximarum rerum timore nemo potest. Quae cum dixisset paulumque institisset, Quid est',
+  '1',
+  '1'
+);
 
-
-', '1', 'http://chalifour-assets.s3.amazonaws.com/wp-content/uploads/2014/08/https.jpg', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Conclusum est enim contra Cyrenaicos satis acute', '2016-03-13 20:59:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <b>Vide, quantum, inquam, fallare, Torquate.</b> Isto modo, ne si avia quidem eius nata non esset. Stoici autem, quod finem bonorum in una virtute ponunt, similes sunt illorum; <code>Nos vero, inquit ille;</code> Duo Reges: constructio interrete. Eam stabilem appellas. Beatus autem esse in maximarum rerum timore nemo potest. Quae cum dixisset paulumque institisset, Quid est? </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Conclusum est enim contra Cyrenaicos satis acute',
+  '2016-03-13 20:59:48',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <b>Vide, quantum, inquam, fallare, Torquate.</b> Isto modo, ne si avia quidem eius nata non esset. Stoici autem, quod finem bonorum in una virtute ponunt, similes sunt illorum; <code>Nos vero, inquit ille;</code> Duo Reges: constructio interrete. Eam stabilem appellas. Beatus autem esse in maximarum rerum timore nemo potest. Quae cum dixisset paulumque institisset, Quid est? </p>
 
 <p>Sed id ne cogitari quidem potest quale sit, ut non repugnet ipsum sibi. <i>Nemo igitur esse beatus potest.</i> <code>Addidisti ad extremum etiam indoctum fuisse.</code> Eaedem res maneant alio modo. <mark>Sed residamus, inquit, si placet.</mark> <b>Non semper, inquam;</b> Quis istud possit, inquit, negare? <a href=''http://loripsum.net/'' target=''_blank''>At eum nihili facit;</a> </p>
 
@@ -787,6 +943,21 @@ INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `con
 	<li>Quid, cum fictas fabulas, e quibus utilitas nulla elici potest, cum voluptate legimus?</li>
 </ul>
 
+<pre>
+<code class="language-html5">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;
+   Exemple de HTML
+  &lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  Ceci est une phrase avec un &lt;a href="cible.html"&gt;hyperlien&lt;/a&gt;.
+  &lt;p&gt;
+   Ceci est un paragraphe où il n’y a pas d’hyperlien.
+  &lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
 
 <pre>
 Possumusne ergo in vita summum bonum dicere, cum id ne in
@@ -816,12 +987,20 @@ concordiae.
 	<li>Ita enim vivunt quidam, ut eorum vita refellatur oratio.</li>
 	<li>Nos paucis ad haec additis finem faciamus aliquando;</li>
 	<li>Non est enim vitium in oratione solum, sed etiam in moribus.</li>
-</ol>
+</ol>',
+  '1',
+  'http://images.apple.com/euro/music_alt/home/a/generic/images/social/og.jpg?201602160358',
+  NULL,
+  NULL,
+  'Est enim effectrix multarum et magnarum voluptatum. Omnis enim est natura diligens sui. Nummus in Croesi divitiis obscuratur, pars est tamen divitiarum. Neque enim disputari sine reprehensione nec cum iracundia aut pertinacia recte disputari potest.',
+  '1',
+  '1'
+);
 
-
-', '1', 'http://images.apple.com/euro/music_alt/home/a/generic/images/social/og.jpg?201602160358', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Nec tamen ille erat sapiens', '2016-03-13 21:15:48', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cur tantas regiones barbarorum pedibus obiit, tot maria transmisit? Duo Reges: constructio interrete. Cum id quoque, ut cupiebat, audivisset, evelli iussit eam, qua erat transfixus, hastam. <b>Cur deinde Metrodori liberos commendas?</b> <code>Qui-vere falsone, quaerere mittimus-dicitur oculis se privasse;</code> Non potes, nisi retexueris illa. </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Nec tamen ille erat sapiens',
+  '2016-03-13 21:15:49',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cur tantas regiones barbarorum pedibus obiit, tot maria transmisit? Duo Reges: constructio interrete. Cum id quoque, ut cupiebat, audivisset, evelli iussit eam, qua erat transfixus, hastam. <b>Cur deinde Metrodori liberos commendas?</b> <code>Qui-vere falsone, quaerere mittimus-dicitur oculis se privasse;</code> Non potes, nisi retexueris illa. </p>
 
 <dl>
 	<dt><dfn>Tenent mordicus.</dfn></dt>
@@ -836,6 +1015,22 @@ INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `con
 <p>Ubi ut eam caperet aut quando? <i>Tubulo putas dicere?</i> Quantum Aristoxeni ingenium consumptum videmus in musicis? Ergo ita: non posse honeste vivi, nisi honeste vivatur? Sit, inquam, tam facilis, quam vultis, comparatio voluptatis, quid de dolore dicemus? Beatus autem esse in maximarum rerum timore nemo potest. Tum Quintus: Est plane, Piso, ut dicis, inquit. Aeque enim contingit omnibus fidibus, ut incontentae sint. </p>
 
 <h2>Minime vero, inquit ille, consentit.</h2>
+
+<pre>
+<code class="language-html5">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;
+   Exemple de HTML
+  &lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  Ceci est une phrase avec un &lt;a href="cible.html"&gt;hyperlien&lt;/a&gt;.
+  &lt;p&gt;
+   Ceci est un paragraphe où il n’y a pas d’hyperlien.
+  &lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
 
 <p>Sit, inquam, tam facilis, quam vultis, comparatio voluptatis, quid de dolore dicemus? <mark>Hic ambiguo ludimur.</mark> Quid ei reliquisti, nisi te, quoquo modo loqueretur, intellegere, quid diceret? In quibus doctissimi illi veteres inesse quiddam caeleste et divinum putaverunt. Septem autem illi non suo, sed populorum suffragio omnium nominati sunt. Respondeat totidem verbis. Item de contrariis, a quibus ad genera formasque generum venerunt. <i>Nihilo magis.</i> <i>Scrupulum, inquam, abeunti;</i> Si autem id non concedatur, non continuo vita beata tollitur. </p>
 
@@ -868,11 +1063,20 @@ etiam philosophorum sit.
 </ul>
 
 
-<p>Illum mallem levares, quo optimum atque humanissimum virum, Cn. Istic sum, inquit. At ille pellit, qui permulcet sensum voluptate. Nihil enim iam habes, quod ad corpus referas; Ita relinquet duas, de quibus etiam atque etiam consideret. Non est igitur summum malum dolor. <b>Utilitatis causa amicitia est quaesita.</b> Et quod est munus, quod opus sapientiae? <i>Quis hoc dicit?</i> Nunc haec primum fortasse audientis servire debemus. Bestiarum vero nullum iudicium puto. </p>
+<p>Illum mallem levares, quo optimum atque humanissimum virum, Cn. Istic sum, inquit. At ille pellit, qui permulcet sensum voluptate. Nihil enim iam habes, quod ad corpus referas; Ita relinquet duas, de quibus etiam atque etiam consideret. Non est igitur summum malum dolor. <b>Utilitatis causa amicitia est quaesita.</b> Et quod est munus, quod opus sapientiae? <i>Quis hoc dicit?</i> Nunc haec primum fortasse audientis servire debemus. Bestiarum vero nullum iudicium puto. </p>',
+  '1',
+  'http://lewebpedagogique.com/presencesenligne/files/2014/10/cloud-computing.png',
+  NULL,
+  NULL,
+  'At iam decimum annum in spelunca iacet.</a> Efficiens dici potest. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis; Bestiarum vero nullum iudicium puto. Sed ea mala virtuti magnitudine obruebantur. Sed utrum hortandus es nobis, Luci, inquit.',
+  '1',
+  '1'
+);
 
-', '1', 'http://lewebpedagogique.com/presencesenligne/files/2014/10/cloud-computing.png', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Itaque ad tempus ad Pisonem omnes', '2016-03-13 21:30:10', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et harum quidem rerum facilis est et expedita distinctio. Hoc est non modo cor non habere, sed ne palatum quidem. <b>Quid igitur, inquit, eos responsuros putas?</b> Nam quibus rebus efficiuntur voluptates, eae non sunt in potestate sapientis. <code>Duo Reges: constructio interrete.</code> Suam denique cuique naturam esse ad vivendum ducem. </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Itaque ad tempus ad Pisonem omnes',
+  '2016-03-13 21:30:10',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et harum quidem rerum facilis est et expedita distinctio. Hoc est non modo cor non habere, sed ne palatum quidem. <b>Quid igitur, inquit, eos responsuros putas?</b> Nam quibus rebus efficiuntur voluptates, eae non sunt in potestate sapientis. <code>Duo Reges: constructio interrete.</code> Suam denique cuique naturam esse ad vivendum ducem. </p>
 
 <p><a href=''http://loripsum.net/'' target=''_blank''>At iam decimum annum in spelunca iacet.</a> Efficiens dici potest. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis; Bestiarum vero nullum iudicium puto. Sed ea mala virtuti magnitudine obruebantur. Sed utrum hortandus es nobis, Luci, inquit, an etiam tua sponte propensus es? </p>
 
@@ -887,6 +1091,20 @@ INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `con
 	<dd>Varietates autem iniurasque fortunae facile veteres philosophorum praeceptis instituta vita superabat.</dd>
 </dl>
 
+<pre>
+<code class="language-css">body {
+    background-color: #d0e4fe;
+}
+
+h1 {
+    color: orange;
+    text-align: center;
+}
+
+p {
+    font-family: "Times New Roman";
+    font-size: 20px;
+}</code></pre>
 
 <ol>
 	<li>Itaque sensibus rationem adiunxit et ratione effecta sensus non reliquit.</li>
@@ -918,15 +1136,30 @@ vel Graece loqui vel Latine docendus?
 </ul>
 
 
-<p>Restinguet citius, si ardentem acceperit. Duae sunt enim res quoque, ne tu verba solum putes. Si mala non sunt, iacet omnis ratio Peripateticorum. Teneo, inquit, finem illi videri nihil dolere. Aliter homines, aliter philosophos loqui putas oportere? Igitur neque stultorum quisquam beatus neque sapientium non beatus. </p>
+<p>Restinguet citius, si ardentem acceperit. Duae sunt enim res quoque, ne tu verba solum putes. Si mala non sunt, iacet omnis ratio Peripateticorum. Teneo, inquit, finem illi videri nihil dolere. Aliter homines, aliter philosophos loqui putas oportere? Igitur neque stultorum quisquam beatus neque sapientium non beatus. </p>',
+  '1',
+  'http://static.commentcamarche.net/www.commentcamarche.net/faq/images/16184-istock-000008756145xsmall.png',
+  '2016-03-14 21:30:10',
+  '4',
+  'Restinguet citius, si ardentem acceperit. Duae sunt enim res quoque, ne tu verba solum putes. Si mala non sunt, iacet omnis ratio Peripateticorum. Teneo, inquit, finem illi videri nihil dolere. Aliter homines, aliter philosophos loqui putas oportere? Igitur neque stultorum quisquam beatus neque sapientium non beatus.',
+  '1',
+  '1'
+);
 
-', '1', 'http://static.commentcamarche.net/www.commentcamarche.net/faq/images/16184-istock-000008756145xsmall.png', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Itaque mihi non satis videmini considerare quod iter sit naturae', '2016-03-13 21:45:44', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nihil enim hoc differt. Aliter enim nosmet ipsos nosse non possumus. <a href=''http://loripsum.net/'' target=''_blank''>Duo Reges: constructio interrete.</a> Nondum autem explanatum satis, erat, quid maxime natura vellet. <a href=''http://loripsum.net/'' target=''_blank''>Frater et T.</a> <code>Quis hoc dicit?</code> Multoque hoc melius nos veriusque quam Stoici. Erit enim mecum, si tecum erit. <code>Haec dicuntur inconstantissime.</code> Illa argumenta propria videamus, cur omnia sint paria peccata. </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Itaque mihi non satis videmini considerare quod iter sit naturae',
+  '2016-03-13 21:45:44',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nihil enim hoc differt. Aliter enim nosmet ipsos nosse non possumus. <a href=''http://loripsum.net/'' target=''_blank''>Duo Reges: constructio interrete.</a> Nondum autem explanatum satis, erat, quid maxime natura vellet. <a href=''http://loripsum.net/'' target=''_blank''>Frater et T.</a> <code>Quis hoc dicit?</code> Multoque hoc melius nos veriusque quam Stoici. Erit enim mecum, si tecum erit. <code>Haec dicuntur inconstantissime.</code> Illa argumenta propria videamus, cur omnia sint paria peccata. </p>
 
 <p><i>Sed fac ista esse non inportuna;</i> <i>Dicimus aliquem hilare vivere;</i> In qua quid est boni praeter summam voluptatem, et eam sempiternam? Ut proverbia non nulla veriora sint quam vestra dogmata. <a href=''http://loripsum.net/'' target=''_blank''>Aliter enim explicari, quod quaeritur, non potest.</a> </p>
 
 <p>Non igitur bene. Gloriosa ostentatio in constituendo summo bono. Sed mehercule pergrata mihi oratio tua. Tum Quintus: Est plane, Piso, ut dicis, inquit. Primum divisit ineleganter; Beatus autem esse in maximarum rerum timore nemo potest. </p>
+
+<pre>
+<code class="language-sql">SELECT nom, service
+FROM   employe
+WHERE  statut = ''stagiaire''
+ORDER  BY nom;</code></pre>
 
 <pre>
 Quocirca intellegi necesse est in ipsis rebus, quae
@@ -973,11 +1206,20 @@ voluptate est.
 </ol>
 
 
-<p><i>Primum divisit ineleganter;</i> <a href=''http://loripsum.net/'' target=''_blank''>Haeret in salebra.</a> <a href=''http://loripsum.net/'' target=''_blank''>Istam voluptatem, inquit, Epicurus ignorat?</a> Quamvis enim depravatae non sint, pravae tamen esse possunt. At, si voluptas esset bonum, desideraret. Magni enim aestimabat pecuniam non modo non contra leges, sed etiam legibus partam. Est enim effectrix multarum et magnarum voluptatum. Etsi qui potest intellegi aut cogitari esse aliquod animal, quod se oderit? </p>
+<p><i>Primum divisit ineleganter;</i> <a href=''http://loripsum.net/'' target=''_blank''>Haeret in salebra.</a> <a href=''http://loripsum.net/'' target=''_blank''>Istam voluptatem, inquit, Epicurus ignorat?</a> Quamvis enim depravatae non sint, pravae tamen esse possunt. At, si voluptas esset bonum, desideraret. Magni enim aestimabat pecuniam non modo non contra leges, sed etiam legibus partam. Est enim effectrix multarum et magnarum voluptatum. Etsi qui potest intellegi aut cogitari esse aliquod animal, quod se oderit? </p>',
+  '1',
+  'http://images.cytadel.fr/wp-content/uploads/2015/11/DockerLogo.png',
+  '2016-03-15 21:45:44',
+  '1',
+  'Quamvis enim depravatae non sint, pravae tamen esse possunt. At, si voluptas esset bonum, desideraret. Magni enim aestimabat pecuniam non modo non contra leges, sed etiam legibus partam. Est enim effectrix multarum et magnarum voluptatum. Etsi qui potest intellegi aut cogitari esse aliquod animal, quod se oderit',
+  '1',
+  '1'
+);
 
-', '1', 'http://images.cytadel.fr/wp-content/uploads/2015/11/DockerLogo.png', NULL, NULL);
-
-INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'Hoc ille tuus non vult omnibusque', '2016-03-13 22:03:28', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Omnes enim iucundum motum, quo sensus hilaretur. Et hunc idem dico, inquieta sed ad virtutes et ad vitia nihil interesse. <i>Praeclare hoc quidem.</i> Dicet pro me ipsa virtus nec dubitabit isti vestro beato M. Qua igitur re ab deo vincitur, si aeternitate non vincitur? Duo Reges: constructio interrete. An eum discere ea mavis, quae cum plane perdidiceriti nihil sciat? Sed utrum hortandus es nobis, Luci, inquit, an etiam tua sponte propensus es? <code>Tum Torquatus: Prorsus, inquit, assentior;</code> Neutrum vero, inquit ille. <mark>Paria sunt igitur.</mark> Eadem fortitudinis ratio reperietur. </p>
+INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
+  'Hoc ille tuus non vult omnibusque',
+  '2016-03-13 22:03:28',
+  '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Omnes enim iucundum motum, quo sensus hilaretur. Et hunc idem dico, inquieta sed ad virtutes et ad vitia nihil interesse. <i>Praeclare hoc quidem.</i> Dicet pro me ipsa virtus nec dubitabit isti vestro beato M. Qua igitur re ab deo vincitur, si aeternitate non vincitur? Duo Reges: constructio interrete. An eum discere ea mavis, quae cum plane perdidiceriti nihil sciat? Sed utrum hortandus es nobis, Luci, inquit, an etiam tua sponte propensus es? <code>Tum Torquatus: Prorsus, inquit, assentior;</code> Neutrum vero, inquit ille. <mark>Paria sunt igitur.</mark> Eadem fortitudinis ratio reperietur. </p>
 
 <pre>
 At vero Epicurus una in domo, et ea quidem angusta, quam
@@ -988,6 +1230,21 @@ Etenim nec iustitia nec amicitia esse omnino poterunt, nisi
 ipsae per se expetuntur.
 </pre>
 
+<pre>
+<code class="language-cpp">#include&lt;iostream&gt;
+
+int main()
+{
+    using std::cout;
+    cout &lt;&lt; "Hello, new world!" // std::cout est disponible sans utilisation de std::
+         &lt;&lt; std::endl;           // mais pas std::endl
+}
+
+void foo()
+{
+    std::cout &lt;&lt; "Hello, new world!" // std::cout n''est plus disponible sans utilisation de std::
+              &lt;&lt; std::endl;
+}</code></pre>
 
 <p>Aut, Pylades cum sis, dices te esse Orestem, ut moriare pro amico? Frater et T. <a href=''http://loripsum.net/'' target=''_blank''>Sed fortuna fortis;</a> <b>Restinguet citius, si ardentem acceperit.</b> Hoc Hieronymus summum bonum esse dixit. Si enim ad populum me vocas, eum. <b>Sic enim censent, oportunitatis esse beate vivere.</b> At quanta conantur! Mundum hunc omnem oppidum esse nostrum! Incendi igitur eos, qui audiunt, vides. Quis istud possit, inquit, negare? In qua quid est boni praeter summam voluptatem, et eam sempiternam? </p>
 
@@ -1029,16 +1286,18 @@ ipsae per se expetuntur.
 	<li>Quod cum accidisset ut alter alterum necopinato videremus, surrexit statim.</li>
 	<li>An eiusdem modi?</li>
 	<li>Quid nunc honeste dicit?</li>
-</ol>
-
-
-', '1', 'https://www.djerfy.com/wp-content/uploads/2016/02/openstack.jpg', NULL, NULL);
-
--- Modele ajout technote
--- INSERT INTO `technote`.`technote` (`id_technote`, `titre`, `date_creation`, `contenu`, `id_auteur`, `url_image`, `date_modification`, `id_modificateur`) VALUES (NULL, 'titre', '2016-03-14 10:01:48', 'contenu', '1', 'img', NULL, NULL);
+</ol>',
+  '1',
+  'https://www.djerfy.com/wp-content/uploads/2016/02/openstack.jpg',
+  '2016-03-23 12:03:18',
+  '1',
+  'Non risu potius quam oratione eiciendum? Sed residamus, inquit, si placet. Quia nec honesto quic quam honestius nec turpi turpius. Est, ut dicis, inquit.',
+  '1',
+  '1'
+);
 
 -- Insertion pour la table mot_cle
-INSERT IGNORE INTO `technote`.`mot_cle` (`label`) VALUES
+INSERT IGNORE INTO `technote`.`mot_cle` (label) VALUES
   ('HTML/CSS'),
   ('JavaScript'),
   ('PHP'),
@@ -1069,19 +1328,70 @@ INSERT IGNORE INTO `technote`.`mot_cle` (`label`) VALUES
 ;
 
 -- Insertion pour la table decrire
-INSERT IGNORE INTO `technote`.`decrire` (`id_technote`, `id_mot_cle`) VALUES
-  ('1', '1'),
-  ('1', '2'),
-  ('1', '3'),
-  ('2', '2'),
-  ('2', '2'),
-  ('3', '3'),
-  ('3', '5'),
-  ('3', '4'),
-  ('5', '5'),
-  ('6', '8'),
-  ('10', '12'),
-  ('11', '15'),
-  ('15', '10'),
-  ('18', '9')
+INSERT IGNORE INTO `technote`.`decrire` (id_technote, id_mot_cle) VALUES
+  ('1', '1'), ('1', '2'), ('1', '3'),
+  ('2', '4'), ('2', '5'), ('2', '6'),
+  ('5', '17'), ('5', '9'),
+  ('10', '14'), ('10', '5'), ('10', '16'),
+  ('5', '13'), ('5', '9'),
+  ('16', '19'), ('16', '21'), ('16', '8'),
+  ('17', '11'),
+  ('18', '22'), ('18', '5'), ('18', '6'),
+  ('19', '3'), ('19', '13')
 ;
+
+-- Insertion pour la table commentaire
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('1', 'C''est un commentaire', '1', '2016-04-09 10:03:28', '1', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('2', 'C''est un commentaire imbriqué', '5', '2016-04-09 10:04:28', '1', '1', NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('3', 'C''est un autre commentaire', '2', '2016-04-09 10:05:29', '1', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('4', 'C''est un commentaire', '1', '2016-04-09 10:05:30', '3', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('5', 'C''est un commentaire imbriqué', '3', '2016-04-09 10:05:31', '3', '4', NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('6', 'C''est un autre commentaire', '5', '2016-04-09 10:05:32', '3', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('7', 'C''est un commentaire', '1', '2016-04-09 10:05:33', '5', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('8', 'C''est un commentaire imbriqué', '2', '2016-04-09 10:05:34', '5', '7', NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('9', 'C''est un autre commentaire', '6', '2016-04-09 10:05:38', '5', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('10', 'Superbe technote !', '3', '2016-04-09 10:05:39', '5', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('11', 'Excellent, merci !', '2', '2016-04-09 10:05:40', '5', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('12', 'Superbe technote !', '4', '2016-04-09 10:05:41', '10', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('13', 'Excellent, merci !', '1', '2016-04-09 10:05:43', '10', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('14', 'Superbe technote !', '2', '2016-04-09 10:05:48', '15', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('15', 'Excellent, merci !', '1', '2016-04-09 10:05:50', '15', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('16', 'Superbe technote !', '2', '2016-04-09 10:05:56', '16', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('17', 'Excellent, merci !', '3', '2016-04-09 10:05:59', '16', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('18', 'C''est un commentaire', '1', '2016-04-09 10:06:08', '17', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('19', 'C''est un commentaire imbriqué', '5', '2016-04-09 10:06:12', '17', '18', NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('20', 'C''est un autre commentaire', '2', '2016-04-09 10:06:19', '17', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('21', 'C''est un commentaire', '1', '2016-04-09 10:06:28', '18', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('22', 'C''est un commentaire imbriqué', '5', '2016-04-09 10:06:38', '18', '21', NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('23', 'C''est un autre commentaire imb', '2', '2016-04-09 10:07:13', '18', '22', NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('24', 'Trop cool !', '1', '2016-04-09 10:07:38', '18', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('25', 'Depuis le temps que je voulais une technote sur ça. Juste géniale. Merci', '1', '2016-04-09 10:07:41', '19', NULL, NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('26', 'Trop d''accord avec toi !', '5', '2016-04-09 10:07:48', '19', '25', NULL, NULL, '1');
+INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
+VALUES ('27', 'Fantastique technote !', '2', '2016-04-09 10:07:54', '19', NULL, NULL, NULL, '1');
