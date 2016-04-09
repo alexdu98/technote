@@ -90,8 +90,6 @@ class Main extends Controleur{
 							echo json_encode($res);
 							exit();
 						}
-						echo 'wtf';
-						var_dump($_POST['jetonCSRF'], $_SESSION['jetonCSRF']);
 					}
 					$this->vue->display('membre_edit.twig', $vars);
 				}
@@ -222,14 +220,29 @@ class Main extends Controleur{
 		switch($action){
 			case 'add':
 				if(!empty($_POST)){
-					// On essaye d'enregistrer le commentaire
-					$res = Commentaire::addCommentaire($_POST);
-					if($res->success){
-						$res->add['commentaire'] = $this->vue->render('templates/commentaire.twig', array('commentaires' => $res->add));
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Commentaire::addCommentaire($_POST);
+						if($res->success){
+							$res->add['commentaire'] = $this->vue->render('templates/commentaire.twig', array('commentaires' => $res->add));
+						}
+						echo json_encode($res);
 					}
-					echo json_encode($res);
 					exit();
 				}
+				exit();
+			case 'edit':
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Commentaire::editCommentaire($_POST, $id);
+						echo json_encode($res);
+					}
+					exit();
+				}
+				exit();
 		}
 	}
 

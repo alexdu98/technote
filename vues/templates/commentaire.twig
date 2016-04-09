@@ -1,14 +1,22 @@
 {% for commentaire in commentaires %}
 	<div class="commentaire">
 		<span class="id_commentaire" hidden>{{ commentaire.id_commentaire }}</span>
-		<b class="texte-bleu">{{ commentaire.pseudo | capitalize }}</b> : {{ commentaire.commentaire | raw }}<br>
+		<b class="texte-bleu">{{ commentaire.auteur | capitalize }}</b> : <span class="texteCommentaire">{{ commentaire.commentaire | raw }}</span><br>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-6">
 					<a class="repondreCommentaire">Répondre</a>
+					{% if session.user.pseudo == commentaire.auteur or session.user.groupe == 'Administrateur' or session.user.groupe == 'Modérateur' %}
+						<a class="modifierCommentaire">Modifier</a>
+					{% endif %}
 				</div>
 				<div class="col-md-6 text-right">
-					<span class="dateCommentaire">{{ commentaire.date_creation | date('d/m/Y à H:i') }}</span>
+					<span class="dateCommentaire">
+						{{ commentaire.date_creation | date('d/m/Y à H:i') }}
+						{% if commentaire.modificateur %}
+							<span class="glyphicon glyphicon-pencil infosModificaton" aria-hidden="true" title="modifié par {{ commentaire.modificateur }} le {{ commentaire.date_modification | date('d/m/Y à H:i') }}"></span>
+						{% endif %}
+					</span>
 				</div>
 			</div>
 		</div>

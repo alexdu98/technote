@@ -10,7 +10,7 @@ class CommentaireDAO extends DAO{
 	// #######################################
 
 	public function getOne($id){
-		$req = $this->pdo->prepare('SELECT c.*, m.pseudo FROM commentaire c INNER JOIN membre m ON m.id_membre=c.id_auteur WHERE id_commentaire = :id_commentaire');
+		$req = $this->pdo->prepare('SELECT c.*, ma.pseudo auteur, mm.pseudo modificateur FROM commentaire c INNER JOIN membre ma ON ma.id_membre=c.id_auteur LEFT JOIN membre mm ON mm.id_membre=c.id_modificateur WHERE id_commentaire = :id_commentaire');
 		$req->execute(array(
 			'id_commentaire' => $id
 		));
@@ -29,14 +29,14 @@ class CommentaireDAO extends DAO{
 	}
 
 	public function save($commentaire){
+		$fields = $commentaire->getFields();
 		if($commentaire->id_commentaire == DAO::UNKNOWN_ID){
 			$champs = $valeurs = '';
-			$fields = $commentaire->getFields();
 			foreach($commentaire as $nomChamp => $valeur){
 				$champs .= $nomChamp . ', ';
-				if($nomChamp == 'id_commentaire_parent' && $valeur == NULL){
-					$valeurs .= "NULL, ";
-					unset($fields['id_commentaire_parent']);
+				if($valeur === NULL){
+					$valeurs .= 'NULL, ';
+					unset($fields[$nomChamp]);
 				}
 				else{
 					$valeurs .= ":$nomChamp, ";
@@ -44,8 +44,7 @@ class CommentaireDAO extends DAO{
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			$sql = 'INSERT INTO commentaire(' . $champs .') VALUES(' . $valeurs .')';
-			$req = $this->pdo->prepare($sql);
+			$req = $this->pdo->prepare("INSERT INTO commentaire($champs) VALUES($valeurs)");
 			if($req->execute($fields)){
 				$commentaire->id_commentaire = $this->pdo->lastInsertId();
 				return $commentaire;
@@ -53,15 +52,20 @@ class CommentaireDAO extends DAO{
 			return false;
 		}
 		else{
-			$id_commentaire = $commentaire->id_commentaire;
 			unset($commentaire->id_commentaire);
 			$newValeurs = '';
 			foreach($commentaire as $nomChamp => $valeur){
-				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+				if($valeur === NULL){
+					$newValeurs .= $nomChamp . ' = NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$newValeurs .= "$nomChamp = :$nomChamp, ";
+				}
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
-			$req = "UPDATE commentaire SET $newValeurs WHERE id_commentaire = '$id_commentaire'";
-			return $this->pdo->exec($req);
+			$req = $this->pdo->prepare("UPDATE commentaire SET $newValeurs WHERE id_commentaire = :id_commentaire");
+			return $req->execute($fields);
 		}
 	}
 
@@ -93,7 +97,7 @@ class CommentaireDAO extends DAO{
 	public function getTreeForOneTechnote($id_technote, $id_commentaire_parent){
 		$res = array();
 		$op = empty($id_commentaire_parent) ? 'IS' : '=';
-		$req = $this->pdo->prepare('SELECT c.*, m.pseudo FROM commentaire c INNER JOIN membre m ON m.id_membre=c.id_auteur WHERE id_technote = :id_technote AND id_commentaire_parent ' . $op . ' :id_commentaire_parent');
+		$req = $this->pdo->prepare('SELECT c.*, ma.pseudo auteur, mm.pseudo modificateur FROM commentaire c INNER JOIN membre ma ON ma.id_membre=c.id_auteur LEFT JOIN membre mm ON mm.id_membre=c.id_modificateur WHERE id_technote = :id_technote AND id_commentaire_parent ' . $op . ' :id_commentaire_parent');
 		$req->execute(array(
 			'id_technote' => $id_technote,
 			'id_commentaire_parent' => $id_commentaire_parent
