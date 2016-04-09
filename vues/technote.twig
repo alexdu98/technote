@@ -3,6 +3,33 @@
 	<section class="row">
 		<div class="panel panel-default">
 			<div class="panel-body">
+				{% if technote.auteur == session.user.pseudo or session.user.groupe == 'Administrateur' or session.user.groupe == 'Modérateur' %}
+					<div>
+						<button type="button" class="btn btn-primary" id="modifierTechnote">Modifier</button>
+						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#dropTechnoteConfirmModal">Supprimer</button>
+					</div>
+					<div class="modal fade" id="dropTechnoteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">{{ technote.titre }}</h4>
+								</div>
+								<div class="modal-body">
+									Voulez-vous vraiment supprimer cette technote ?
+								</div>
+								<div class="modal-footer">
+									<form method="POST" action="/technotes/drop/{{ technote.id_technote }}" class="form-horizontal" name="dropTechnote">
+										<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+										<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+										<input type="submit" class="btn btn-danger" value="Supprimer">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr>
+				{% endif %}
 				{{ technote.contenu | raw }}
 				<hr>
 				<div>

@@ -186,9 +186,12 @@ class Main extends Controleur{
 				if($_SESSION['user']){
 					// Si un formulaire a été envoyé
 					if(!empty($_POST)){
-						// On essaye d'enregistrer la technote
-						echo json_encode(Technote::addTechnote($_POST));
-						exit();
+						// Si le formulaire est valide au niveau faille CSRF
+						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+							// On essaye d'enregistrer la technote
+							echo json_encode(Technote::addTechnote($_POST));
+							exit();
+						}
 					}
 					$this->vue->display('technotes_add.twig', $vars);
 					exit();
@@ -199,14 +202,42 @@ class Main extends Controleur{
 			
 			/**** EDIT ****/
 			case 'edit':
-				$vars['active_technotes'] = 1;
+				$vars['active_technotes'] = 1; // Active le style dans le menu technotes
+				$vars['titrePage'] = 'Modifier une technote'; // <h1> de la page
+
+				// On récupère tous les mots clés
+				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+				$vars['motsCles'] = $motCleDAO->getAll();
+
+				// Si l'utilisateur est connecté
+				if($_SESSION['user']){
+					// Si un formulaire a été envoyé
+					if(!empty($_POST)){
+						// Si le formulaire est valide au niveau faille CSRF
+						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+							// On essaye d'enregistrer la technote
+							echo json_encode(Technote::editTechnote($_POST));
+							exit();
+						}
+					}
+					$this->vue->display('technotes_add.twig', $vars);
+					exit();
+				}
+				else
+					$this->technotes('403.twig', NULL, $vars);
 				exit();
 
 			/**** DROP ****/
 			case 'drop':
-				$vars['active_technotes'] = 1;
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Technote::dropTechnote($id);
+						echo json_encode($res);
+					}
+				}
 				exit();
-
 			default:
 				$this->vue->display('404.twig', $vars);
 				exit();
@@ -240,7 +271,6 @@ class Main extends Controleur{
 						$res = Commentaire::editCommentaire($_POST, $id);
 						echo json_encode($res);
 					}
-					exit();
 				}
 				exit();
 		}

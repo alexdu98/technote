@@ -2,13 +2,33 @@
 
 class Technote extends TableObject{
 
+	static public function dropTechnote($id_technote){
+		$res = (object) array('success' => false, 'msg' => array());
+
+		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+		if($_SESSION['user']->groupe == 'Membre' || $_SESSION['user']->groupe == 'Modérateur'){
+
+		}
+		elseif($_SESSION['user']->groupe == 'Administrateur'){
+			if($technoteDAO->delete($id_technote)){
+				$res->success = true;
+				$res->msg[] = 'La technote a bien été supprimée';
+			}
+			else{
+				$res->success = false;
+				$res->msg[] = 'Erreur BDD';
+			}
+		}
+		return $res;
+	}
+
 	/**
 	 * Vérifie et ajoute une technote
 	 * @param array $param Les attributs de la technotes
 	 * @return object 2 attributs, bool success et array string msg
 	 * @static
 	 */
-	static public function addTechnote(&$param) {
+	static public function addTechnote(&$param){
 		$resCheck = self::checkTechnote($param);
 		$res = $resCheck;
 		if($resCheck->success === true){

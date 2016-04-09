@@ -29,9 +29,18 @@ $(document).ready(function(){
 
     $('.modifierCommentaire').on('click', editCommentaireForm);
 
+    $('#modifierTechnote').on('click', editTechnote);
+
     $("[data-hide]").on("click", function(){
         $("." + $(this).attr("data-hide")).hide();
     });
+
+    /**
+     * Modification d'une technote
+     */
+    function editTechnote(){
+
+    }
 
     /**
      * Affiche le formulaire de modification d'un commentaire
@@ -70,45 +79,46 @@ $(document).ready(function(){
             treatUpdateEmail(data, form);
         else if(form[0].name == "addTechnote")
             treatAddTechnote(data, form);
+        else if(form[0].name == "dropTechnote")
+            treatDropTechnote(data, form);
         else if(form[0].name == "addCommentaire" || form[0].name == "addCommentaireImbrique")
             treatAddCommentaire(data, form);
         else if(form[0].name == "editCommentaire")
             treatEditCommentaire(data, form);
 
-        // Traiment générique selon si c'est un succès ou un échec
+        // Affiche les messages
+        $('#messagesResultatAJAX').empty().append(constructMessagesHTML(data, form));
+        $('#divResultatAJAX').show();
+    }
+
+    function constructMessagesHTML(data, form){
         var alert = '';
-        if(data.success){
+        if(data.success) {
             form[0].reset();
             alert = 'success';
         }
-        else{
+        else
             alert = 'danger';
-        }
+        $('#divResultatAJAX').removeClass('alert-success alert-danger').addClass('alert-' + alert);
 
-        // Construit la liste des messages
         var messagesHTML = '';
         $.each(data.msg, function(key, value){
             messagesHTML += '<li>' + value + '</li>'
         });
-
-        // Affiche les messages
-        $('#messagesResultatAJAX').empty().append(messagesHTML);
-        $('#divResultatAJAX').removeClass('alert-success alert-danger').addClass('alert-' + alert).show();
+        return messagesHTML;
     }
 
     function treatConnexion(data, form){
-        if(data.success){
-
-        }
-        else{
+        if(!data.success){
             $('#badLogin').empty().append(data.message).show();
             form.find('input[type=password]').val('');
         }
     }
 
     function treatUpdateEmail(data, form){
-        if(data.success)
+        if(data.success) {
             $('#email').attr('placeholder', data.update.email);
+        }
     }
 
     function treatAddTechnote(data, form){
@@ -118,6 +128,14 @@ $(document).ready(function(){
                 CKEDITOR.instances[instance].setData('');
             }
         }
+    }
+
+    function treatDropTechnote(data, form){
+        $('#dropTechnoteConfirmModal').modal('hide');
+        // Affiche les messages
+        var messages = $('#divResultatAJAX').detach().show();
+        $('#messagesResultatAJAX').empty().append(constructMessagesHTML(data, form));
+        $('h1').after(messages);
     }
 
     function treatAddCommentaire(data, form){
