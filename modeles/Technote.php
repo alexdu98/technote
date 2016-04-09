@@ -10,7 +10,7 @@ class Technote extends TableObject{
 
 		}
 		elseif($_SESSION['user']->groupe == 'Administrateur'){
-			if(true){ // $technoteDAO->delete($id_technote)
+			if($technoteDAO->delete($id_technote)){
 				$res->success = true;
 				$res->msg[] = 'La technote a bien été supprimée';
 			}
