@@ -123,6 +123,7 @@ $(document).ready(function(){
     function treatAddCommentaire(data, form){
         if(data.success){
             $(form[0]).parent().before(data.add.commentaire);
+            $(form[0]).parent().prev().find('.modifierCommentaire').on('click', editCommentaireForm);
             $(form[0]).parent().prev().find('.repondreCommentaire').remove();
         }
     }

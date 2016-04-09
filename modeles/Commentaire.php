@@ -71,7 +71,7 @@ class Commentaire extends TableObject{
 				$actionDAO->save($action);
 				$res->success = true;
 				$res->msg[] = 'Ajout du commentaire réussie';
-				$commentaire = (object) array_merge($resSaveCommentaire->getFields(), array('modificateur' => $_SESSION['user']->pseudo));
+				$commentaire = (object) array_merge($resSaveCommentaire->getFields(), array('auteur' => $_SESSION['user']->pseudo));
 				$res->add['commentaires'] = $commentaire;
 			}
 			else{
