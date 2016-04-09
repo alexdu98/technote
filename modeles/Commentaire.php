@@ -65,7 +65,7 @@ class Commentaire extends TableObject{
 				$actionDAO = new ActionDAO(BDD::getInstancePDO());
 				$action = new Action(array(
 					'id_action' => DAO::UNKNOWN_ID,
-					'libelle' => "Ajout d\'un commentaire (technote n°$param[id_technote])",
+					'libelle' => "Ajout d\'un commentaire (commentaire n°$resSaveCommentaire->id_commentaire)",
 					'id_membre' => $_SESSION['user']->id_membre
 				));
 				$actionDAO->save($action);

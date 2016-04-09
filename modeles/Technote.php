@@ -45,7 +45,7 @@ class Technote extends TableObject{
 				$actionDAO = new ActionDAO(BDD::getInstancePDO());
 				$action = new Action(array(
 					'id_action' => DAO::UNKNOWN_ID,
-					'libelle' => "Modification d\'une technote ($technote->titre)",
+					'libelle' => "Modification d\'une technote (technote n°$id_technote)",
 					'id_membre' => $_SESSION['user']->id_membre
 				));
 				$actionDAO->save($action);
@@ -89,11 +89,12 @@ class Technote extends TableObject{
 				$actionDAO = new ActionDAO(BDD::getInstancePDO());
 				$action = new Action(array(
 					'id_action' => DAO::UNKNOWN_ID,
-					'libelle' => "Ajout d\'une technote ($technote->titre)",
+					'libelle' => "Ajout d\'une technote (technote n°$resSaveTechnote->id_technote)",
 					'id_membre' => $_SESSION['user']->id_membre
 				));
 				$actionDAO->save($action);
 				$res->success = true;
+				$res->id_technote = $resSaveTechnote->id_technote;
 				$res->msg[] = 'Ajout de la technote réussie';
 			}
 			else{

@@ -8,6 +8,7 @@
 					<a class="repondreCommentaire">Répondre</a>
 					{% if session.user.pseudo == commentaire.auteur or session.user.groupe == 'Administrateur' or session.user.groupe == 'Modérateur' %}
 						<a class="modifierCommentaire">Modifier</a>
+						<a class="supprimerCommentaire">Supprimer</a>
 					{% endif %}
 				</div>
 				<div class="col-md-6 text-right">

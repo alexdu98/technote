@@ -47,6 +47,9 @@ $(document).ready(function(){
     // Au clic sur un lien pour modifier un commentaire, on appelle le callback
     $('.modifierCommentaire').on('click', editCommentaireForm);
 
+    // Au clic sur un lien pour supprimer un commentaire, on appelle le callback
+    $('.supprimerCommentaire').on('click', dropCommentaireForm);
+
     // Au clic sur un lien pour modifier une technote
     $('#modifierTechnote').on('click', function(){
         // On redirige sur la bonne page
@@ -60,10 +63,63 @@ $(document).ready(function(){
     });
 
     /**
-     * Modification d'une technote
+     * Traite le résultat d'un formulaire
      */
-    function editTechnote(){
+    function treatResponse(data, status, xhr, form){
 
+        // S'il y a un ordre de redirection, redirection après 3 secondes
+        if(data.redirect.length > 0){
+            form[0].reset();
+            data.msg.push('Vous allez être redirectionné dans 3 secondes');
+            setTimeout(function(){
+                $(location).attr('href', data.redirect);
+            }, 3000);
+        }
+
+        // S'il y avait un captcha on le reset
+        if($(form[0]).find('.g-recaptcha').length)
+            grecaptcha.reset();
+
+        // Traitement du résultat de la requête AJAX
+        if(form[0].name == "connexion") {
+            treatConnexion(data, form);
+            return;
+        }
+        else if(form[0].name == "updateEmail")
+            treatUpdateEmail(data, form);
+        else if(form[0].name == "addTechnote")
+            treatAddTechnote(data, form);
+        else if(form[0].name == "dropTechnote")
+            treatDropTechnote(data, form);
+        else if(form[0].name == "addCommentaire" || form[0].name == "addCommentaireImbrique")
+            treatAddCommentaire(data, form);
+        else if(form[0].name == "editCommentaire")
+            treatEditCommentaire(data, form);
+        else if(form[0].name == "dropCommentaire")
+            treatDropCommentaire(data, form);
+
+        // Affiche les messages
+        $('#messagesResultatAJAX').empty().append(constructMessagesHTML(data, form));
+        $('#divResultatAJAX').show();
+    }
+
+    function constructMessagesHTML(data, form){
+        // Détermine le type de message
+        var alert = '';
+        if(data.success){
+            form[0].reset();
+            alert = 'success';
+        }
+        else
+            alert = 'danger';
+        $('#divResultatAJAX').removeClass('alert-success alert-danger').addClass('alert-' + alert);
+
+        // Créer la liste des messages
+        var messagesHTML = '';
+        $.each(data.msg, function(key, value){
+            messagesHTML += '<li>' + value + '</li>'
+        });
+        return messagesHTML;
     }
 
     /**
@@ -91,58 +147,6 @@ $(document).ready(function(){
 
         // On cache le lien pour éditer le commentaire
         $(this).hide();
-    }
-
-    /**
-     * Traite le résultat d'un formulaire
-     */
-    function treatResponse(data, status, xhr, form){
-
-        // S'il y a un ordre de redirection, redirection
-        $(location).attr('href', data.redirect);
-
-        // S'il y avait un captcha on le reset
-        if($(form[0]).find('.g-recaptcha').length)
-            grecaptcha.reset();
-
-        // Traitement du résultat de la requête AJAX
-        if(form[0].name == "connexion") {
-            treatConnexion(data, form);
-            return;
-        }
-        else if(form[0].name == "updateEmail")
-            treatUpdateEmail(data, form);
-        else if(form[0].name == "addTechnote")
-            treatAddTechnote(data, form);
-        else if(form[0].name == "dropTechnote")
-            treatDropTechnote(data, form);
-        else if(form[0].name == "addCommentaire" || form[0].name == "addCommentaireImbrique")
-            treatAddCommentaire(data, form);
-        else if(form[0].name == "editCommentaire")
-            treatEditCommentaire(data, form);
-
-        // Affiche les messages
-        $('#messagesResultatAJAX').empty().append(constructMessagesHTML(data, form));
-        $('#divResultatAJAX').show();
-    }
-
-    function constructMessagesHTML(data, form){
-        // Détermine le type de message
-        var alert = '';
-        if(data.success) {
-            form[0].reset();
-            alert = 'success';
-        }
-        else
-            alert = 'danger';
-        $('#divResultatAJAX').removeClass('alert-success alert-danger').addClass('alert-' + alert);
-
-        // Créer la liste des messages
-        var messagesHTML = '';
-        $.each(data.msg, function(key, value){
-            messagesHTML += '<li>' + value + '</li>'
-        });
-        return messagesHTML;
     }
 
     function treatConnexion(data, form){
@@ -189,6 +193,12 @@ $(document).ready(function(){
             $(form[0]).parent().prev().find('.dateCommentaire').append('<span class="glyphicon glyphicon-pencil infosModificaton" aria-hidden="true" title="modifié par ' + data.edit.commentaire.modificateur + ' le ' + data.edit.commentaire.date_modification + '"></span>');
             $(form[0]).parent().prev().find('.modifierCommentaire').show();
             $(form[0]).remove();
+        }
+    }
+
+    function treatDropCommentaire(data, form){
+        if(data.success){
+
         }
     }
 

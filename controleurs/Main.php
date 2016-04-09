@@ -189,7 +189,10 @@ class Main extends Controleur{
 						// Si le formulaire est valide au niveau faille CSRF
 						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
 							// On essaye d'enregistrer la technote
-							echo json_encode(Technote::addTechnote($_POST));
+							$res = Technote::addTechnote($_POST);
+							if($res->success)
+								$res->redirect = "/technotes/get/$res->id_technote";
+							echo json_encode($res);
 							exit();
 						}
 					}
@@ -239,6 +242,8 @@ class Main extends Controleur{
 					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
 						// On essaye d'enregistrer le commentaire
 						$res = Technote::dropTechnote($id);
+						if($res->success)
+							$res->redirect = "/";
 						echo json_encode($res);
 					}
 				}
