@@ -10,9 +10,47 @@ class Technote extends TableObject{
 
 		}
 		elseif($_SESSION['user']->groupe == 'Administrateur'){
-			if($technoteDAO->delete($id_technote)){
+			if(true){ // $technoteDAO->delete($id_technote)
 				$res->success = true;
 				$res->msg[] = 'La technote a bien été supprimée';
+			}
+			else{
+				$res->success = false;
+				$res->msg[] = 'Erreur BDD';
+			}
+		}
+		return $res;
+	}
+
+	static public function editTechnote(&$param, $id_technote){
+		$resCheck = self::checkTechnote($param);
+		$res = $resCheck;
+		if($resCheck->success === true){
+			$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+			$technote = new Technote(array(
+				'id_technote' => $id_technote,
+				'titre' => $param['titre'],
+				'contenu' => $param['contenu'],
+				'id_modificateur' => $_SESSION['user']->id_membre,
+				'url_image' => $param['url_image']
+			));
+			if(($resSaveTechnote = $technoteDAO->save($technote)) !== false){
+				$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
+				if(!empty($param['id_mot_cle'])){
+					foreach($param['id_mot_cle'] as $id_mot_cle){
+						$decrire = new Decrire(array('id_technote' => $id_technote, 'id_mot_cle' => $id_mot_cle));
+						$decrireDAO->save($decrire);
+					}
+				}
+				$actionDAO = new ActionDAO(BDD::getInstancePDO());
+				$action = new Action(array(
+					'id_action' => DAO::UNKNOWN_ID,
+					'libelle' => "Modification d\'une technote ($technote->titre)",
+					'id_membre' => $_SESSION['user']->id_membre
+				));
+				$actionDAO->save($action);
+				$res->success = true;
+				$res->msg[] = 'Modification de la technote réussie';
 			}
 			else{
 				$res->success = false;

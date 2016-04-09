@@ -205,6 +205,8 @@ class Main extends Controleur{
 				$vars['active_technotes'] = 1; // Active le style dans le menu technotes
 				$vars['titrePage'] = 'Modifier une technote'; // <h1> de la page
 
+				$vars['technote'] = $technoteDAO->getOne($id);
+
 				// On récupère tous les mots clés
 				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 				$vars['motsCles'] = $motCleDAO->getAll();
@@ -216,11 +218,14 @@ class Main extends Controleur{
 						// Si le formulaire est valide au niveau faille CSRF
 						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
 							// On essaye d'enregistrer la technote
-							echo json_encode(Technote::editTechnote($_POST));
+							$res = Technote::editTechnote($_POST, $id);
+							if($res->success)
+								$res->redirect = "/technotes/get/$id";
+							echo json_encode($res);
 							exit();
 						}
 					}
-					$this->vue->display('technotes_add.twig', $vars);
+					$this->vue->display('technotes_edit.twig', $vars);
 					exit();
 				}
 				else

@@ -31,8 +31,10 @@ class CommentaireDAO extends DAO{
 	public function save($commentaire){
 		$fields = $commentaire->getFields();
 		if($commentaire->id_commentaire == DAO::UNKNOWN_ID){
+			unset($fields['id_commentaire']);
 			$champs = $valeurs = '';
 			foreach($commentaire as $nomChamp => $valeur){
+				if($nomChamp == 'id_commentaire') continue;
 				$champs .= $nomChamp . ', ';
 				if($valeur === NULL){
 					$valeurs .= 'NULL, ';

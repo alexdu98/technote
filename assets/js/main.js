@@ -1,37 +1,61 @@
 $(document).ready(function(){
 
+    /**
+     * Configuration de AjaxForm
+     */
     var optionsAJAXFORM = {
+        // Avant de récupérer le contenu des champs du formulaire
         beforeSerialize: function(arr, form, options){
             for(instance in CKEDITOR.instances){
+                // On met à jour les champs de type CKEDITOR
                 CKEDITOR.instances[instance].updateElement();
             }
         },
+        // Quand la réponse Ajax sera reçu, on appelle ce callback
         'success' : treatResponse,
+        // La réponse Ajax est de type JSON
         'dataType' : 'json'
     };
 
     /**
-     * Configuration de ajaxForm (envoie des formulaires en ajax)
+     * Tous les formulaires seront en Ajax
      */
     $('form').ajaxForm(optionsAJAXFORM);
 
+    /**
+     * Au clic sur un lien pour répondre à un commentaire
+     */
     $('.repondreCommentaire').on('click', function(){
+        // On récupère l'id du commentaire parent
         var id_commentaire_parent = $(this).closest('.commentaire').find('.id_commentaire').html();
+
+        // On copie le formulaire déjà présent et on le modifie
         var clone = $('form[name=addCommentaire]').parent().clone();
         $(this).closest('.commentaire').append(clone);
         $(clone).find('form').attr('name', 'addCommentaireImbrique');
         $(clone).find('label').attr('for', 'commentaire' + id_commentaire_parent);
         $(clone).find('#commentaire').attr('id', 'commentaire' + id_commentaire_parent);
         $(clone).find('form').append('<input type="hidden" name="id_commentaire_parent" value="' + id_commentaire_parent + '">');
+
+        // On rajoute l'auditeur d'événement AjaxForm sur ce nouveau formulaire
         $(clone).find('form').ajaxForm(optionsAJAXFORM);
+
+        // On supprime le lien pour répondre au commentaire
         $(this).remove();
     });
 
+    // Au clic sur un lien pour modifier un commentaire, on appelle le callback
     $('.modifierCommentaire').on('click', editCommentaireForm);
 
-    $('#modifierTechnote').on('click', editTechnote);
+    // Au clic sur un lien pour modifier une technote
+    $('#modifierTechnote').on('click', function(){
+        // On redirige sur la bonne page
+        $(location).attr('href', '/technotes/edit/' + $(this).attr('data-id_technote'));
+    });
 
+    // Au clic sur un élement avec un attribut data-hide
     $("[data-hide]").on("click", function(){
+        // On le cache
         $("." + $(this).attr("data-hide")).hide();
     });
 
@@ -46,15 +70,26 @@ $(document).ready(function(){
      * Affiche le formulaire de modification d'un commentaire
      */
     function editCommentaireForm(){
+        // On récupère l'id du commentaire
         var id_commentaire = $(this).closest('.commentaire').find('.id_commentaire').html();
+
+        // On clone le formulaire déjà présent
         var clone = $('form[name=addCommentaire]').parent().clone();
+
+        // On récupère le texte actuel du commentaire
         var texte = $(this).closest('.commentaire').find('.texteCommentaire').html().replace(/<br>/, '');
         $(this).closest('.container-fluid').after(clone);
+
+        // On modifie la copie du formulaire
         $(clone).find('form #commentaire').text(texte);
         $(clone).find('form').attr('action', '/commentaires/edit/' + id_commentaire);
         $(clone).find('form').attr('name', 'editCommentaire');
         $(clone).find('form input[type=submit]').attr('value', 'Modifier');
+
+        // On ajoute l'auditeur d'événement AjaxForm sur ce nouveau formulaire
         $(clone).find('form').ajaxForm(optionsAJAXFORM);
+
+        // On cache le lien pour éditer le commentaire
         $(this).hide();
     }
 
@@ -92,6 +127,7 @@ $(document).ready(function(){
     }
 
     function constructMessagesHTML(data, form){
+        // Détermine le type de message
         var alert = '';
         if(data.success) {
             form[0].reset();
@@ -101,6 +137,7 @@ $(document).ready(function(){
             alert = 'danger';
         $('#divResultatAJAX').removeClass('alert-success alert-danger').addClass('alert-' + alert);
 
+        // Créer la liste des messages
         var messagesHTML = '';
         $.each(data.msg, function(key, value){
             messagesHTML += '<li>' + value + '</li>'
@@ -132,9 +169,7 @@ $(document).ready(function(){
 
     function treatDropTechnote(data, form){
         $('#dropTechnoteConfirmModal').modal('hide');
-        // Affiche les messages
         var messages = $('#divResultatAJAX').detach().show();
-        $('#messagesResultatAJAX').empty().append(constructMessagesHTML(data, form));
         $('h1').after(messages);
     }
 

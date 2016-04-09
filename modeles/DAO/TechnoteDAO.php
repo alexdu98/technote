@@ -43,34 +43,47 @@ class TechnoteDAO extends DAO{
 	}
 
 	public function save($technote){
+		$fields = $technote->getFields();
 		if($technote->id_technote == DAO::UNKNOWN_ID){
+			unset($fields['id_technote']);
 			$champs = $valeurs = '';
 			foreach($technote as $nomChamp => $valeur){
-				if($nomChamp != 'id_technote'){
-					$champs .= $nomChamp . ', ';
-					$valeurs .= "'$valeur', ";
+				if($nomChamp == 'id_technote') continue;
+				$champs .= $nomChamp . ', ';
+				if($valeur === NULL){
+					$valeurs .= 'NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$valeurs .= ":$nomChamp, ";
 				}
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			$req = 'INSERT INTO technote(' . $champs .') VALUES(' . $valeurs .')';
-			if(($res = $this->pdo->exec($req)) !== false){
+			$req = $this->pdo->prepare("INSERT INTO technote($champs) VALUES($valeurs)");
+			if($req->execute($fields)){
 				$technote->id_technote = $this->pdo->lastInsertId();
 				return $technote;
 			}
-			else
-				return false;
+			return false;
 		}
 		else{
-			$id_technote = $technote->id_technote;
 			unset($technote->id_technote);
 			$newValeurs = '';
 			foreach($technote as $nomChamp => $valeur){
-				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+				if($valeur === NULL){
+					$newValeurs .= $nomChamp . ' = NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$newValeurs .= "$nomChamp = :$nomChamp, ";
+				}
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
-			$req = "UPDATE technote SET $newValeurs WHERE id_technote = '$id_technote'";
-			return $this->pdo->exec($req);
+			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
+			$decrireDAO->deleteAllForOneTechnote($fields['id_technote']);
+			$req = $this->pdo->prepare("UPDATE technote SET $newValeurs WHERE id_technote = :id_technote");
+			return $req->execute($fields);
 		}
 	}
 
