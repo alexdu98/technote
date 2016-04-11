@@ -99,7 +99,12 @@ class CommentaireDAO extends DAO{
 	public function getTreeForOneTechnote($id_technote, $id_commentaire_parent){
 		$res = array();
 		$op = empty($id_commentaire_parent) ? 'IS' : '=';
-		$req = $this->pdo->prepare('SELECT c.*, ma.pseudo auteur, mm.pseudo modificateur FROM commentaire c INNER JOIN membre ma ON ma.id_membre=c.id_auteur LEFT JOIN membre mm ON mm.id_membre=c.id_modificateur WHERE id_technote = :id_technote AND id_commentaire_parent ' . $op . ' :id_commentaire_parent');
+		$req = $this->pdo->prepare('SELECT c.*, ma.pseudo auteur, mm.pseudo modificateur 
+									FROM commentaire c 
+									INNER JOIN membre ma ON ma.id_membre=c.id_auteur 
+									LEFT JOIN membre mm ON mm.id_membre=c.id_modificateur 
+									WHERE id_technote = :id_technote 
+										AND id_commentaire_parent ' . $op . ' :id_commentaire_parent');
 		$req->execute(array(
 			'id_technote' => $id_technote,
 			'id_commentaire_parent' => $id_commentaire_parent
