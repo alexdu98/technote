@@ -166,6 +166,7 @@ class Main extends Controleur{
 
 						// On récupère le nombre total de technotes non publié par l'
 						$count = $technoteDAO->getNbRedige($_SESSION['user']->id_membre, 0);
+						
 						// On créé la pagination
 						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/technotes/get?nonpublie&page=');
 						// On récupère les technotes
@@ -178,7 +179,7 @@ class Main extends Controleur{
 						// On récupère le nombre total de technotes
 						$count = $technoteDAO->getCount();
 						// On créé la pagination
-						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/technotes/get?page=');
+						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/recherche/get?page=');
 						// On récupère les technotes
 						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
 					}
@@ -386,7 +387,44 @@ class Main extends Controleur{
 				exit();
 		}
 	}
-
+	
+	/*--------------------------------
+	  			RECHERCHE
+	  ---------------------------------*/
+	public function recherche($action, $id, $vars){
+		$vars['active_technotes'] = 1; // Active le style dans le menu technotes
+		$vars['active_technotes_recherche'] = 1; // Active le style dans le sous menu ajout de technote
+		$vars['titrePage'] = 'Rechercher une technote'; // <h1> de la page
+		
+		// On récupère tous les mots clés
+		$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+		$vars['motsCles'] = $motCleDAO->getAll();
+		
+		// On récupère tous les auteurs
+		$membreDAO = new MembreDAO(BDD::getInstancePDO());
+		$vars['auteurs'] = $membreDAO->getAll();
+		
+		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+		
+		if(!empty($_POST)){
+			$technotes = $technoteDAO->getTechnotesRecherchees($_POST);
+			
+		}
+		else {
+			// On récupère la page
+			$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+			
+			// On récupère le nombre total de technotes
+			$count = $technoteDAO->getCount();
+			// On créé la pagination
+			$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/recherche/get?page=');
+			// On récupère les technotes
+			$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
+			
+			$this->vue->display('recherche.twig', $vars);
+		}
+	}
+	
 	/*------------------------
 	 		CONDITIONS
 	 --------------------------*/

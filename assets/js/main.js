@@ -102,7 +102,9 @@ $(document).ready(function(){
             treatDropCommentaire(data, form);
         else if(form[0].name == "dropToken")
             treatDropToken(data, form);
-
+        else if(form[0].name == "recherche")
+            treatRecherche(data, form);
+        
         // Affiche les messages
         $('#messagesResultatAJAX').empty().append(constructMessagesHTML(data, form));
         $('#divResultatAJAX').show();
