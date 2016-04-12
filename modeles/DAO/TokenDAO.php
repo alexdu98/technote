@@ -54,15 +54,20 @@ class TokenDAO extends DAO{
 			return false;
 		}
 		else{
-			$id_token = $token->id_token;
 			unset($token->id_token);
 			$newValeurs = '';
 			foreach($token as $nomChamp => $valeur){
-				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+				if($valeur === NULL){
+					$newValeurs .= $nomChamp . ' = NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$newValeurs .= "$nomChamp = :$nomChamp, ";
+				}
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
-			$req = "UPDATE token SET $newValeurs WHERE id_token = '$id_token'";
-			return $this->pdo->exec($req);
+			$req = $this->pdo->prepare("UPDATE token SET $newValeurs WHERE id_token = :id_token");
+			return $req->execute($fields);
 		}
 	}
 

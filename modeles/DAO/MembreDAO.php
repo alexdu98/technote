@@ -33,33 +33,45 @@ class MembreDAO extends DAO{
 	}
 
 	public function save($membre){
+		$fields = $membre->getFields();
 		if($membre->id_membre == DAO::UNKNOWN_ID){
+			unset($fields['id_membre']);
 			$champs = $valeurs = '';
 			foreach($membre as $nomChamp => $valeur){
-				if($nomChamp !== 'id_membre') {
-					$champs .= $nomChamp . ', ';
-					$valeurs .= "'$valeur', ";
+				if($nomChamp == 'id_membre') continue;
+				$champs .= $nomChamp . ', ';
+				if($valeur === NULL){
+					$valeurs .= 'NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$valeurs .= ":$nomChamp, ";
 				}
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			$req = 'INSERT INTO membre(' . $champs .') VALUES(' . $valeurs .')';
-			if(($res = $this->pdo->exec($req)) !== false){
+			$req = $this->pdo->prepare("INSERT INTO membre($champs) VALUES($valeurs)");
+			if($req->execute($fields)){
 				$membre->id_membre = $this->pdo->lastInsertId();
 				return $membre;
 			}
-			return $res;
+			return false;
 		}
 		else{
-			$id_membre = $membre->id_membre;
 			unset($membre->id_membre);
 			$newValeurs = '';
 			foreach($membre as $nomChamp => $valeur){
-				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+				if($valeur === NULL){
+					$newValeurs .= $nomChamp . ' = NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$newValeurs .= "$nomChamp = :$nomChamp, ";
+				}
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
-			$req = "UPDATE membre SET $newValeurs WHERE id_membre = '$id_membre'";
-			return $this->pdo->exec($req);
+			$req = $this->pdo->prepare("UPDATE membre SET $newValeurs WHERE id_membre = :id_membre");
+			return $req->execute($fields);
 		}
 	}
 

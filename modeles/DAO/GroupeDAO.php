@@ -29,29 +29,45 @@ class GroupeDAO extends DAO{
 	}
 
 	public function save($groupe){
+		$fields = $groupe->getFields();
 		if($groupe->id_groupe == DAO::UNKNOWN_ID){
+			unset($fields['id_groupe']);
 			$champs = $valeurs = '';
 			foreach($groupe as $nomChamp => $valeur){
+				if($nomChamp == 'id_groupe') continue;
 				$champs .= $nomChamp . ', ';
-				$valeurs .= "'$valeur', ";
+				if($valeur === NULL){
+					$valeurs .= 'NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$valeurs .= ":$nomChamp, ";
+				}
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			$req = 'INSERT INTO groupe(' . $champs .') VALUES(' . $valeurs .')';
-			$res = $this->pdo->exec($req);
-			$groupe->id_groupe = $this->pdo->lastInsertId();
-			return $res;
+			$req = $this->pdo->prepare("INSERT INTO groupe($champs) VALUES($valeurs)");
+			if($req->execute($fields)){
+				$groupe->id_groupe = $this->pdo->lastInsertId();
+				return $groupe;
+			}
+			return false;
 		}
 		else{
-			$id_groupe = $groupe->id_groupe;
 			unset($groupe->id_groupe);
 			$newValeurs = '';
 			foreach($groupe as $nomChamp => $valeur){
-				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+				if($valeur === NULL){
+					$newValeurs .= $nomChamp . ' = NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$newValeurs .= "$nomChamp = :$nomChamp, ";
+				}
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
-			$req = "UPDATE groupe SET $newValeurs WHERE id_groupe = '$id_groupe'";
-			return $this->pdo->exec($req);
+			$req = $this->pdo->prepare("UPDATE groupe SET $newValeurs WHERE id_groupe = :id_groupe");
+			return $req->execute($fields);
 		}
 	}
 

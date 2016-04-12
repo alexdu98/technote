@@ -27,7 +27,7 @@ $visite = new Visite(array('id_visite' => DAO::UNKNOWN_ID, 'ip' => $_SERVER['REM
 $visite->checkVisite($visite);
 
 // Récupération de l'URL
-$controleur = $_GET['url_controleur'];
+$controleur = ucfirst($_GET['url_controleur']);
 $page = !empty($_GET['url_page']) ? $_GET['url_page'] : 'accueil';
 $action = !empty($_GET['url_action']) ? $_GET['url_action'] : 'get';
 $id = !empty($_GET['url_id']) ? $_GET['url_id'] : NULL;

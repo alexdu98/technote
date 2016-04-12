@@ -30,16 +30,19 @@ class DecrireDAO extends DAO{
 	}
 
 	public function save($decrire){
+		$fields = $decrire->getFields();
 		$champs = $valeurs = '';
 		foreach($decrire as $nomChamp => $valeur){
 			$champs .= $nomChamp . ', ';
-			$valeurs .= "'$valeur', ";
+			$valeurs .= ":$nomChamp, ";
 		}
 		$champs = substr($champs, 0, -2);
 		$valeurs = substr($valeurs, 0, -2);
-		$req = 'INSERT INTO decrire(' . $champs .') VALUES(' . $valeurs .')';
-		$res = $this->pdo->exec($req);
-		return $res;
+		$req = $this->pdo->prepare("INSERT INTO decrire($champs) VALUES($valeurs)");
+		if($req->execute($fields)){
+			return $decrire;
+		}
+		return false;
 	}
 
 	public function delete($id){

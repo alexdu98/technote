@@ -29,29 +29,45 @@ class ReponseDAO extends DAO{
 	}
 
 	public function save($reponse){
+		$fields = $reponse->getFields();
 		if($reponse->id_reponse == DAO::UNKNOWN_ID){
+			unset($fields['id_reponse']);
 			$champs = $valeurs = '';
 			foreach($reponse as $nomChamp => $valeur){
+				if($nomChamp == 'id_reponse') continue;
 				$champs .= $nomChamp . ', ';
-				$valeurs .= "'$valeur', ";
+				if($valeur === NULL){
+					$valeurs .= 'NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$valeurs .= ":$nomChamp, ";
+				}
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			$req = 'INSERT INTO reponse(' . $champs .') VALUES(' . $valeurs .')';
-			$res = $this->pdo->exec($req);
-			$reponse->id_reponse = $this->pdo->lastInsertId();
-			return $res;
+			$req = $this->pdo->prepare("INSERT INTO reponse($champs) VALUES($valeurs)");
+			if($req->execute($fields)){
+				$reponse->id_reponse = $this->pdo->lastInsertId();
+				return $reponse;
+			}
+			return false;
 		}
 		else{
-			$id_reponse = $reponse->id_reponse;
 			unset($reponse->id_reponse);
 			$newValeurs = '';
 			foreach($reponse as $nomChamp => $valeur){
-				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+				if($valeur === NULL){
+					$newValeurs .= $nomChamp . ' = NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$newValeurs .= "$nomChamp = :$nomChamp, ";
+				}
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
-			$req = "UPDATE reponse SET $newValeurs WHERE id_reponse = '$id_reponse'";
-			return $this->pdo->exec($req);
+			$req = $this->pdo->prepare("UPDATE reponse SET $newValeurs WHERE id_reponse = :id_reponse");
+			return $req->execute($fields);
 		}
 	}
 
