@@ -22,8 +22,8 @@ class Technote extends TableObject{
 		return $res;
 	}
 
-	static public function editTechnote(&$param, $id_technote){
-		$resCheck = self::checkTechnote($param);
+	static public function editTechnote(&$param, &$files, $id_technote){
+		$resCheck = self::checkTechnote($param, $files, 'edit');
 		$res = $resCheck;
 		if($resCheck->success === true){
 			$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
@@ -68,8 +68,8 @@ class Technote extends TableObject{
 	 * @return object 2 attributs, bool success et array string msg
 	 * @static
 	 */
-	static public function addTechnote(&$param){
-		$resCheck = self::checkTechnote($param);
+	static public function addTechnote(&$param, &$files){
+		$resCheck = self::checkTechnote($param, $files, 'add');
 		$res = $resCheck;
 		if($resCheck->success === true){
 			$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
@@ -116,7 +116,7 @@ class Technote extends TableObject{
 	 * @return object 2 attributs, bool success et array string msg
 	 * @static
 	 */
-	static private function checkTechnote(&$param){
+	static private function checkTechnote(&$param, &$files, $typeCheck){
 		$std = (object) array('success' => false, 'msg' => array());
 
 		if(($res = Technote::checkDescription($param['description'])) !== true)
@@ -127,8 +127,34 @@ class Technote extends TableObject{
 			$std->msg[] = $res;
 		if(($res = Technote::checkContenu($param['contenu'])) !== true)
 			$std->msg[] = $res;
-		if(($res = Technote::checkURLImage($param['url_image'])) !== true)
-			$std->msg[] = $res;
+
+		// Si on ajoute une technote, ou que c'est une édition avec modification de l'image
+		if($typeCheck == 'add' || !empty($files['image'])){
+			if(($res = Technote::checkImage($files['image'])) !== true)
+				$std->msg[] = $res;
+			// On génère un nom aléatoire
+			do{
+				$gen = uniqid(rand());
+				$nom = pathinfo($files['image']['name'], PATHINFO_FILENAME);
+				$extension = pathinfo($files['image']['name'], PATHINFO_EXTENSION);
+				$base = dirname(__FILE__) . '/..';
+				$chemin = '/assets/images/uploads/' . $nom . $gen . '.' . $extension;
+			}while(file_exists($base . $chemin));
+
+			if(move_uploaded_file($files['image']['tmp_name'], $base . $chemin)){
+				$param['url_image'] = $chemin;
+			}
+			else{
+				$std->msg[] = 'Problème de déplacement de l\'image sur le serveur, veuillez contacter un admin';
+			}
+		}
+		// Sinon on vérifie l'url de l'image
+		else{
+			if(($res = Technote::checkURLImage($param['url_image'])) !== true){
+				$std->msg[] = $res;
+			}
+		}
+
 		if(!empty($param['id_mot_cle'])){
 			foreach($param['id_mot_cle'] as $id_mot_cle){
 				if(($res = MotCle::checkExiste($id_mot_cle)) !== true)
@@ -205,10 +231,38 @@ class Technote extends TableObject{
 	 * @return bool|string True si l'URL de l'image est valide, un message sinon
 	 * @static
 	 */
+	static public function checkImage(&$image){
+		if(!empty($image) && $image['error'] != UPLOAD_ERR_NO_FILE){
+			if($image['error'] == UPLOAD_ERR_OK){
+				$typesAcceptes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
+				$typeDetecte = exif_imagetype($image['tmp_name']);
+				if(in_array($typeDetecte, $typesAcceptes)){
+					if($image['size'] < 1048576){
+						return true;
+					}
+					return 'L\'image est trop volumineuse';
+				}
+				return 'Le fichier n\'est pas une image (png,jpeg';
+			}
+			return 'Une erreur (code:' . $image['error'] . ') est survenue lors du télécharement de l\'image, veuillez réessayer';
+		}
+		return 'L\'image n\'est pas renseigné';
+	}
+
+	/**
+	 * Vérifie le lien de l'image d'une technote
+	 * @param string $url L'URL de l'image à vérifier
+	 * @return bool|string True si l'URL de l'image est valide, un message sinon
+	 * @static
+	 */
 	static public function checkURLImage(&$url){
 		if(!empty($url)){
-			if(filter_var($url, FILTER_VALIDATE_URL))
-				return true;
+			if(preg_match('#^/assets/images/uploads/#', $url)){
+				if(file_exists(dirname(__FILE__) . '/..' . $url)){
+					return true;
+				}
+				return 'L\'URL de l\'image n\'existe pas';
+			}
 			return 'L\'URL de l\'image n\'est pas valide';
 		}
 		return 'L\'URL de l\'image n\'est pas renseigné';

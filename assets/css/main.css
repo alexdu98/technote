@@ -163,6 +163,10 @@ img.img-technote{
     min-width: 75%;
     max-height: 250px;
 }
+img.img-technote-edit{
+    max-height: 150px;
+    max-width: 150px;
+}
 .panel{
     margin-top: 20px;
 }

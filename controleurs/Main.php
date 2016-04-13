@@ -179,7 +179,7 @@ class Main extends Controleur{
 						// On récupère le nombre total de technotes
 						$count = $technoteDAO->getCount();
 						// On créé la pagination
-						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/recherche/get?page=');
+						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/technotes/get?page=');
 						// On récupère les technotes
 						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
 					}
@@ -204,7 +204,7 @@ class Main extends Controleur{
 						// Si le formulaire est valide au niveau faille CSRF
 						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
 							// On essaye d'enregistrer la technote
-							$res = Technote::addTechnote($_POST);
+							$res = Technote::addTechnote($_POST, $_FILES);
 							if($res->success)
 								$res->redirect = "/technotes/get/$res->id_technote";
 							echo json_encode($res);
@@ -236,7 +236,7 @@ class Main extends Controleur{
 						// Si le formulaire est valide au niveau faille CSRF
 						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
 							// On essaye d'enregistrer la technote
-							$res = Technote::editTechnote($_POST, $id);
+							$res = Technote::editTechnote($_POST, $_FILES, $id);
 							if($res->success)
 								$res->redirect = "/technotes/get/$id";
 							echo json_encode($res);
