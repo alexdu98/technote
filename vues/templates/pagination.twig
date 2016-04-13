@@ -1,8 +1,9 @@
 <nav class="text-center">
 	<ul class="pagination">
+		<li><a href="{{ pagination.url ~ 1 }}">Première page</a></li>
 		{% if pagination.page > 1 %}
 			<li>
-				<a href="{{ pagination.url ~ (pagination.page - 1) }}" aria-label="Previous">
+				<a href="{{ pagination.url ~ (pagination.page - 1) }}" aria-label="Précédent" title="Précédent">
 					<span aria-hidden="true">&laquo;</span>
 				</a>
 			</li>
@@ -16,10 +17,11 @@
 		{% endfor %}
 		{% if not pagination.fin and pagination.page is defined %}
 			<li>
-				<a href="{{ pagination.url ~ (pagination.page + 1) }}" aria-label="Next">
+				<a href="{{ pagination.url ~ (pagination.page + 1) }}" aria-label="Suivant" title="Suivant">
 					<span aria-hidden="true">&raquo;</span>
 				</a>
 			</li>
 		{% endif %}
+		<li><a href="{{ pagination.url ~ (pagination.nbPages) }}">Dernière page</a></li>
 	</ul>
 </nav>
