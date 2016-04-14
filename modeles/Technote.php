@@ -29,12 +29,30 @@ class Technote extends TableObject{
 		}
 
 		if(!empty($param['mots_cles'])){
-
+			$tabMC = explode(',', $param['mots_cles']);
+			$tabMCClean = array();
+			foreach($tabMC as $key => $value){
+				$valueClean = trim($value);
+				if($valueClean != ''){
+					$tabMCClean[] = $valueClean;
+					if($valueClean[0] == '+'){
+						if(($res = MotCle::checkExisteByLabel(substr($value, 1))) !== true)
+							$std->msg[] = $res;
+					}
+				}
+			}
+			$cond['mots_cles'] = $tabMCClean;
 		}
 
+		if(!empty($std->msg))
+			return $std;
+
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
-		$technotes = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond);
-		var_dump($param, $std);die;
+		$std->get = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond);
+
+		if(!empty($std->get))
+			$std->success = true;
+		return $std;
 	}
 
 

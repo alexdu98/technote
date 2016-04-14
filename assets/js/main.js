@@ -68,13 +68,25 @@ $(document).ready(function(){
         return split(term).pop();
     }
 
+    // Autocomplétion pour la recherche de membre
+    $( "#search-membre" ).autocomplete({
+        minLength: 1,
+        source : function(request, response){
+            $.getJSON('/autocomplete?type=membre&term=' + request.term, function(data){
+                response($.map(data, function(item){
+                    return item.pseudo;
+                }));
+            });
+        }
+    });
+
     // Autocomplétion pour la recherche par mot clé
     $( "#search-motsCles" ).autocomplete({
         minLength: 1, // Il faut au moins 1 caractère pour lancer la recherche d'autocomplétion
         source: function(request, response){
             var search = split(request.term).pop().replace(/^\++/, ''); // Enlève le + pour rendre obligatoire le mot clé s'il y en a un
             if(search != ''){
-                $.getJSON('/autocomplete?type=motcle&term=' + search, function (data){
+                $.getJSON('/autocomplete?type=motcle&term=' + encodeURIComponent(search), function(data){
                     response(data);
                 });
             }
@@ -136,12 +148,16 @@ $(document).ready(function(){
             treatDropCommentaire(data, form);
         else if(form[0].name == "dropToken")
             treatDropToken(data, form);
-        else if(form[0].name == "recherche")
-            treatRecherche(data, form);
+        else if(form[0].name == "rechercheTechnote")
+            treatRechercheTechnote(data, form);
         
-        // Affiche les messages
-        $('#messagesResultatAJAX').empty().append(constructMessagesHTML(data, form));
-        $('#divResultatAJAX').show();
+
+        $('#divResultatAJAX').hide();
+        // Affiche les messages s'il y en a
+        if(data.msg.length > 0) {
+            $('#messagesResultatAJAX').empty().append(constructMessagesHTML(data, form));
+            $('#divResultatAJAX').show();
+        }
     }
 
     function constructMessagesHTML(data, form){
@@ -161,6 +177,12 @@ $(document).ready(function(){
             messagesHTML += '<li>' + value + '</li>'
         });
         return messagesHTML;
+    }
+
+    function treatRechercheTechnote(data, form){
+        if(data.success) {
+            $('#technotes').empty().append(data.get.technotes);
+        }
     }
 
     /**

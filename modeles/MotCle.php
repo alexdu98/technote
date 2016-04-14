@@ -15,4 +15,14 @@ class MotCle extends TableObject{
 		return 'Le mot clé '. $id_mot_cle .' n\'existe pas';
 	}
 
+	static public function checkExisteByLabel($label){
+		if($label[0] == '+')
+			$label = substr($label, 1);
+
+		$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+		if(($res = $motCleDAO->checkExiste($label)) !== false)
+			return true;
+		return 'Le mot clé '. $label .' n\'existe pas';
+	}
+
 }

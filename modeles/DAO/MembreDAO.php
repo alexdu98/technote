@@ -175,4 +175,13 @@ class MembreDAO extends DAO{
 			return false;
 	}
 
+	public function getAllStartBy($debut){
+		$res = array();
+		$req = $this->pdo->prepare('SELECT id_membre, pseudo FROM membre WHERE pseudo LIKE :debut');
+		$req->execute(array(
+			'debut' => $debut . '%'
+		));
+		return $req->fetchAll();
+	}
+
 }

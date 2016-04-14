@@ -396,6 +396,8 @@ class Main extends Controleur{
 					$page = !empty($_GET['page']) ? $_GET['page'] : 1;
 					// On essaye de récupèrer les technotes avec les critères de recherche
 					$res = Technote::recherche($_POST, $page);
+					if($res->success)
+						$res->get['technotes'] = $this->vue->render('templates/technotesExtraits.twig', array('technotes' => $res->get));
 					echo json_encode($res);
 					exit();
 				}
@@ -459,12 +461,17 @@ class Main extends Controleur{
 		switch($action){
 			case 'get':
 				if(!empty($_GET['type']) && !empty($_GET['term'])){
+					$res = NULL;
 					if($_GET['type'] == 'motcle'){
 						$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 						$res = $motCleDAO->getAllStartBy($_GET['term']);
-						echo json_encode($res);
-						exit();
 					}
+					elseif($_GET['type'] == 'membre'){
+						$membreDAO = new MembreDAO(BDD::getInstancePDO());
+						$res = $membreDAO->getAllStartBy($_GET['term']);
+					}
+					echo json_encode($res);
+					exit();
 				}
 				$this->vue->display('404.twig', $vars);
 

@@ -91,4 +91,14 @@ class MotCleDAO extends DAO{
 		return $req->fetchAll();
 	}
 
+	public function checkExiste($motCle){
+		$req = $this->pdo->prepare('SELECT * FROM mot_cle WHERE label = :motcle');
+		$req->execute(array(
+			'motcle' => $motCle
+		));
+		if(($res = $req->fetch()) !== false)
+			return true;
+		return false;
+	}
+
 }
