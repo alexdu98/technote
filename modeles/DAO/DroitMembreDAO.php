@@ -83,4 +83,15 @@ class DroitMembreDAO extends DAO{
 	// ######## MÉTHODES PERSONNELLES ########
 	// #######################################
 
+	public function getAllForOneMembre($id_membre){
+		$res = array();
+		$req = $this->pdo->prepare('SELECT * FROM droit_membre WHERE id_membre = :id_membre');
+		$req->execute(array(
+			'id_membre' => $id_membre
+		));
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new DroitMembre(get_object_vars($ligne));
+		return $res;
+	}
+
 }

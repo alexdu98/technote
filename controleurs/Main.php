@@ -40,16 +40,13 @@ class Main extends Controleur{
 				$vars['titrePage'] = 'Profil'; // <h1> de la page
 				$vars['active_profil'] = 1; // Active le style dans le menu profil
 
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					// On récupère son profil
-					$vars['profil'] = $_SESSION['user']->getProfil();
+				// On met à jour les variables de profil et les droits du membre
+				$_SESSION['user']->rechargerProfil();
 
-					$this->vue->display('membre_get.twig', $vars);
-					exit();
-				}
+				// On récupère son profil
+				$vars['profil'] = $_SESSION['user']->getProfil();
 
-				header('Location: /');
+				$this->vue->display('membre_get.twig', $vars);
 				exit();
 
 			/**** ADD ****/
@@ -57,21 +54,15 @@ class Main extends Controleur{
 				$vars['titrePage'] = 'Inscription'; // <h1> de la page
 				$vars['active_profile'] = 1; // Active le style dans le menu profil
 
-				// Si l'utilisateur n'est pas connecté
-				if(!$_SESSION['user']){
-					// Si un formulaire a été envoyé
-					if(!empty($_POST)){
-						// On essaye d'inscrire l'utilisateur
-						echo json_encode(Membre::inscription($_POST));
-						exit();
-					}
-					$this->vue->display('membre_add.twig', $vars);
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// On essaye d'inscrire l'utilisateur
+					echo json_encode(Membre::inscription($_POST));
 					exit();
 				}
-
-				header('Location: /');
+				$this->vue->display('membre_add.twig', $vars);
 				exit();
-				
+
 			/**** EDIT ****/
 			case 'edit':
 				$vars['active_profile'] = 1; // Active le style dans le menu profil
@@ -197,27 +188,21 @@ class Main extends Controleur{
 				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 				$vars['motsCles'] = $motCleDAO->getAll();
 
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					// Si un formulaire a été envoyé
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer la technote
-							$res = Technote::addTechnote($_POST, $_FILES);
-							if($res->success)
-								$res->redirect = "/technotes/get/$res->id_technote";
-							echo json_encode($res);
-							exit();
-						}
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer la technote
+						$res = Technote::addTechnote($_POST, $_FILES);
+						if($res->success)
+							$res->redirect = "/technotes/get/$res->id_technote";
+						echo json_encode($res);
+						exit();
 					}
-					$this->vue->display('technotes_add.twig', $vars);
-					exit();
 				}
-				else
-					$this->technotes('403.twig', NULL, $vars);
+				$this->vue->display('technotes_add.twig', $vars);
 				exit();
-			
+
 			/**** EDIT ****/
 			case 'edit':
 				$vars['active_technotes'] = 1; // Active le style dans le menu technotes
@@ -229,25 +214,19 @@ class Main extends Controleur{
 				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 				$vars['motsCles'] = $motCleDAO->getAll();
 
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					// Si un formulaire a été envoyé
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer la technote
-							$res = Technote::editTechnote($_POST, $_FILES, $id);
-							if($res->success)
-								$res->redirect = "/technotes/get/$id";
-							echo json_encode($res);
-							exit();
-						}
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer la technote
+						$res = Technote::editTechnote($_POST, $_FILES, $id);
+						if($res->success)
+							$res->redirect = "/technotes/get/$id";
+						echo json_encode($res);
+						exit();
 					}
-					$this->vue->display('technotes_edit.twig', $vars);
-					exit();
 				}
-				else
-					$this->technotes('403.twig', NULL, $vars);
+				$this->vue->display('technotes_edit.twig', $vars);
 				exit();
 
 			/**** DROP ****/
@@ -275,47 +254,41 @@ class Main extends Controleur{
 	public function commentaires($action, $id, $vars){
 		switch($action){
 			case 'add':
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer le commentaire
-							$res = Commentaire::addCommentaire($_POST);
-							if($res->success){
-								$res->add['commentaire'] = $this->vue->render('templates/commentaire.twig', array('commentaires' => $res->add));
-							}
-							echo json_encode($res);
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Commentaire::addCommentaire($_POST);
+						if($res->success){
+							$res->add['commentaire'] = $this->vue->render('templates/commentaire.twig', array('commentaires' => $res->add));
 						}
+						echo json_encode($res);
 					}
 				}
 				exit();
+
 			case 'edit':
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer le commentaire
-							$res = Commentaire::editCommentaire($_POST, $id);
-							echo json_encode($res);
-						}
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Commentaire::editCommentaire($_POST, $id);
+						echo json_encode($res);
 					}
 				}
 				exit();
+
 			case 'drop':
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer le commentaire
-							$res = Commentaire::dropCommentaire($_POST, $id);
-							echo json_encode($res);
-						}
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Commentaire::dropCommentaire($_POST, $id);
+						echo json_encode($res);
 					}
 				}
 				exit();
+
 			default:
 				$this->vue->display('404.twig', $vars);
 				exit();
@@ -326,32 +299,25 @@ class Main extends Controleur{
 	 		CONNEXION
 	 --------------------------*/
 	public function connexion($action, $id, $vars){
-		// Si l'utilisateur n'est pas connecté
-		if(!$_SESSION['user']){
-			switch($action){
-
-				case 'get':
-					// Si un formulaire a été envoyé
-					if(!empty($_POST)){
-						// On essaye de se connecter
-						$res = Membre::connexion($_POST);
-						if($res->success)
-							$res->redirect = "/membre";
-						echo json_encode($res);
-						exit();
-					}
-
-					$this->vue->display('403.twig', $vars);
+		switch($action){
+			case 'get':
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// On essaye de se connecter
+					$res = Membre::connexion($_POST);
+					if($res->success)
+						$res->redirect = "/membre";
+					echo json_encode($res);
 					exit();
+				}
 
-				default:
-					$this->vue->display('404.twig', $vars);
-					exit();
-			}
+				$this->vue->display('403.twig', $vars);
+				exit();
+
+			default:
+				$this->vue->display('404.twig', $vars);
+				exit();
 		}
-
-		$this->vue->display('403.twig', $vars);
-		exit();
 	}
 
 	/*------------------------
@@ -447,17 +413,13 @@ class Main extends Controleur{
 	 --------------------------*/
 	public function token($action, $id, $vars){
 		switch($action){
-
 			case 'drop':
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer le commentaire
-							$res = Token::dropToken($_POST, $id);
-							echo json_encode($res);
-						}
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Token::dropToken($_POST, $id);
+						echo json_encode($res);
 					}
 				}
 				exit();

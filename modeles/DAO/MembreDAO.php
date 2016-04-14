@@ -10,7 +10,7 @@ class MembreDAO extends DAO{
 	// #######################################
 
 	public function getOne($id){
-		$req = $this->pdo->prepare('SELECT m.*, g.libelle groupe FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE id_membre = :id_membre');
+		$req = $this->pdo->prepare('SELECT m.*, g.id_groupe_parent, g.libelle groupe FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE id_membre = :id_membre');
 		$req->execute(array(
 			'id_membre' => $id
 		));
@@ -92,7 +92,7 @@ class MembreDAO extends DAO{
 	 * @return bool|\Membre False si aucun membre avec ce pseudo, Membre sinon
 	 */
 	public function getOneByPseudo($pseudo){
-		$req = $this->pdo->prepare('SELECT m.*, g.libelle groupe FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE pseudo = :pseudo');
+		$req = $this->pdo->prepare('SELECT m.*, g.id_groupe_parent, g.libelle groupe FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE pseudo = :pseudo');
 		$req->execute(array(
 			'pseudo' => $pseudo
 		));

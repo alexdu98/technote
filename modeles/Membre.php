@@ -23,6 +23,20 @@ class Membre extends TableObject{
 		return $res;
 	}
 
+	public function rechargerProfil(){
+		// Recupère les variables utilisateurs
+		$membreDAO = new MembreDAO(BDD::getInstancePDO());
+		$_SESSION['user'] = $membreDAO->getOne($this->id_membre);
+
+		// Récupère les doits du groupe du membre
+		$droitGroupeDAO = new DroitGroupeDAO(BDD::getInstancePDO());
+		$_SESSION['droits']['groupe'] = $droitGroupeDAO->getAllForOneGroupeTree($_SESSION['user']->id_groupe);
+
+		// Récupère les doits du membre
+		$droitMembreDAO = new DroitMembreDAO(BDD::getInstancePDO());
+		$_SESSION['droits']['membre'] = $droitMembreDAO->getAllForOneMembre($_SESSION['user']->id_membre);
+	}
+
 	/**
 	 * Connecte un membre
 	 * @param array $param Les attributs pour se connecter
@@ -46,6 +60,15 @@ class Membre extends TableObject{
 			if(($res = $membreDAO->connexion($param['pseudo'])) !== false){
 				if(!$res->bloquer){
 					$_SESSION['user'] = $res;
+
+					// Récupère les doits du groupe du membre
+					$droitGroupeDAO = new DroitGroupeDAO(BDD::getInstancePDO());
+					$_SESSION['droits']['groupe'] = $droitGroupeDAO->getAllForOneGroupeTree($_SESSION['user']->id_groupe);
+
+					// Récupère les doits du membre
+					$droitMembreDAO = new DroitMembreDAO(BDD::getInstancePDO());
+					$_SESSION['droits']['membre'] = $droitMembreDAO->getAllForOneMembre($_SESSION['user']->id_membre);
+
 					$jeton = '';
 					if(isset($param['autoConnexion']) && $param['autoConnexion'] == 'on'){
 						Token::createToken();

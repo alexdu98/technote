@@ -82,6 +82,22 @@ class GroupeDAO extends DAO{
 	// ######## MÉTHODES PERSONNELLES ########
 	// #######################################
 
+	public function getTreeOfOneGroupe($id_groupe){
+		$req = $this->pdo->prepare('SELECT *
+									FROM groupe
+									WHERE id_groupe = :id_groupe');
+		$req->execute(array(
+			'id_groupe' => $id_groupe
+		));
+		$groupeDAO = new GroupeDAO(BDD::getInstancePDO());
+		if(($groupe = $req->fetch()) !== false){
+			$groupe->groupe_parent = $groupeDAO->getTreeOfOneGroupe($groupe->id_groupe_parent);
+			return new DroitGroupe(get_object_vars($groupe));
+		}
+		else
+			return false;
+	}
+
 	/**
 	 * Récupère un Groupe
 	 * @param string $libelle Le libellé du groupe

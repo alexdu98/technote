@@ -83,4 +83,27 @@ class DroitGroupeDAO extends DAO{
 	// ######## MÉTHODES PERSONNELLES ########
 	// #######################################
 
+	public function getAllForOneGroupe($id_groupe){
+		$res = array();
+		$req = $this->pdo->prepare('SELECT * FROM droit_groupe WHERE id_groupe = :id_groupe');
+		$req->execute(array(
+			'id_groupe' => $id_groupe
+		));
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new DroitGroupe(get_object_vars($ligne));
+		return $res;
+	}
+
+	public function getAllForOneGroupeTree($id_groupe){
+		$res['id_groupe'] = $id_groupe;
+		$res['droits'] = $this->getAllForOneGroupe($id_groupe);
+
+		$groupeDAO = new GroupeDAO(BDD::getInstancePDO());
+		$groupe = $groupeDAO->getOne($id_groupe);
+		if(!empty($groupe->id_groupe_parent))
+			$res['groupe_parent'] = $this->getAllForOneGroupeTree($groupe->id_groupe_parent);
+
+		return $res;
+	}
+
 }
