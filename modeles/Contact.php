@@ -33,7 +33,7 @@ class Contact{
 				'sujet' => $this->sujet,
 				'message' => nl2br($this->message)
 			);
-			$mail = new Mail(DESTINATAIRE_MAIL_CONTACT, '[Technote.dev] Contact', 'mail_contact.twig', $param);
+			$mail = new Mail(DESTINATAIRE_MAIL_CONTACT, '[Technote] Contact', 'mail_contact.twig', $param);
 			$resMail = $mail->sendMail();
 			$res->success = $resCheck->success && $resMail->success;
 			$res->msg = array_merge($res->msg, $resMail->msg);

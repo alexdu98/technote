@@ -131,6 +131,12 @@ class Membre extends TableObject{
 					'id_membre' => $resSave->id_membre
 				));
 				$actionDAO->save($action);
+				$params = array(
+					'pseudo' => $param['pseudo'],
+					'sujet' => 'Inscription'
+				);
+				$mail = new Mail($param['email'], '[Technote] Inscription', 'mail_inscription.twig', $params);
+				$mail->sendMail();
 				$res->success = true;
 				$res->msg[] = 'Inscription réussie';
 			}
@@ -443,7 +449,7 @@ class Membre extends TableObject{
 					'sujet' => 'Oubli de mot de passe',
 					'cle' => $cle
 				);
-				$mail = new Mail($membreRes->email, '[Technote.dev] Oubli de mot de passe', 'mail_lostPass.twig', $param);
+				$mail = new Mail($membreRes->email, '[Technote] Oubli de mot de passe', 'mail_lostPass.twig', $param);
 				$resMail = $mail->sendMail();
 				$res = $resMail;
 				if($resMail->success === true){

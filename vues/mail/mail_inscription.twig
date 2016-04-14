@@ -1,0 +1,14 @@
+{% extends "mail/mail_base.twig" %}
+{% block titre %}
+	{{ sujet }}
+{% endblock %}
+{% block pseudo %}
+	{{ pseudo }}
+{% endblock %}
+{% block contenu %}
+	<p>
+		Vous venez de vous inscrire sur Technote et nous vous en remercions.<br><br>
+		Pseudo : {{ pseudo }}<br>
+		Mot de passe : vous seul le connaissez, ne le dilvulgé pas.
+	</p>
+{% endblock %}
