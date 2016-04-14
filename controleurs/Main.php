@@ -159,9 +159,9 @@ class Main extends Controleur{
 						$count = $technoteDAO->getNbRedige($_SESSION['user']->id_membre, 0);
 						
 						// On créé la pagination
-						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/technotes/get?nonpublie&page=');
+						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTES_PAGE, '/technotes/get?nonpublie&page=');
 						// On récupère les technotes
-						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut, 0);
+						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTES_PAGE, $vars['pagination']->debut, 0);
 					}
 					else{
 						$vars['titrePage'] = 'Toutes les technotes'; // <h1> de la page
@@ -170,9 +170,9 @@ class Main extends Controleur{
 						// On récupère le nombre total de technotes
 						$count = $technoteDAO->getCount();
 						// On créé la pagination
-						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/technotes/get?page=');
+						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTES_PAGE, '/technotes/get?page=');
 						// On récupère les technotes
-						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
+						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTES_PAGE, $vars['pagination']->debut);
 					}
 					$this->vue->display('technotes_get_all.twig', $vars);
 				}
@@ -385,33 +385,39 @@ class Main extends Controleur{
 	  			RECHERCHE
 	  ---------------------------------*/
 	public function recherche($action, $id, $vars){
-		if($_GET['type'] == 'technote'){
-			$vars['active_recherche'] = 1; // Active le style dans le menu recherche
-			$vars['active_recherche_technote'] = 1; // Active le style dans le sous menu recherche de technote
-			$vars['titrePage'] = 'Chercher une technote'; // <h1> de la page
+		if(!empty($_GET['type'])){
+			if($_GET['type'] == 'technote'){
+				$vars['active_recherche'] = 1; // Active le style dans le menu recherche
+				$vars['active_recherche_technote'] = 1; // Active le style dans le sous menu recherche de technote
+				$vars['titrePage'] = 'Chercher une technote'; // <h1> de la page
 
-			// Si un formulaire a été envoyé
-			if(!empty($_POST)){
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+					// On essaye de récupèrer les technotes avec les critères de recherche
+					$res = Technote::recherche($_POST, $page);
+					echo json_encode($res);
+					exit();
+				}
 
+				$this->vue->display('recherche_technote_get.twig', $vars);
+				exit();
+			}elseif($_GET['type'] == 'question'){
+				$vars['active_recherche'] = 1; // Active le style dans le menu recherche
+				$vars['active_recherche_question'] = 1; // Active le style dans le sous menu recherche de question
+				$vars['titrePage'] = 'Chercher une question'; // <h1> de la page
+
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// On essaye de récupèrer les questions avec les critères de recherche
+					$res = Question::recherche($_POST);
+					echo json_encode($res);
+					exit();
+				}
+
+				$this->vue->display('recherche_question_get.twig', $vars);
 				exit();
 			}
-
-			$this->vue->display('recherche_technote_get.twig', $vars);
-			exit();
-		}
-		elseif($_GET['type'] == 'question'){
-			$vars['active_recherche'] = 1; // Active le style dans le menu recherche
-			$vars['active_recherche_question'] = 1; // Active le style dans le sous menu recherche de question
-			$vars['titrePage'] = 'Chercher une question'; // <h1> de la page
-
-			// Si un formulaire a été envoyé
-			if(!empty($_POST)){
-
-				exit();
-			}
-
-			$this->vue->display('recherche_question_get.twig', $vars);
-			exit();
 		}
 
 		
@@ -444,6 +450,29 @@ class Main extends Controleur{
 		}*/
 		$this->vue->display('404.twig', $vars);
 		exit();
+	}
+
+	/*------------------------
+	 		AUTOCOMPLETE
+	 --------------------------*/
+	public function autocomplete($action, $id, $vars){
+		switch($action){
+			case 'get':
+				if(!empty($_GET['type']) && !empty($_GET['term'])){
+					if($_GET['type'] == 'motcle'){
+						$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+						$res = $motCleDAO->getAllStartBy($_GET['term']);
+						echo json_encode($res);
+						exit();
+					}
+				}
+				$this->vue->display('404.twig', $vars);
+
+
+			default:
+				$this->vue->display('404.twig', $vars);
+				exit();
+		}
 	}
 	
 	/*------------------------

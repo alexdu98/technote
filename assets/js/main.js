@@ -46,10 +46,6 @@ $(document).ready(function(){
 
     $('.lienSendAjax').on('click', dropCommentaireForm);
 
-    function dropCommentaireForm(){
-        $(this).next().ajaxSubmit(optionsAJAXFORM);
-    }
-
     // Au clic sur un lien pour modifier un commentaire, on appelle le callback
     $('.modifierCommentaire').on('click', editCommentaireForm);
 
@@ -64,6 +60,44 @@ $(document).ready(function(){
         // On le cache
         $("." + $(this).attr("data-hide")).hide();
     });
+
+    function split(val){
+        return val.split(/,\s*/);
+    }
+    function extractLast(term){
+        return split(term).pop();
+    }
+
+    // Autocomplétion pour la recherche par mot clé
+    $( "#search-motsCles" ).autocomplete({
+        minLength: 1, // Il faut au moins 1 caractère pour lancer la recherche d'autocomplétion
+        source: function(request, response){
+            var search = split(request.term).pop().replace(/^\++/, ''); // Enlève le + pour rendre obligatoire le mot clé s'il y en a un
+            if(search != ''){
+                $.getJSON('/autocomplete?type=motcle&term=' + search, function (data){
+                    response(data);
+                });
+            }
+        },
+        focus: function(){
+            return false;
+        },
+        select: function(event,ui){
+            var terms = split(this.value);
+            var last = terms.pop(); // Recupère le dernier mot clé tapé
+            if(last.charAt(0) == '+') // Si le client voulait que le mot clé soit obligatoire
+                terms.push('+' + ui.item.value); // On remet le +
+            else
+                terms.push(ui.item.value);
+            terms.push("");
+            this.value = terms.join(", ");
+            return false;
+        }
+    });
+
+    function dropCommentaireForm(){
+        $(this).next().ajaxSubmit(optionsAJAXFORM);
+    }
 
     /**
      * Traite le résultat d'un formulaire

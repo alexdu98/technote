@@ -148,6 +148,10 @@ class TechnoteDAO extends DAO{
 		return $res;
 	}
 
+	public function getTechnotesWithSearch($max, $conditions, $debut = 0){
+
+	}
+
 	/**
 	 * Récupère le nombre de technotes total
 	 * @return int Le nombre de technotes total

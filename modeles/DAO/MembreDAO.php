@@ -148,6 +148,17 @@ class MembreDAO extends DAO{
 			return false;
 	}
 
+	public function checkPseudoExiste($pseudo){
+		$req = $this->pdo->prepare('SELECT id_membre, pseudo FROM membre WHERE pseudo = :pseudo');
+		$req->execute(array(
+			'pseudo' => $pseudo
+		));
+		if(($res = $req->fetch()) !== false)
+			return new Membre(get_object_vars($res));
+		else
+			return false;
+	}
+
 	/**
 	 * Vérifie la clé de réinitialisation du mot de passe
 	 * @param string $cle La clé de réinitialisation

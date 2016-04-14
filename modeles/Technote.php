@@ -2,6 +2,43 @@
 
 class Technote extends TableObject{
 
+	static public function recherche(&$param, $page){
+		$std = (object) array('success' => false, 'msg' => array());
+		$cond = array();
+
+		if(!empty($param['date_debut'])){
+			if(($res = Date::verifierDate($param['date_debut'])) !== true)
+				$std->msg[] = $res . ' (date de début)';
+			else
+				$cond['date_debut'] = $param['date_debut'];
+		}
+
+		if(!empty($param['date_fin'])){
+			if(($res = Date::verifierDate($param['date_fin'])) !== true)
+				$std->msg[] = $res . ' (date de fin)';
+			else
+				$cond['date_fin'] = $param['date_fin'];
+		}
+
+		if(!empty($param['auteur'])){
+			$membreDAO = new MembreDAO(BDD::getInstancePDO());
+			if(($res = $membreDAO->checkPseudoExiste($param['auteur'])) === false)
+				$std->msg[] = 'Aucun membre avec ce pseudo';
+			else
+				$cond['auteur'] = $param['auteur'];
+		}
+
+		if(!empty($param['mots_cles'])){
+
+		}
+
+		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+		$technotes = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond);
+		var_dump($param, $std);die;
+	}
+
+
+
 	static public function dropTechnote($id_technote){
 		$res = (object) array('success' => false, 'msg' => array());
 

@@ -4,6 +4,7 @@
 		<div class="panel panel-default">
 			<div class="panel-body text-center">
 				<p class="text-center text-danger text">Vous devez renseigné au moins une ligne</p>
+				{% include 'templates/messages.twig' %}
 				<form method="POST" class="form-horizontal" name="rechercheTechnote">
 					<div class="form-inline">
 						<div class="form-group">
@@ -28,8 +29,8 @@
 					<br>
 					<div class="form-inline">
 						<div class="form-group">
-							<label for="motsCles" class="control-label">Mots clés</label>
-							<input type="text" size="50" name="mots_cles" class="form-control" id="motsCles" placeholder="Mots clés" value="{{ post.mots_cles }}">
+							<label for="search-motsCles" class="control-label">Mots clés</label>
+							<input type="text" size="50" name="mots_cles" class="form-control" id="search-motsCles" placeholder="Mots clés" value="{{ post.mots_cles }}">
 						</div>
 						<p class="help-block">Séparez les mots clés par des ',' !<br>Précédé d'un '+', le mot clé devient obligatoire</p>
 					</div>
