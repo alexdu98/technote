@@ -139,7 +139,7 @@ nav .dropdown-menu{
 nav .nav-pills li.open ul{
     background: #2aabd2;
     color: white !important;
-    width: 100%;
+    min-width: 100%;
 }
 nav .dropdown-menu>li>a{
     color: white;

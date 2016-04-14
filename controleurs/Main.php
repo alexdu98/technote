@@ -138,7 +138,7 @@ class Main extends Controleur{
 					// Si la technote existe
 					if($vars['technote'] !== false && $vars['technote']->visible && ($vars['technote']->publie || $vars['technote']->id_auteur == $_SESSION['user']->id_membre || $_SESSION['user']->groupe == 'Administrateur' || $_SESSION['user']->groupe == 'Modérateur')){
 						$vars['titrePage'] = $vars['technote']->titre; // <h1> de la page
-						$this->vue->display('technote.twig', $vars);
+						$this->vue->display('technotes_get_one.twig', $vars);
 					}
 					// Si la technote n'existe pas
 					else
@@ -174,7 +174,7 @@ class Main extends Controleur{
 						// On récupère les technotes
 						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
 					}
-					$this->vue->display('technotes.twig', $vars);
+					$this->vue->display('technotes_get_all.twig', $vars);
 				}
 				exit();
 			
@@ -296,6 +296,33 @@ class Main extends Controleur{
 	}
 
 	/*------------------------
+	 		QUESTIONS
+	 --------------------------*/
+	public function questions($action, $id, $vars){
+		switch($action){
+			case 'get':
+				$vars['titrePage'] = 'Les dernières questions'; // <h1> de la page
+				$vars['active_questions'] = 1; // Active le style dans le menu contact
+
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// On essaye de se connecter
+					/*$res = Membre::connexion($_POST);
+					if($res->success)
+						$res->redirect = "/membre";
+					echo json_encode($res);*/
+					exit();
+				}
+				$this->vue->display('questions_get_all.twig', $vars);
+				exit();
+
+			default:
+				$this->vue->display('404.twig', $vars);
+				exit();
+		}
+	}
+
+	/*------------------------
 	 		CONNEXION
 	 --------------------------*/
 	public function connexion($action, $id, $vars){
@@ -358,11 +385,37 @@ class Main extends Controleur{
 	  			RECHERCHE
 	  ---------------------------------*/
 	public function recherche($action, $id, $vars){
-		$vars['active_technotes'] = 1; // Active le style dans le menu technotes
-		$vars['active_technotes_recherche'] = 1; // Active le style dans le sous menu ajout de technote
-		$vars['titrePage'] = 'Rechercher une technote'; // <h1> de la page
+		if($_GET['type'] == 'technote'){
+			$vars['active_recherche'] = 1; // Active le style dans le menu recherche
+			$vars['active_recherche_technote'] = 1; // Active le style dans le sous menu recherche de technote
+			$vars['titrePage'] = 'Chercher une technote'; // <h1> de la page
+
+			// Si un formulaire a été envoyé
+			if(!empty($_POST)){
+
+				exit();
+			}
+
+			$this->vue->display('recherche_technote_get.twig', $vars);
+			exit();
+		}
+		elseif($_GET['type'] == 'question'){
+			$vars['active_recherche'] = 1; // Active le style dans le menu recherche
+			$vars['active_recherche_question'] = 1; // Active le style dans le sous menu recherche de question
+			$vars['titrePage'] = 'Chercher une question'; // <h1> de la page
+
+			// Si un formulaire a été envoyé
+			if(!empty($_POST)){
+
+				exit();
+			}
+
+			$this->vue->display('recherche_question_get.twig', $vars);
+			exit();
+		}
+
 		
-		// On récupère tous les mots clés
+		/*// On récupère tous les mots clés
 		$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 		$vars['motsCles'] = $motCleDAO->getAll();
 		
@@ -387,8 +440,10 @@ class Main extends Controleur{
 			// On récupère les technotes
 			$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
 			
-			$this->vue->display('recherche.twig', $vars);
-		}
+
+		}*/
+		$this->vue->display('404.twig', $vars);
+		exit();
 	}
 	
 	/*------------------------

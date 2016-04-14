@@ -72,7 +72,7 @@
 				<img src="/assets/images/logo.png" alt="Logo">
 			</div>
 			<nav class="col-md-12 main">
-				<div class="col-md-8 col-md-offset-2">
+				<div class="col-md-10 col-md-offset-1">
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
 							<span class="sr-only">Toggle navigation</span>
@@ -94,6 +94,26 @@
 			                            <li class="{% if active_technotes_add %}active{% endif %}"><a href="/technotes/add">Écrire une technote</a></li>
 			                            <li class="{% if active_technotes_non_publie %}active{% endif %}"><a href="/technotes/get?nonpublie">Mes technotes non publié</a></li>
 									{% endif %}
+								</ul>
+							</li>
+							<li class="dropdown {% if active_questions %}active{% endif %}">
+								<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+									Questions <span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li class="{% if active_questions_all %}active{% endif %}"><a href="/questions">Voir toutes les questions</a></li>
+									{% if session.user %}
+										<li class="{% if active_questions_add %}active{% endif %}"><a href="/questions/add">Poser une question</a></li>
+									{% endif %}
+								</ul>
+							</li>
+							<li class="dropdown {% if active_recherche %}active{% endif %}">
+								<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+									Recherche <span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li class="{% if active_recherche_technote %}active{% endif %}"><a href="/recherche?type=technote">Chercher une technote</a></li>
+									<li class="{% if active_recherche_question %}active{% endif %}"><a href="/recherche?type=question">Chercher une question</a></li>
 								</ul>
 							</li>
 							{% if session.user %}
@@ -129,7 +149,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">
-				<p id="copyright">• <a href="http://{{ server.SERVER_NAME }}/">Technote</a> © {{ "now"|date("Y") }} •</p>
+				<p id="copyright">• <a href="http://{{ server.SERVER_NAME }}/">Technote</a> © {{ "now" | date("Y") }} •</p>
 			</div>
 		</div>
 	</footer>
