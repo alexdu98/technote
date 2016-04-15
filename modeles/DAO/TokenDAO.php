@@ -54,15 +54,20 @@ class TokenDAO extends DAO{
 			return false;
 		}
 		else{
-			$id_token = $token->id_token;
 			unset($token->id_token);
 			$newValeurs = '';
 			foreach($token as $nomChamp => $valeur){
-				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+				if($valeur === NULL){
+					$newValeurs .= $nomChamp . ' = NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$newValeurs .= "$nomChamp = :$nomChamp, ";
+				}
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
-			$req = "UPDATE token SET $newValeurs WHERE id_token = '$id_token'";
-			return $this->pdo->exec($req);
+			$req = $this->pdo->prepare("UPDATE token SET $newValeurs WHERE id_token = :id_token");
+			return $req->execute($fields);
 		}
 	}
 
@@ -83,17 +88,24 @@ class TokenDAO extends DAO{
 	 */
 	public function checkToken(){
 		if(!empty($_COOKIE['token'])){
-			$req = $this->pdo->prepare('SELECT M.*, G.libelle groupe
+			$req = $this->pdo->prepare('SELECT id_membre
 					FROM token T 
-					JOIN membre M ON M.id_membre=T.id_membre 
-					JOIN groupe G ON G.id_groupe=M.id_groupe 
 					WHERE cle = :token AND date_expiration > NOW() AND actif = 1');
 			$req->execute(array(
 				'token' => $_COOKIE['token']
 			));
 			if($res = $req->fetch()){
-				unset($res->password, $res->cle_reset_pass);
-				$_SESSION['user'] = new Membre(get_object_vars($res));
+				$membreDAO = new MembreDAO(BDD::getInstancePDO());
+				$_SESSION['user'] = $membreDAO->getOne($res->id_membre);
+
+				// Récupère les doits du groupe du membre
+				$droitGroupeDAO = new DroitGroupeDAO(BDD::getInstancePDO());
+				$_SESSION['droits']['groupe'] = $droitGroupeDAO->getAllForOneGroupeTree($_SESSION['user']->id_groupe);
+
+				// Récupère les doits du membre
+				$droitMembreDAO = new DroitMembreDAO(BDD::getInstancePDO());
+				$_SESSION['droits']['membre'] = $droitMembreDAO->getAllForOneMembre($_SESSION['user']->id_membre);
+
 				return;
 			}
 		}

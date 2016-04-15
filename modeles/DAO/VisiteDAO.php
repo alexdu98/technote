@@ -29,35 +29,47 @@ class VisiteDAO extends DAO{
 	}
 
 	public function save($visite){
+		$fields = $visite->getFields();
 		if($visite->id_visite == DAO::UNKNOWN_ID){
+			unset($fields['id_visite']);
 			$champs = $valeurs = '';
 			foreach($visite as $nomChamp => $valeur){
-				if($nomChamp != "id_visite"){
-					// on doit pas ajouter le champ id_visite
-					// car c'est un AUTOINCREMENT
-					$champs .= $nomChamp . ', ';
-					$valeurs .= "'$valeur', ";
+				if($nomChamp == 'id_visite') continue;
+				$champs .= $nomChamp . ', ';
+				if($valeur === NULL){
+					$valeurs .= 'NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$valeurs .= ":$nomChamp, ";
 				}
 			}
 			
 			// substr pour enlever le dernier espace et virgule
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			$req = 'INSERT INTO visite(' . $champs .') VALUES(' . $valeurs .')';
-			$res = $this->pdo->exec($req);
-			$visite->id_visite = $this->pdo->lastInsertId();
-			return $res;
+			$req = $this->pdo->prepare("INSERT INTO visite($champs) VALUES($valeurs)");
+			if($req->execute($fields)){
+				$visite->id_visite = $this->pdo->lastInsertId();
+				return $visite;
+			}
+			return false;
 		}
 		else{
-			$id_visite = $visite->id_visite;
 			unset($visite->id_visite);
 			$newValeurs = '';
 			foreach($visite as $nomChamp => $valeur){
-				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+				if($valeur === NULL){
+					$newValeurs .= $nomChamp . ' = NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$newValeurs .= "$nomChamp = :$nomChamp, ";
+				}
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
-			$req = "UPDATE visite SET $newValeurs WHERE id_visite = '$id_visite'";
-			return $this->pdo->exec($req);
+			$req = $this->pdo->prepare("UPDATE visite SET $newValeurs WHERE id_visite = :id_visite");
+			return $req->execute($fields);
 		}
 	}
 

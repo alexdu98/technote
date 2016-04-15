@@ -40,16 +40,13 @@ class Main extends Controleur{
 				$vars['titrePage'] = 'Profil'; // <h1> de la page
 				$vars['active_profil'] = 1; // Active le style dans le menu profil
 
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					// On récupère son profil
-					$vars['profil'] = $_SESSION['user']->getProfil();
+				// On met à jour les variables de profil et les droits du membre
+				$_SESSION['user']->rechargerProfil();
 
-					$this->vue->display('membre_get.twig', $vars);
-					exit();
-				}
+				// On récupère son profil
+				$vars['profil'] = $_SESSION['user']->getProfil();
 
-				header('Location: /');
+				$this->vue->display('membre_get.twig', $vars);
 				exit();
 
 			/**** ADD ****/
@@ -57,21 +54,15 @@ class Main extends Controleur{
 				$vars['titrePage'] = 'Inscription'; // <h1> de la page
 				$vars['active_profile'] = 1; // Active le style dans le menu profil
 
-				// Si l'utilisateur n'est pas connecté
-				if(!$_SESSION['user']){
-					// Si un formulaire a été envoyé
-					if(!empty($_POST)){
-						// On essaye d'inscrire l'utilisateur
-						echo json_encode(Membre::inscription($_POST));
-						exit();
-					}
-					$this->vue->display('membre_add.twig', $vars);
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// On essaye d'inscrire l'utilisateur
+					echo json_encode(Membre::inscription($_POST));
 					exit();
 				}
-
-				header('Location: /');
+				$this->vue->display('membre_add.twig', $vars);
 				exit();
-				
+
 			/**** EDIT ****/
 			case 'edit':
 				$vars['active_profile'] = 1; // Active le style dans le menu profil
@@ -147,7 +138,7 @@ class Main extends Controleur{
 					// Si la technote existe
 					if($vars['technote'] !== false && $vars['technote']->visible && ($vars['technote']->publie || $vars['technote']->id_auteur == $_SESSION['user']->id_membre || $_SESSION['user']->groupe == 'Administrateur' || $_SESSION['user']->groupe == 'Modérateur')){
 						$vars['titrePage'] = $vars['technote']->titre; // <h1> de la page
-						$this->vue->display('technote.twig', $vars);
+						$this->vue->display('technotes_get_one.twig', $vars);
 					}
 					// Si la technote n'existe pas
 					else
@@ -168,9 +159,9 @@ class Main extends Controleur{
 						$count = $technoteDAO->getNbRedige($_SESSION['user']->id_membre, 0);
 						
 						// On créé la pagination
-						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/technotes/get?nonpublie&page=');
+						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTES_PAGE, '/technotes/get?nonpublie&page=');
 						// On récupère les technotes
-						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut, 0);
+						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTES_PAGE, $vars['pagination']->debut, 0);
 					}
 					else{
 						$vars['titrePage'] = 'Toutes les technotes'; // <h1> de la page
@@ -179,11 +170,11 @@ class Main extends Controleur{
 						// On récupère le nombre total de technotes
 						$count = $technoteDAO->getCount();
 						// On créé la pagination
-						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/recherche/get?page=');
+						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTES_PAGE, '/technotes/get?page=');
 						// On récupère les technotes
-						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
+						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTES_PAGE, $vars['pagination']->debut);
 					}
-					$this->vue->display('technotes.twig', $vars);
+					$this->vue->display('technotes_get_all.twig', $vars);
 				}
 				exit();
 			
@@ -197,27 +188,21 @@ class Main extends Controleur{
 				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 				$vars['motsCles'] = $motCleDAO->getAll();
 
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					// Si un formulaire a été envoyé
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer la technote
-							$res = Technote::addTechnote($_POST);
-							if($res->success)
-								$res->redirect = "/technotes/get/$res->id_technote";
-							echo json_encode($res);
-							exit();
-						}
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer la technote
+						$res = Technote::addTechnote($_POST, $_FILES);
+						if($res->success)
+							$res->redirect = "/technotes/get/$res->id_technote";
+						echo json_encode($res);
+						exit();
 					}
-					$this->vue->display('technotes_add.twig', $vars);
-					exit();
 				}
-				else
-					$this->technotes('403.twig', NULL, $vars);
+				$this->vue->display('technotes_add.twig', $vars);
 				exit();
-			
+
 			/**** EDIT ****/
 			case 'edit':
 				$vars['active_technotes'] = 1; // Active le style dans le menu technotes
@@ -229,25 +214,19 @@ class Main extends Controleur{
 				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 				$vars['motsCles'] = $motCleDAO->getAll();
 
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					// Si un formulaire a été envoyé
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer la technote
-							$res = Technote::editTechnote($_POST, $id);
-							if($res->success)
-								$res->redirect = "/technotes/get/$id";
-							echo json_encode($res);
-							exit();
-						}
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer la technote
+						$res = Technote::editTechnote($_POST, $_FILES, $id);
+						if($res->success)
+							$res->redirect = "/technotes/get/$id";
+						echo json_encode($res);
+						exit();
 					}
-					$this->vue->display('technotes_edit.twig', $vars);
-					exit();
 				}
-				else
-					$this->technotes('403.twig', NULL, $vars);
+				$this->vue->display('technotes_edit.twig', $vars);
 				exit();
 
 			/**** DROP ****/
@@ -275,47 +254,68 @@ class Main extends Controleur{
 	public function commentaires($action, $id, $vars){
 		switch($action){
 			case 'add':
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer le commentaire
-							$res = Commentaire::addCommentaire($_POST);
-							if($res->success){
-								$res->add['commentaire'] = $this->vue->render('templates/commentaire.twig', array('commentaires' => $res->add));
-							}
-							echo json_encode($res);
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Commentaire::addCommentaire($_POST);
+						if($res->success){
+							$res->add['commentaire'] = $this->vue->render('templates/commentaire.twig', array('commentaires' => $res->add));
 						}
+						echo json_encode($res);
 					}
 				}
 				exit();
+
 			case 'edit':
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer le commentaire
-							$res = Commentaire::editCommentaire($_POST, $id);
-							echo json_encode($res);
-						}
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Commentaire::editCommentaire($_POST, $id);
+						echo json_encode($res);
 					}
 				}
 				exit();
+
 			case 'drop':
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer le commentaire
-							$res = Commentaire::dropCommentaire($_POST, $id);
-							echo json_encode($res);
-						}
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Commentaire::dropCommentaire($_POST, $id);
+						echo json_encode($res);
 					}
 				}
 				exit();
+
+			default:
+				$this->vue->display('404.twig', $vars);
+				exit();
+		}
+	}
+
+	/*------------------------
+	 		QUESTIONS
+	 --------------------------*/
+	public function questions($action, $id, $vars){
+		switch($action){
+			case 'get':
+				$vars['titrePage'] = 'Les dernières questions'; // <h1> de la page
+				$vars['active_questions'] = 1; // Active le style dans le menu contact
+
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// On essaye de se connecter
+					/*$res = Membre::connexion($_POST);
+					if($res->success)
+						$res->redirect = "/membre";
+					echo json_encode($res);*/
+					exit();
+				}
+				$this->vue->display('questions_get_all.twig', $vars);
+				exit();
+
 			default:
 				$this->vue->display('404.twig', $vars);
 				exit();
@@ -326,32 +326,25 @@ class Main extends Controleur{
 	 		CONNEXION
 	 --------------------------*/
 	public function connexion($action, $id, $vars){
-		// Si l'utilisateur n'est pas connecté
-		if(!$_SESSION['user']){
-			switch($action){
-
-				case 'get':
-					// Si un formulaire a été envoyé
-					if(!empty($_POST)){
-						// On essaye de se connecter
-						$res = Membre::connexion($_POST);
-						if($res->success)
-							$res->redirect = "/membre";
-						echo json_encode($res);
-						exit();
-					}
-
-					$this->vue->display('403.twig', $vars);
+		switch($action){
+			case 'get':
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// On essaye de se connecter
+					$res = Membre::connexion($_POST);
+					if($res->success)
+						$res->redirect = "/membre";
+					echo json_encode($res);
 					exit();
+				}
 
-				default:
-					$this->vue->display('404.twig', $vars);
-					exit();
-			}
+				$this->vue->display('403.twig', $vars);
+				exit();
+
+			default:
+				$this->vue->display('404.twig', $vars);
+				exit();
 		}
-
-		$this->vue->display('403.twig', $vars);
-		exit();
 	}
 
 	/*------------------------
@@ -392,11 +385,45 @@ class Main extends Controleur{
 	  			RECHERCHE
 	  ---------------------------------*/
 	public function recherche($action, $id, $vars){
-		$vars['active_technotes'] = 1; // Active le style dans le menu technotes
-		$vars['active_technotes_recherche'] = 1; // Active le style dans le sous menu ajout de technote
-		$vars['titrePage'] = 'Rechercher une technote'; // <h1> de la page
+		if(!empty($_GET['type'])){
+			if($_GET['type'] == 'technote'){
+				$vars['active_recherche'] = 1; // Active le style dans le menu recherche
+				$vars['active_recherche_technote'] = 1; // Active le style dans le sous menu recherche de technote
+				$vars['titrePage'] = 'Chercher une technote'; // <h1> de la page
+
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+					// On essaye de récupèrer les technotes avec les critères de recherche
+					$res = Technote::recherche($_POST, $page);
+					if($res->success)
+						$res->get['technotes'] = $this->vue->render('templates/technotesExtraits.twig', array('technotes' => $res->get));
+					echo json_encode($res);
+					exit();
+				}
+
+				$this->vue->display('recherche_technote_get.twig', $vars);
+				exit();
+			}elseif($_GET['type'] == 'question'){
+				$vars['active_recherche'] = 1; // Active le style dans le menu recherche
+				$vars['active_recherche_question'] = 1; // Active le style dans le sous menu recherche de question
+				$vars['titrePage'] = 'Chercher une question'; // <h1> de la page
+
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// On essaye de récupèrer les questions avec les critères de recherche
+					$res = Question::recherche($_POST);
+					echo json_encode($res);
+					exit();
+				}
+
+				$this->vue->display('recherche_question_get.twig', $vars);
+				exit();
+			}
+		}
+
 		
-		// On récupère tous les mots clés
+		/*// On récupère tous les mots clés
 		$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 		$vars['motsCles'] = $motCleDAO->getAll();
 		
@@ -421,7 +448,37 @@ class Main extends Controleur{
 			// On récupère les technotes
 			$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
 			
-			$this->vue->display('recherche.twig', $vars);
+
+		}*/
+		$this->vue->display('404.twig', $vars);
+		exit();
+	}
+
+	/*------------------------
+	 		AUTOCOMPLETE
+	 --------------------------*/
+	public function autocomplete($action, $id, $vars){
+		switch($action){
+			case 'get':
+				if(!empty($_GET['type']) && !empty($_GET['term'])){
+					$res = NULL;
+					if($_GET['type'] == 'motcle'){
+						$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+						$res = $motCleDAO->getAllStartBy($_GET['term']);
+					}
+					elseif($_GET['type'] == 'membre'){
+						$membreDAO = new MembreDAO(BDD::getInstancePDO());
+						$res = $membreDAO->getAllStartBy($_GET['term']);
+					}
+					echo json_encode($res);
+					exit();
+				}
+				$this->vue->display('404.twig', $vars);
+
+
+			default:
+				$this->vue->display('404.twig', $vars);
+				exit();
 		}
 	}
 	
@@ -447,17 +504,13 @@ class Main extends Controleur{
 	 --------------------------*/
 	public function token($action, $id, $vars){
 		switch($action){
-
 			case 'drop':
-				// Si l'utilisateur est connecté
-				if($_SESSION['user']){
-					if(!empty($_POST)){
-						// Si le formulaire est valide au niveau faille CSRF
-						if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
-							// On essaye d'enregistrer le commentaire
-							$res = Token::dropToken($_POST, $id);
-							echo json_encode($res);
-						}
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Token::dropToken($_POST, $id);
+						echo json_encode($res);
 					}
 				}
 				exit();

@@ -24,7 +24,7 @@ define('SALT_RESET_PASS', 'b@dK|U^Qh:');
 
 // TECHNOTES
 define('NB_TECHNOTE_ACCUEIL', 6);
-define('NB_TECHNOTE_PAGE', 9);
+define('NB_TECHNOTES_PAGE', 9);
 
 // STATISTIQUES
 define('NB_SEC_ENTRE_2_VISITES', 60 * 60);

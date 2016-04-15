@@ -1,23 +1,52 @@
 USE technote;
 
 # Insertion pour la table groupe
-INSERT IGNORE INTO `technote`.`groupe` (id_groupe, libelle) VALUES (1, 'Administrateur');
-INSERT IGNORE INTO `technote`.`groupe` (id_groupe, libelle) VALUES (2, 'Modérateur');
-INSERT IGNORE INTO `technote`.`groupe` (id_groupe, libelle) VALUES (3, 'Membre');
+INSERT IGNORE INTO `technote`.`groupe` (id_groupe, libelle, id_groupe_parent) VALUES
+  (1, 'Visiteur', NULL),
+  (2, 'Membre', 1),
+  (3, 'Modérateur', 2),
+  (4, 'Administrateur', 3);
+
+#Insertion pour la table droit_groupe
+INSERT INTO `technote`.`droit_groupe` (type, cible, id_groupe, autoriser) VALUES
+  # Visiteur = droit visiteur (get et autres)
+  # ('get', 'technotes', '1', '1'), // Par défaut get accessible pour tout le monde !
+  ('get', 'membre', '1', '0'), # Les visiteurs ne peuvent pas voir le profil !
+  ('add', 'membre', '1', '1'), # Les visiteurs peuvent s'inscrire !
+  ('edit', 'membre', '1', '1'), # Les visiteurs peuvent réinitialiser leur mot de passe
+  # Membre = droit visiteur + membre
+  ('get', 'membre', '2', '1'), # Les membres peuvent voir leur profil !
+  ('add', 'membre', '2', '0'), # Un membre ne peut pas s'inscrire
+  ('get', 'connexion', '2', '0'), # Un membre ne peut pas se connecter
+  ('drop', 'token', '2', '1'), # Un membre peut supprimer ses token
+  ('add', 'technotes', '2', '1'), ('edit', 'technotes', '2', '1'), ('drop', 'technotes', '2', '1'),
+  ('add', 'commentaires', '2', '1'), ('edit', 'commentaires', '2', '1'), ('drop', 'commentaires', '2', '1'),
+  ('add', 'questions', '2', '1'), ('edit', 'questions', '2', '1'), ('drop', 'questions', '2', '1'),
+  ('add', 'reponses', '2', '1'), ('edit', 'reponses', '2', '1'), ('drop', 'reponses', '2', '1'),
+  # Administrateur = droit visiteur + membre + administrateur
+  ('add', 'membre', '4', '1'),
+  ('add', 'membres', '4', '1'), ('edit', 'membres', '4', '1'), ('drop', 'membres', '4', '1');
 
 #Insertion pour la table membre
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Alex', 'alexdu98@gmx.fr', '$2y$12$baWf8sziCXcnYb875dCoKe708LxeQI7AQoO8fskrRcQiQO2jyquSC', '1', '0');
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('modo', 'modo@outlook.fr', 'mdp', '2', '0');
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('membre', 'membre@outlook.fr', 'mdp', '3', '0');
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Tinnarra', 'Tinnarra@live.fr', 'mdp', '3', '0');
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Daewyrr', 'Daewyrr@live.fr', 'mdp', '3', '0');
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Neldolen', 'Neldolen@gmail.com', 'mdp', '3', '0');
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Swarvard', 'Swarvard@gmail.com', 'mdp', '2', '0');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Alex', 'alexdu98@gmx.fr', '$2y$12$baWf8sziCXcnYb875dCoKe708LxeQI7AQoO8fskrRcQiQO2jyquSC', '4', '0');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('modo', 'modo@outlook.fr', 'mdp', '3', '0');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('membre', 'membre@outlook.fr', 'mdp', '2', '0');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Tinnarra', 'Tinnarra@live.fr', 'mdp', '2', '0');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Daewyrr', 'Daewyrr@live.fr', 'mdp', '2', '0');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Neldolen', 'Neldolen@gmail.com', 'mdp', '2', '0');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Swarvard', 'Swarvard@gmail.com', 'mdp', '3', '0');
 INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Legosten', 'Legosten@orange.fr', 'mdp', '2', '0');
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Iorakilan', 'Iorakilan@gmx.fr', 'mdp', '3', '1');
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Volrod', 'Volrod@gmail.com', 'mdp', '3', '1');
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Fategard', 'Fategard@monsite.fr', 'mdp', '3', '1');
-INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Gasclyr', 'Gasclyr@sfr.fr', 'mdp', '2', '0');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Iorakilan', 'Iorakilan@gmx.fr', 'mdp', '2', '1');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Volrod', 'Volrod@gmail.com', 'mdp', '2', '1');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Fategard', 'Fategard@monsite.fr', 'mdp', '2', '1');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Gasclyr', 'Gasclyr@sfr.fr', 'mdp', '3', '0');
+
+#Insertion pour la table action
+INSERT INTO `technote`.`action` (libelle, id_membre) VALUES
+  ('Inscription', 1), ('Inscription', 2), ('Inscription', 3),
+  ('Inscription', 4), ('Inscription', 5), ('Inscription', 6),
+  ('Inscription', 7), ('Inscription', 8), ('Inscription', 9),
+  ('Inscription', 10), ('Inscription', 11), ('Inscription', 12);
 
 #Insertion pour la table technote
 INSERT IGNORE INTO `technote`.`technote` (titre, date_creation, contenu, id_auteur, url_image, date_modification, id_modificateur , description, visible, publie) VALUES (
@@ -83,8 +112,8 @@ quidem captam esse senserit?
 
 Sed ad bona praeterita redeamus.
 </pre>',
-  '1',
-  'http://www.zdnet.fr/i/edit/ne/2014/09/ngn-intro-hub-140x105.jpg',
+  '2',
+  '/assets/images/uploads/bigdata.jpg',
   '2016-03-11 09:06:23',
   '1',
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vel sagittis leo. Cras ullamcorper, dolor in venenatis porta, ex odio vehicula est, tempor vestibulum nisl felis sed metus. Mauris sed nibh ut ipsum pharetra laoreet non vitae nisl. Morbi at eros facilisis, ultrices turpis a cras amet.',
@@ -159,8 +188,8 @@ cogitemus.
 	<dt><dfn>Quibusnam praeteritis?</dfn></dt>
 	<dd>Iam id ipsum absurdum, maximum malum neglegi.</dd>
 </dl>',
-  '1',
-  'http://news360x.fr/wp-content/uploads/2015/12/Internet1.jpg',
+  '2',
+  '/assets/images/uploads/svn.png',
   NULL,
   NULL,
   'Ita multo sanguine profuso in laetitia et in victoria est mortuus. Quod autem ratione actum est, id officium appellamus. Nondum autem explanatum satis, erat, quid maxime natura vellet.',
@@ -216,8 +245,8 @@ puerum diligis.
 <p>Vitiosum est enim in dividendo partem in genere numerare. Sed tamen enitar et, si minus multa mihi occurrent, non fugiam ista popularia. Nescio quo modo praetervolavit oratio. <a href=''http://loripsum.net/'' target=''_blank''>Quodsi ipsam honestatem undique pertectam atque absolutam.</a> <mark>Vide, quantum, inquam, fallare, Torquate.</mark> </p>
 
 <p><a href=''http://loripsum.net/'' target=''_blank''>Nam Pyrrho, Aristo, Erillus iam diu abiecti.</a> Si quicquam extra virtutem habeatur in bonis. Nullus est igitur cuiusquam dies natalis. <a href=''http://loripsum.net/'' target=''_blank''>Beatum, inquit.</a> <code>Ecce aliud simile dissimile.</code> Si qua in iis corrigere voluit, deteriora fecit. <b>Erit enim mecum, si tecum erit.</b> Dat enim intervalla et relaxat. <i>Comprehensum, quod cognitum non habet?</i> Virtutibus igitur rectissime mihi videris et ad consuetudinem nostrae orationis vitia posuisse contraria. </p>',
-  '1',
-  'http://oleaass.com/wp-content/uploads/2014/09/PHP.png',
+  '3',
+  '/assets/images/uploads/symfony.png',
   NULL,
   NULL,
   'Primum in nostrane potestate est, quid meminerimus? Sint modo partes vitae beatae. Ita fit cum gravior, tum etiam splendidior oratio.',
@@ -275,8 +304,8 @@ intellegam;
 
 
 <p>Duo Reges: constructio interrete. Efficiens dici potest. Vulgo enim dicitur: Iucundi acti labores, nec male Euripidesconcludam, si potero, Latine; <i>Obsecro, inquit, Torquate, haec dicit Epicurus?</i> <mark>Id mihi magnum videtur.</mark> </p>',
-  '1',
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/MVC-Process.svg/2000px-MVC-Process.svg.png',
+  '4',
+  '/assets/images/uploads/letsencrypt.jpg',
   NULL,
   NULL,
   'Duo Reges: constructio interrete. Id est enim, de quo quaerimus. An vero displicuit ea, quae tributa est animi virtutibus tanta praestantia? Sin dicit obscurari quaedam nec apparere, quia valde parva sint, nos quoque concedimus',
@@ -344,8 +373,8 @@ sapienti.
 <h2>Quid dubitas igitur mutare principia naturae?</h2>
 
 <p>Nos commodius agimus. <b>At iam decimum annum in spelunca iacet.</b> Sic vester sapiens magno aliquo emolumento commotus cicuta, si opus erit, dimicabit. Te enim iudicem aequum puto, modo quae dicat ille bene noris. Nihil enim hoc differt. </p>',
-  '1',
-  'http://camusdevelopment.com/images/img_pub/Lorem%20Ipsum.jpg',
+  '8',
+  '/assets/images/uploads/lorem.jpg',
   NULL,
   NULL,
   'Illa videamus, quae a te de amicitia dicta sunt. Si mala non sunt, iacet omnis ratio Peripateticorum. Ad quorum et cognitionem et usum iam corroborati natura ipsa praeeunte deducimur.',
@@ -404,7 +433,7 @@ Itaque his sapiens semper vacabit.
 
 <p><b>Id est enim, de quo quaerimus.</b> Obsecro, inquit, Torquate, haec dicit Epicurus? Sed quid attinet de rebus tam apertis plura requirere? Serpere anguiculos, nare anaticulas, evolare merulas, cornibus uti videmus boves, nepas aculeis. Paulum, cum regem Persem captum adduceret, eodem flumine invectio? Prioris generis est docilitas, memoria; </p>',
   '1',
-  'http://1.bp.blogspot.com/--Rxqm-7Q73s/UVvDXQsVtrI/AAAAAAAAAAs/-q-dRkMtEr8/s1600/LoremIpsum.png',
+  '/assets/images/uploads/dd.png',
   NULL,
   NULL,
   'Quodsi esset in voluptate summum bonum, ut dicitis, optabile esset maxima in voluptate nullo intervallo interiecto dies noctesque versari, cum omnes sensus dulcedine omni quasi perfusi moverentur.',
@@ -473,8 +502,8 @@ censebant;
 	<li>Sint ista Graecorum;</li>
 	<li>Ita relinquet duas, de quibus etiam atque etiam consideret.</li>
 </ul>',
-  '1',
-  'https://thenewboston.com/photos/users/27/original/f34559fb85ab31961e60e1928bf4e0ca.jpg',
+  '11',
+  '/assets/images/uploads/mvc.png',
   NULL,
   NULL,
   'Hoc loco tenere se Triarius non potuit. Videamus animi partes, quarum est conspectus illustrior; Teneo, inquit, finem illi videri nihil dolere.',
@@ -542,8 +571,8 @@ possit iure laudari.
 <h2>Teneo, inquit, finem illi videri nihil dolere.</h2>
 
 <p>Non est ista, inquam, Piso, magna dissensio. <code>Quam nemo umquam voluptatem appellavit, appellat;</code> <a href=''http://loripsum.net/'' target=''_blank''>Quonam, inquit, modo?</a> Ne in odium veniam, si amicum destitero tueri. <a href=''http://loripsum.net/'' target=''_blank''>Quid ait Aristoteles reliquique Platonis alumni?</a> Hoc Hieronymus summum bonum esse dixit. In his igitur partibus duabus nihil erat, quod Zeno commutare gestiret. </p>',
-  '1',
-  'http://naodev.fr/wp-content/uploads/2015/09/6-30-12_Git.jpg',
+  '10',
+  '/assets/images/uploads/internet.jpg',
   NULL,
   NULL,
   'Traditur, inquit, ab Epicuro ratio neglegendi doloris. Quamquam ab iis philosophiam et omnes ingenuas disciplinas habemus; Quae hic rei publicae vulnera inponebat, eadem ille sanabat.',
@@ -608,7 +637,7 @@ deorum erat vitae simillima, sapiente visa est dignissima.
 	<li>Hoc etsi multimodis reprehendi potest, tamen accipio, quod dant.</li>
 </ol>',
   '1',
-  'https://s3-eu-west-1.amazonaws.com/s3.housseniawriting.com/wp-content/uploads/2015/11/langage-python.jpg',
+  '/assets/images/uploads/PHP.png',
   '2016-03-13 17:49:48',
   '1',
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sic enim censent, oportunitatis esse beate vivere. Quod cum dixissent, ille contra. Non est enim vitium in oratione solum, sed etiam in moribus.',
@@ -665,8 +694,8 @@ ipsae per se expetuntur.
 
 
 <p>Quamquam haec quidem praeposita recte et reiecta dicere licebit. Si quicquam extra virtutem habeatur in bonis. Efficiens dici potest. Hos contra singulos dici est melius. Bestiarum vero nullum iudicium puto. </p>',
-  '1',
-  'http://www.revealittech.com/img/large_html.jpg',
+  '7',
+  '/assets/images/uploads/git.jpg',
   '2016-03-13 18:44:48',
   '1',
   'Quamquam haec quidem praeposita recte et reiecta dicere licebit. Si quicquam extra virtutem habeatur in bonis. Efficiens dici potest.',
@@ -737,8 +766,8 @@ int main()
 
 
 <p>Serpere anguiculos, nare anaticulas, evolare merulas, cornibus uti videmus boves, nepas aculeis. Theophrasti igitur, inquit, tibi liber ille placet de beata vita? Cui Tubuli nomen odio non est? </p>',
-  '1',
-  'https://static.oc-static.com/prod/courses/illustrations/illu_ajax-et-l-echange-de-donnees-en-javascript.png',
+  '12',
+  '/assets/images/uploads/pointInterrogation.png',
   NULL,
   NULL,
   'Serpere anguiculos, nare anaticulas, evolare merulas, cornibus uti videmus boves, nepas aculeis. Theophrasti igitur, inquit, tibi liber ille placet de beata vita',
@@ -803,8 +832,8 @@ Quid dubitas igitur mutare principia naturae?
 	<li>In eo enim positum est id, quod dicimus esse expetendum.</li>
 	<li>Quod est, ut dixi, habere ea, quae secundum naturam sint, vel omnia vel plurima et maxima.</li>
 </ol>',
-  '1',
-  'http://www.silicon.fr/wp-content/uploads/2012/10/Google-chrome-faille-securite-%C2%A9-drx-Fotolia.com_.jpg',
+  '11',
+  '/assets/images/uploads/securite.jpg',
   NULL,
   NULL,
   'Sapiens autem semper beatus est et est aliquando in dolore; Quae cum dixisset paulumque institisset, Quid est? Suo genere perveniant ad extremum',
@@ -859,8 +888,8 @@ Ad eos igitur converte te, quaeso.
 	<li>Itaque dicunt nec dubitant: mihi sic usus est, tibi ut opus est facto, fac.</li>
 	<li>Nosti, credo, illud: Nemo pius est, qui pietatem-;</li>
 </ul>',
-  '1',
-  'http://www.campingatlantica.com/uploads/images/Gallery/borne-internet-wifi/internet.png',
+  '5',
+  '/assets/images/uploads/openstack.jpg',
   NULL,
   NULL,
   'Suavis laborum est praeteritorum memoria. Stoici autem, quod finem bonorum in una virtute ponunt, similes sunt illorum; Tuo vero id quidem, inquam, arbitratu.',
@@ -916,8 +945,8 @@ Tu enim ista lenius, hic Stoicorum more nos vexat.
 	<li>Quamvis enim depravatae non sint, pravae tamen esse possunt.</li>
 	<li>Quod est, ut dixi, habere ea, quae secundum naturam sint, vel omnia vel plurima et maxima.</li>
 </ul>',
-  '1',
-  'http://chalifour-assets.s3.amazonaws.com/wp-content/uploads/2014/08/https.jpg',
+  '8',
+  '/assets/images/uploads/navigateurs.png',
   NULL,
   NULL,
   'Duo Reges: constructio interrete. Eam stabilem appellas. Beatus autem esse in maximarum rerum timore nemo potest. Quae cum dixisset paulumque institisset, Quid est',
@@ -989,7 +1018,7 @@ concordiae.
 	<li>Non est enim vitium in oratione solum, sed etiam in moribus.</li>
 </ol>',
   '1',
-  'http://images.apple.com/euro/music_alt/home/a/generic/images/social/og.jpg?201602160358',
+  '/assets/images/uploads/https.jpg',
   NULL,
   NULL,
   'Est enim effectrix multarum et magnarum voluptatum. Omnis enim est natura diligens sui. Nummus in Croesi divitiis obscuratur, pars est tamen divitiarum. Neque enim disputari sine reprehensione nec cum iracundia aut pertinacia recte disputari potest.',
@@ -1064,8 +1093,8 @@ etiam philosophorum sit.
 
 
 <p>Illum mallem levares, quo optimum atque humanissimum virum, Cn. Istic sum, inquit. At ille pellit, qui permulcet sensum voluptate. Nihil enim iam habes, quod ad corpus referas; Ita relinquet duas, de quibus etiam atque etiam consideret. Non est igitur summum malum dolor. <b>Utilitatis causa amicitia est quaesita.</b> Et quod est munus, quod opus sapientiae? <i>Quis hoc dicit?</i> Nunc haec primum fortasse audientis servire debemus. Bestiarum vero nullum iudicium puto. </p>',
-  '1',
-  'http://lewebpedagogique.com/presencesenligne/files/2014/10/cloud-computing.png',
+  '8',
+  '/assets/images/uploads/ajax.png',
   NULL,
   NULL,
   'At iam decimum annum in spelunca iacet.</a> Efficiens dici potest. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis; Bestiarum vero nullum iudicium puto. Sed ea mala virtuti magnitudine obruebantur. Sed utrum hortandus es nobis, Luci, inquit.',
@@ -1137,8 +1166,8 @@ vel Graece loqui vel Latine docendus?
 
 
 <p>Restinguet citius, si ardentem acceperit. Duae sunt enim res quoque, ne tu verba solum putes. Si mala non sunt, iacet omnis ratio Peripateticorum. Teneo, inquit, finem illi videri nihil dolere. Aliter homines, aliter philosophos loqui putas oportere? Igitur neque stultorum quisquam beatus neque sapientium non beatus. </p>',
-  '1',
-  'http://static.commentcamarche.net/www.commentcamarche.net/faq/images/16184-istock-000008756145xsmall.png',
+  '3',
+  '/assets/images/uploads/cloud-computing.png',
   '2016-03-14 21:30:10',
   '4',
   'Restinguet citius, si ardentem acceperit. Duae sunt enim res quoque, ne tu verba solum putes. Si mala non sunt, iacet omnis ratio Peripateticorum. Teneo, inquit, finem illi videri nihil dolere. Aliter homines, aliter philosophos loqui putas oportere? Igitur neque stultorum quisquam beatus neque sapientium non beatus.',
@@ -1207,8 +1236,8 @@ voluptate est.
 
 
 <p><i>Primum divisit ineleganter;</i> <a href=''http://loripsum.net/'' target=''_blank''>Haeret in salebra.</a> <a href=''http://loripsum.net/'' target=''_blank''>Istam voluptatem, inquit, Epicurus ignorat?</a> Quamvis enim depravatae non sint, pravae tamen esse possunt. At, si voluptas esset bonum, desideraret. Magni enim aestimabat pecuniam non modo non contra leges, sed etiam legibus partam. Est enim effectrix multarum et magnarum voluptatum. Etsi qui potest intellegi aut cogitari esse aliquod animal, quod se oderit? </p>',
-  '1',
-  'http://images.cytadel.fr/wp-content/uploads/2015/11/DockerLogo.png',
+  '12',
+  '/assets/images/uploads/Docker.png',
   '2016-03-15 21:45:44',
   '1',
   'Quamvis enim depravatae non sint, pravae tamen esse possunt. At, si voluptas esset bonum, desideraret. Magni enim aestimabat pecuniam non modo non contra leges, sed etiam legibus partam. Est enim effectrix multarum et magnarum voluptatum. Etsi qui potest intellegi aut cogitari esse aliquod animal, quod se oderit',
@@ -1287,9 +1316,9 @@ void foo()
 	<li>An eiusdem modi?</li>
 	<li>Quid nunc honeste dicit?</li>
 </ol>',
-  '1',
-  'https://www.djerfy.com/wp-content/uploads/2016/02/openstack.jpg',
-  '2016-03-23 12:03:18',
+  '9',
+  '/assets/images/uploads/html5-css3.jpg',
+  '2016-04-23 12:03:18',
   '1',
   'Non risu potius quam oratione eiciendum? Sed residamus, inquit, si placet. Quia nec honesto quic quam honestius nec turpi turpius. Est, ut dicis, inquit.',
   '1',

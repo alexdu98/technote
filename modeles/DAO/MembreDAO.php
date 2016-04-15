@@ -10,7 +10,7 @@ class MembreDAO extends DAO{
 	// #######################################
 
 	public function getOne($id){
-		$req = $this->pdo->prepare('SELECT m.*, g.libelle groupe FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE id_membre = :id_membre');
+		$req = $this->pdo->prepare('SELECT m.*, g.id_groupe_parent, g.libelle groupe FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE id_membre = :id_membre');
 		$req->execute(array(
 			'id_membre' => $id
 		));
@@ -33,33 +33,45 @@ class MembreDAO extends DAO{
 	}
 
 	public function save($membre){
+		$fields = $membre->getFields();
 		if($membre->id_membre == DAO::UNKNOWN_ID){
+			unset($fields['id_membre']);
 			$champs = $valeurs = '';
 			foreach($membre as $nomChamp => $valeur){
-				if($nomChamp !== 'id_membre') {
-					$champs .= $nomChamp . ', ';
-					$valeurs .= "'$valeur', ";
+				if($nomChamp == 'id_membre') continue;
+				$champs .= $nomChamp . ', ';
+				if($valeur === NULL){
+					$valeurs .= 'NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$valeurs .= ":$nomChamp, ";
 				}
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			$req = 'INSERT INTO membre(' . $champs .') VALUES(' . $valeurs .')';
-			if(($res = $this->pdo->exec($req)) !== false){
+			$req = $this->pdo->prepare("INSERT INTO membre($champs) VALUES($valeurs)");
+			if($req->execute($fields)){
 				$membre->id_membre = $this->pdo->lastInsertId();
 				return $membre;
 			}
-			return $res;
+			return false;
 		}
 		else{
-			$id_membre = $membre->id_membre;
 			unset($membre->id_membre);
 			$newValeurs = '';
 			foreach($membre as $nomChamp => $valeur){
-				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+				if($valeur === NULL){
+					$newValeurs .= $nomChamp . ' = NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$newValeurs .= "$nomChamp = :$nomChamp, ";
+				}
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
-			$req = "UPDATE membre SET $newValeurs WHERE id_membre = '$id_membre'";
-			return $this->pdo->exec($req);
+			$req = $this->pdo->prepare("UPDATE membre SET $newValeurs WHERE id_membre = :id_membre");
+			return $req->execute($fields);
 		}
 	}
 
@@ -80,7 +92,7 @@ class MembreDAO extends DAO{
 	 * @return bool|\Membre False si aucun membre avec ce pseudo, Membre sinon
 	 */
 	public function getOneByPseudo($pseudo){
-		$req = $this->pdo->prepare('SELECT m.*, g.libelle groupe FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE pseudo = :pseudo');
+		$req = $this->pdo->prepare('SELECT m.*, g.id_groupe_parent, g.libelle groupe FROM membre m INNER JOIN groupe g ON g.id_groupe=m.id_groupe WHERE pseudo = :pseudo');
 		$req->execute(array(
 			'pseudo' => $pseudo
 		));
@@ -136,6 +148,17 @@ class MembreDAO extends DAO{
 			return false;
 	}
 
+	public function checkPseudoExiste($pseudo){
+		$req = $this->pdo->prepare('SELECT id_membre, pseudo FROM membre WHERE pseudo = :pseudo');
+		$req->execute(array(
+			'pseudo' => $pseudo
+		));
+		if(($res = $req->fetch()) !== false)
+			return new Membre(get_object_vars($res));
+		else
+			return false;
+	}
+
 	/**
 	 * Vérifie la clé de réinitialisation du mot de passe
 	 * @param string $cle La clé de réinitialisation
@@ -150,6 +173,15 @@ class MembreDAO extends DAO{
 			return new Membre(get_object_vars($res));
 		else
 			return false;
+	}
+
+	public function getAllStartBy($debut){
+		$res = array();
+		$req = $this->pdo->prepare('SELECT id_membre, pseudo FROM membre WHERE pseudo LIKE :debut');
+		$req->execute(array(
+			'debut' => $debut . '%'
+		));
+		return $req->fetchAll();
 	}
 
 }

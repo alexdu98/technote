@@ -29,29 +29,45 @@ class MotCleDAO extends DAO{
 	}
 
 	public function save($motCle){
+		$fields = $motCle->getFields();
 		if($motCle->id_mot_cle == DAO::UNKNOWN_ID){
+			unset($fields['id_mot_cle']);
 			$champs = $valeurs = '';
 			foreach($motCle as $nomChamp => $valeur){
+				if($nomChamp == 'id_mot_cle') continue;
 				$champs .= $nomChamp . ', ';
-				$valeurs .= "'$valeur', ";
+				if($valeur === NULL){
+					$valeurs .= 'NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$valeurs .= ":$nomChamp, ";
+				}
 			}
 			$champs = substr($champs, 0, -2);
 			$valeurs = substr($valeurs, 0, -2);
-			$req = 'INSERT INTO mot_cle(' . $champs .') VALUES(' . $valeurs .')';
-			$res = $this->pdo->exec($req);
-			$motCle->id_mot_cle = $this->pdo->lastInsertId();
-			return $res;
+			$req = $this->pdo->prepare("INSERT INTO mot_cle($champs) VALUES($valeurs)");
+			if($req->execute($fields)){
+				$motCle->id_mot_cle = $this->pdo->lastInsertId();
+				return $motCle;
+			}
+			return false;
 		}
 		else{
-			$id_mot_cle = $motCle->id_mot_cle;
 			unset($motCle->id_mot_cle);
 			$newValeurs = '';
 			foreach($motCle as $nomChamp => $valeur){
-				$newValeurs .= $nomChamp . " = '" . $valeur . "', ";
+				if($valeur === NULL){
+					$newValeurs .= $nomChamp . ' = NULL, ';
+					unset($fields[$nomChamp]);
+				}
+				else{
+					$newValeurs .= "$nomChamp = :$nomChamp, ";
+				}
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
-			$req = "UPDATE mot_cle SET $newValeurs WHERE id_mot_cle = '$id_mot_cle'";
-			return $this->pdo->exec($req);
+			$req = $this->pdo->prepare("UPDATE mot_cle SET $newValeurs WHERE id_mot_cle = :id_mot_cle");
+			return $req->execute($fields);
 		}
 	}
 
@@ -65,5 +81,24 @@ class MotCleDAO extends DAO{
 	// #######################################
 	// ######## MÉTHODES PERSONNELLES ########
 	// #######################################
+
+	public function getAllStartBy($debut){
+		$res = array();
+		$req = $this->pdo->prepare('SELECT * FROM mot_cle WHERE label LIKE :debut');
+		$req->execute(array(
+			'debut' => $debut . '%'
+		));
+		return $req->fetchAll();
+	}
+
+	public function checkExiste($motCle){
+		$req = $this->pdo->prepare('SELECT * FROM mot_cle WHERE label = :motcle');
+		$req->execute(array(
+			'motcle' => $motCle
+		));
+		if(($res = $req->fetch()) !== false)
+			return true;
+		return false;
+	}
 
 }
