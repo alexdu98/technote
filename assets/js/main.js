@@ -181,7 +181,7 @@ $(document).ready(function(){
 
     function treatRechercheTechnote(data, form){
         if(data.success) {
-            $('#technotes').empty().append(data.get.technotes);
+            $('#technotes').empty().append(data.get.pagination).append(data.get.technotes).append(data.get.pagination);
         }
     }
 

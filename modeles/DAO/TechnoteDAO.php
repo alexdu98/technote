@@ -148,7 +148,7 @@ class TechnoteDAO extends DAO{
 		return $res;
 	}
 
-	public function getTechnotesWithSearch($max, $conditions, $debut = 0){
+	public function getTechnotesWithSearch($max, $conditions, $count = false, $debut = 0){
 		$res = array();
 
 		$where = '';
@@ -160,26 +160,23 @@ class TechnoteDAO extends DAO{
 			$conditions['date_fin'] .= ' 23:59:59';
 			$param['date_debut'] = $conditions['date_debut'];
 			$param['date_fin'] = $conditions['date_fin'];
-			$where .= "WHERE date_creation BETWEEN :date_debut AND :date_fin";
+			$where .= " AND date_creation BETWEEN :date_debut AND :date_fin";
 		}
 		elseif(!empty($conditions['date_debut'])){
 			$conditions['date_debut'] .= ' 00:00:00';
 			$param['date_debut'] = $conditions['date_debut'];
-			$where .= "WHERE date_creation BETWEEN :date_debut AND NOW()";
+			$where .= " AND date_creation BETWEEN :date_debut AND NOW()";
 		}
 		elseif(!empty($conditions['date_fin'])){
 			$conditions['date_fin'] .= ' 23:59:59';
 			$param['date_fin'] = $conditions['date_fin'];
-			$where .= "WHERE date_creation < :date_fin";
+			$where .= " AND date_creation < :date_fin";
 		}
 
 		// Partie auteur
 		if(!empty($conditions['auteur'])){
 			$param['auteur'] = $conditions['auteur'];
-			if(empty($where))
-				$where .= "WHERE ma.pseudo = :auteur";
-			else
-				$where .= " AND ma.pseudo = :auteur";
+			$where .= " AND ma.pseudo = :auteur";
 		}
 
 		// Partie mots clés
@@ -202,12 +199,28 @@ class TechnoteDAO extends DAO{
 
 		}
 
+		if($count){
+			$sql = 'SELECT COUNT(DISTINCT t.id_technote) nbRes
+									FROM technote t
+									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
+									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
+									LEFT JOIN decrire d ON d.id_technote=t.id_technote
+									LEFT JOIN mot_cle mc ON mc.id_mot_cle=d.id_mot_cle
+									WHERE publie = 1
+									' . $where;
+			$req = $this->pdo->prepare($sql);
+			$req->execute($param);
+			$res = $req->fetch();
+			return $res->nbRes;
+		}
+
 		$sql = 'SELECT DISTINCT t.*, ma.pseudo auteur, mm.pseudo modificateur
 									FROM technote t
 									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
-									INNER JOIN decrire d ON d.id_technote=t.id_technote
-									INNER JOIN mot_cle mc ON mc.id_mot_cle=d.id_mot_cle
+									LEFT JOIN decrire d ON d.id_technote=t.id_technote
+									LEFT JOIN mot_cle mc ON mc.id_mot_cle=d.id_mot_cle
+									WHERE publie = 1
 									' . $where . '
 									ORDER BY date_creation DESC
 									LIMIT ' . $debut . ', ' . $max; // Ne peut pas etre preparé car échapé (LIMIT '9', '0' => FAIL)

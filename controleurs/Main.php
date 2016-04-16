@@ -392,14 +392,25 @@ class Main extends Controleur{
 				$vars['titrePage'] = 'Chercher une technote'; // <h1> de la page
 
 				// Si un formulaire a été envoyé
-				if(!empty($_POST)){
+				if(!empty($_GET['submit'])){
 					$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+
 					// On essaye de récupèrer les technotes avec les critères de recherche
-					$res = Technote::recherche($_POST, $page);
-					if($res->success)
-						$res->get['technotes'] = $this->vue->render('templates/technotesExtraits.twig', array('technotes' => $res->get));
-					echo json_encode($res);
-					exit();
+					$res = Technote::recherche($_GET, $page);
+					if($_GET['submit'] == 'ajax'){
+						if($res->success){
+							$res->get['pagination'] = $this->vue->render('templates/pagination.twig', array('pagination' => $res->pagination));
+							$res->get['technotes'] = $this->vue->render('templates/technotesExtraits.twig', array('technotes' => $res->technotes));
+						}
+						echo json_encode($res);
+						exit();
+					}
+					else{
+						if($res->success){
+							$vars['pagination'] = $res->pagination;
+							$vars['technotes'] = $res->technotes;
+						}
+					}
 				}
 
 				$this->vue->display('recherche_technote_get.twig', $vars);
@@ -410,9 +421,9 @@ class Main extends Controleur{
 				$vars['titrePage'] = 'Chercher une question'; // <h1> de la page
 
 				// Si un formulaire a été envoyé
-				if(!empty($_POST)){
+				if(!empty($_GET)){
 					// On essaye de récupèrer les questions avec les critères de recherche
-					$res = Question::recherche($_POST);
+					$res = Question::recherche($_GET);
 					echo json_encode($res);
 					exit();
 				}

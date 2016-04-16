@@ -5,27 +5,34 @@ class Technote extends TableObject{
 	static public function recherche(&$param, $page){
 		$std = (object) array('success' => false, 'msg' => array());
 		$cond = array();
+		$strPagination = '&submit=page';
 
 		if(!empty($param['date_debut'])){
 			if(($res = Date::verifierDate($param['date_debut'])) !== true)
 				$std->msg[] = $res . ' (date de début)';
-			else
+			else{
 				$cond['date_debut'] = $param['date_debut'];
+				$strPagination .= '&date_debut=' . $param['date_debut'];
+			}
 		}
 
 		if(!empty($param['date_fin'])){
 			if(($res = Date::verifierDate($param['date_fin'])) !== true)
 				$std->msg[] = $res . ' (date de fin)';
-			else
+			else{
 				$cond['date_fin'] = $param['date_fin'];
+				$strPagination .= '&date_fin=' . $param['date_fin'];
+			}
 		}
 
 		if(!empty($param['auteur'])){
 			$membreDAO = new MembreDAO(BDD::getInstancePDO());
 			if(($res = $membreDAO->checkPseudoExiste($param['auteur'])) === false)
 				$std->msg[] = 'Aucun membre avec ce pseudo';
-			else
+			else{
 				$cond['auteur'] = $param['auteur'];
+				$strPagination .= '&auteur=' . $param['auteur'];
+			}
 		}
 
 		if(!empty($param['mots_cles'])){
@@ -48,9 +55,18 @@ class Technote extends TableObject{
 			return $std;
 
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
-		$std->get = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond);
+		// On récupère le nombre de technotes qu'on a en résultat
+		$count = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond, true);
 
-		if(!empty($std->get))
+		// On créé la pagination
+		$std->pagination = new Pagination($page, $count, NB_TECHNOTES_PAGE, '/recherche/get?type=technote' . $strPagination . '&page=');
+
+		// On récupère les technotes
+		$std->technotes = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond, false, $std->pagination->debut);
+
+		if(empty($std->technotes))
+			$std->msg[] = 'Aucune technote';
+		else
 			$std->success = true;
 		return $std;
 	}
