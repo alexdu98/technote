@@ -82,11 +82,10 @@ class MotCleDAO extends DAO{
 	// ######## MÉTHODES PERSONNELLES ########
 	// #######################################
 
-	public function getAllStartBy($debut){
-		$res = array();
-		$req = $this->pdo->prepare('SELECT * FROM mot_cle WHERE label LIKE :debut');
+	public function getAllComposedOf($exp){
+		$req = $this->pdo->prepare('SELECT label FROM mot_cle WHERE label LIKE :exp');
 		$req->execute(array(
-			'debut' => $debut . '%'
+			'exp' => '%' . $exp . '%'
 		));
 		return $req->fetchAll();
 	}

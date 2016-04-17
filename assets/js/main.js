@@ -69,6 +69,18 @@ $(document).ready(function(){
     }
 
     // Autocomplétion pour la recherche de membre
+    $( "#search-titreTechnote" ).autocomplete({
+        minLength: 3,
+        source : function(request, response){
+            $.getJSON('/autocomplete?type=titreTechnote&term=' + request.term, function(data){
+                response($.map(data, function(item){
+                    return item.titre;
+                }));
+            });
+        }
+    });
+
+    // Autocomplétion pour la recherche de membre
     $( "#search-membre" ).autocomplete({
         minLength: 1,
         source : function(request, response){

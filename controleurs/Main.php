@@ -439,34 +439,6 @@ class Main extends Controleur{
 			}
 		}
 
-		
-		/*// On récupère tous les mots clés
-		$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
-		$vars['motsCles'] = $motCleDAO->getAll();
-		
-		// On récupère tous les auteurs
-		$membreDAO = new MembreDAO(BDD::getInstancePDO());
-		$vars['auteurs'] = $membreDAO->getAll();
-		
-		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
-		
-		if(!empty($_POST)){
-			$technotes = $technoteDAO->getTechnotesRecherchees($_POST);
-			
-		}
-		else {
-			// On récupère la page
-			$page = !empty($_GET['page']) ? $_GET['page'] : 1;
-			
-			// On récupère le nombre total de technotes
-			$count = $technoteDAO->getCount();
-			// On créé la pagination
-			$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/recherche/get?page=');
-			// On récupère les technotes
-			$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
-			
-
-		}*/
 		$this->vue->display('404.twig', $vars);
 		exit();
 	}
@@ -481,11 +453,15 @@ class Main extends Controleur{
 					$res = NULL;
 					if($_GET['type'] == 'motcle'){
 						$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
-						$res = $motCleDAO->getAllStartBy($_GET['term']);
+						$res = $motCleDAO->getAllComposedOf($_GET['term']);
 					}
 					elseif($_GET['type'] == 'membre'){
 						$membreDAO = new MembreDAO(BDD::getInstancePDO());
-						$res = $membreDAO->getAllStartBy($_GET['term']);
+						$res = $membreDAO->getAllComposedOf($_GET['term']);
+					}
+					elseif($_GET['type'] == 'titreTechnote'){
+						$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+						$res = $technoteDAO->getAllTitreComposedOf($_GET['term']);
 					}
 					echo json_encode($res);
 					exit();

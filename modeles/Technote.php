@@ -7,6 +7,11 @@ class Technote extends TableObject{
 		$cond = array();
 		$strPagination = '&submit=page';
 
+		if(!empty($param['titre'])){
+			$cond['titre'] = $param['titre'];
+			$strPagination .= '&titre=' . urlencode($param['titre']);
+		}
+
 		if(!empty($param['date_debut'])){
 			if(($res = Date::verifierDate($param['date_debut'])) !== true)
 				$std->msg[] = $res . ' (date de début)';

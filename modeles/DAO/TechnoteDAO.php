@@ -155,6 +155,12 @@ class TechnoteDAO extends DAO{
 		$join = '';
 		$param = array();
 
+		// Partie titre technote
+		if(!empty($conditions['titre'])){
+			$param['titre'] = '%' . $conditions['titre'] . '%';
+			$where .= " AND t.titre LIKE :titre";
+		}
+
 		// Partie date
 		if(!empty($conditions['date_debut']) && !empty($conditions['date_fin'])){
 			$conditions['date_debut'] .= ' 00:00:00';
@@ -257,106 +263,12 @@ class TechnoteDAO extends DAO{
 		return $res->nbTechnotes;
 	}
 
-	
-	/**
-	 * Récupère les $limit dernières technotes
-	 * @param string $author Le nom de l'auteur pour lequel on veut récupérer
-	 * les technotes
-	 * @return array Le tableau des technotes écries par $author
-	 */
-	public function getTechnotesByAuthor($author) {
-		$res = array();
-
-		$req = $this->pdo->prepare('SELECT t.*, m.pseudo auteur
-									FROM technote t
-									JOIN membre m ON m.id_membre = t.id_auteur
-									WHERE m.pseudo = :authorName');
-		
+	public function getAllTitreComposedOf($exp){
+		$req = $this->pdo->prepare('SELECT titre FROM technote WHERE titre LIKE :exp');
 		$req->execute(array(
-				'authorName' => $author
+			'exp' => '%' . $exp . '%'
 		));
-		
-		foreach($req->fetchAll() as $ligne){
-
-			// Recuperation des mot-cles correspondant a la technote
-			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
-			$ligne->motsCles  = $decrireDAO->getAllForOneTechnote($ligne->id_technote);
-
-			$res[] = new Technote(get_object_vars($ligne));
-		}
-		return $res;
+		return $req->fetchAll();
 	}
-	
-	public function getTechnotesByKeyWord($keyWord) {
-		$res = array();
-		$req = $this->pdo->prepare('SELECT t.*, m.pseudo auteur
-									FROM technote t
-									JOIN decrire d ON t.id_technote = d.id_technote
-									JOIN mot_cle mc ON mc.id_mot_cle = d.id_mot_cle
-									INNER JOIN membre m ON m.id_membre=t.id_auteur
-									WHERE mc.label = :keyWord');
-	
-		$req->execute(array(
-				'keyWord' => $keyWord
-		));
-	
-		foreach($req->fetchAll() as $ligne){
 
-			// Recuperation des mot-cles correspondant a la technote
-			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
-			$ligne->motsCles  = $decrireDAO->getAllForOneTechnote($ligne->id_technote);
-
-			$res[] = new Technote(get_object_vars($ligne));
-		}
-	
-		return $res;
-	
-	}
-	
-	public function getTechnotesRecherchees($vars) {
-		$res = array();
-		
-		$les_mots_cles = "(";
-		$les_auteurs = "(";
-		
-		if(!empty($vars['id_mot_cle'])){
-			foreach ($vars['id_mot_cle'] as $id_mot_cle){
-				$les_mots_cles += $id_mot_cle.',';
-			}
-			
-		}
-		$les_mots_cles += ')';
-		
-		if(!empty($vars['id_auteurs'])){
-			foreach ($vars['id_auteurs'] as $id_auteur){
-				$les_auteurs += $id_auteur.',';
-			}
-				
-		}
-		$les_auteurs += ')';
-		
-		$req = $this->pdo->prepare('SELECT t.*
-									FROM technote t
-									JOIN decrire d ON t.id_technote = d.id_technote
-									JOIN mot_cle mc ON mc.id_mot_cle = d.id_mot_cle
-									WHERE mc.id_mot_cle IN :les_mot_cles 
-										AND t.id_auteur IN :les_auteurs');
-	
-		$req->execute(array(
-				'les_mots_cles' => $les_mots_cles,
-				'les_auteurs' => $les_auteurs
-		));
-	
-		foreach($req->fetchAll() as $ligne){
-	
-			// Recuperation des mot-cles correspondant a la technote
-			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
-			$ligne->motsCles  = $decrireDAO->getAllForOneTechnote($ligne->id_technote);
-	
-			$res[] = new Technote(get_object_vars($ligne));
-		}
-	
-		return $res;
-	
-	}
 }
