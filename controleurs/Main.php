@@ -393,11 +393,12 @@ class Main extends Controleur{
 
 				// Si un formulaire a été envoyé
 				if(!empty($_GET['submit'])){
-					$page = !empty($_GET['page']) ? $_GET['page'] : 1;
-
-					// On essaye de récupèrer les technotes avec les critères de recherche
-					$res = Technote::recherche($_GET, $page);
+					// Si c'est de l'ajax (appui sur le bouton du formulaire)
 					if($_GET['submit'] == 'ajax'){
+						// On remet toujours à la première page
+						$page = 1;
+						// On essaye de récupèrer les technotes avec les critères de recherche
+						$res = Technote::recherche($_GET, $page);
 						if($res->success){
 							$res->get['pagination'] = $this->vue->render('templates/pagination.twig', array('pagination' => $res->pagination));
 							$res->get['technotes'] = $this->vue->render('templates/technotesExtraits.twig', array('technotes' => $res->technotes));
@@ -405,7 +406,12 @@ class Main extends Controleur{
 						echo json_encode($res);
 						exit();
 					}
+					// Si on arrive sur la page direct
 					else{
+						// on recupère la page
+						$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+						// On essaye de récupèrer les technotes avec les critères de recherche
+						$res = Technote::recherche($_GET, $page);
 						if($res->success){
 							$vars['pagination'] = $res->pagination;
 							$vars['technotes'] = $res->technotes;

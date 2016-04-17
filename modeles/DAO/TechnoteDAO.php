@@ -152,6 +152,7 @@ class TechnoteDAO extends DAO{
 		$res = array();
 
 		$where = '';
+		$join = '';
 		$param = array();
 
 		// Partie date
@@ -185,18 +186,21 @@ class TechnoteDAO extends DAO{
 			$sqlMCNonObligatoire = '';
 			foreach($conditions['mots_cles'] as $mc){
 				if($mc[0] == '+'){
-					$sqlMCObligatoire .= $mc . ' AND ';
+					$sqlMCObligatoire .= '\'' . substr($mc, 1) . '\', '; // On enlee le + pour la requete
 				}
 				else{
-					$sqlMCNonObligatoire = $mc . ' OR ';
+					$sqlMCNonObligatoire .= '\'' . $mc . '\', ';
 				}
 			}
-			$sqlMCObligatoire = substr($sqlMCObligatoire, 0, -5);
-			$sqlMCNonObligatoire = substr($sqlMCNonObligatoire, 0, -4);
-			$concat = $sqlMCNonObligatoire . ' AND ' .$sqlMCObligatoire;
-			var_dump($sqlMCObligatoire, $sqlMCNonObligatoire, $concat);die;
-
-
+			$sqlMCObligatoire = substr($sqlMCObligatoire, 0, -2);
+			$sqlMCNonObligatoire = substr($sqlMCNonObligatoire, 0, -2);
+			if(!empty($sqlMCObligatoire)){
+				$where .= " AND NOT EXISTS(SELECT id_mot_cle FROM mot_cle mc WHERE label IN ($sqlMCObligatoire) AND NOT EXISTS(SELECT * FROM decrire d WHERE mc.id_mot_cle=d.id_mot_cle AND d.id_technote=t.id_technote))";
+			}
+			else{
+				$join .= ' LEFT JOIN decrire d ON d.id_technote=t.id_technote';
+				$where .= " AND d.id_mot_cle IN(SELECT id_mot_cle FROM mot_cle WHERE label IN($sqlMCNonObligatoire))";
+			}
 		}
 
 		if($count){
@@ -204,8 +208,7 @@ class TechnoteDAO extends DAO{
 									FROM technote t
 									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
-									LEFT JOIN decrire d ON d.id_technote=t.id_technote
-									LEFT JOIN mot_cle mc ON mc.id_mot_cle=d.id_mot_cle
+									' . $join . '
 									WHERE publie = 1
 									' . $where;
 			$req = $this->pdo->prepare($sql);
@@ -218,8 +221,7 @@ class TechnoteDAO extends DAO{
 									FROM technote t
 									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
-									LEFT JOIN decrire d ON d.id_technote=t.id_technote
-									LEFT JOIN mot_cle mc ON mc.id_mot_cle=d.id_mot_cle
+									' . $join . '
 									WHERE publie = 1
 									' . $where . '
 									ORDER BY date_creation DESC

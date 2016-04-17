@@ -42,10 +42,10 @@ class Technote extends TableObject{
 				$valueClean = trim($value);
 				if($valueClean != ''){
 					$tabMCClean[] = $valueClean;
-					if($valueClean[0] == '+'){
-						if(($res = MotCle::checkExisteByLabel(substr($value, 1))) !== true)
-							$std->msg[] = $res;
-					}
+					if($valueClean[0] == '+')
+						$valueClean = substr($valueClean, 1);
+					if(($res = MotCle::checkExisteByLabel($valueClean)) !== true)
+						$std->msg[] = $res;
 				}
 			}
 			$cond['mots_cles'] = $tabMCClean;
@@ -65,7 +65,7 @@ class Technote extends TableObject{
 		$std->technotes = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond, false, $std->pagination->debut);
 
 		if(empty($std->technotes))
-			$std->msg[] = 'Aucune technote';
+			$std->msg[] = 'Aucune technote avec ces critères';
 		else
 			$std->success = true;
 		return $std;

@@ -180,8 +180,9 @@ $(document).ready(function(){
     }
 
     function treatRechercheTechnote(data, form){
+        $('#technotes').empty();
         if(data.success) {
-            $('#technotes').empty().append(data.get.pagination).append(data.get.technotes).append(data.get.pagination);
+            $('#technotes').append(data.get.pagination).append(data.get.technotes).append(data.get.pagination);
         }
     }
 
