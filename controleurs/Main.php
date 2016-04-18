@@ -301,19 +301,41 @@ class Main extends Controleur{
 	public function questions($action, $id, $vars){
 		switch($action){
 			case 'get':
-				$vars['titrePage'] = 'Les dernières questions'; // <h1> de la page
-				$vars['active_questions'] = 1; // Active le style dans le menu contact
 
-				// Si un formulaire a été envoyé
-				if(!empty($_POST)){
-					// On essaye de se connecter
-					/*$res = Membre::connexion($_POST);
-					if($res->success)
-						$res->redirect = "/membre";
-					echo json_encode($res);*/
-					exit();
+				$vars['active_questions'] = 1; // Active le style dans le menu questions
+				$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+
+				// Si on veut voir une question précise
+				if(!empty($id)){
+					// On récupère la technote
+					$vars['question'] = $questionDAO->getOne($id);
+					// Si la question existe
+					if($vars['question'] !== false){
+						$vars['titrePage'] = $vars['question']->titre; // <h1> de la page
+						$this->vue->display('questions_get_one.twig', $vars);
+					}
+					// Si la question n'existe pas
+					else
+						$this->vue->display('404.twig', $vars);
 				}
-				$this->vue->display('questions_get_all.twig', $vars);
+				// si on veut voir toutes les questions
+				else{
+					$vars['titrePage'] = 'Les dernières questions'; // <h1> de la page
+
+					// On récupère la page
+					$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+
+					$vars['active_questions_all'] = 1; // Active le style dans le sous menu toutes les questions
+
+					// On récupère le nombre total de technotes
+					$count = $questionDAO->getCount();
+					// On créé la pagination
+					$vars['pagination'] = new Pagination($page, $count, NB_QUESTIONS_PAGE, '/questions/get?page=');
+					// On récupère les questions
+					$vars['questions'] = $questionDAO->getLastNQuestions(NB_QUESTIONS_PAGE, $vars['pagination']->debut);
+
+					$this->vue->display('questions_get_all.twig', $vars);
+				}
 				exit();
 
 			default:

@@ -96,4 +96,43 @@ class QuestionDAO extends DAO{
 		return $res->nbRedige;
 	}
 
+	public function getCount(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) AS nbQuestions
+									FROM question');
+		$req->execute();
+		$res = $req->fetch();
+
+		return $res->nbQuestions;
+	}
+
+	public function getLastNQuestions($max, $debut = 0){
+		$res = array();
+
+		$req = $this->pdo->prepare('SELECT q.*, ma.pseudo auteur, mm.pseudo modificateur
+									FROM question q
+									INNER JOIN membre ma ON ma.id_membre=q.id_auteur
+									LEFT JOIN membre mm ON mm.id_membre=q.id_modificateur
+									ORDER BY date_question DESC
+									LIMIT :max OFFSET :debut');
+
+		$req->bindParam(':debut', $debut, PDO::PARAM_INT);
+		$req->bindParam(':max', $max, PDO::PARAM_INT);
+
+		$req->execute();
+
+		foreach($req->fetchAll() as $ligne){
+			// On recupere le nombre de réponses
+			$reponseDAO = new ReponseDAO(BDD::getInstancePDO());
+			$ligne->nbReponses = $reponseDAO->getCountForOneQuestion($ligne->id_question);
+			$ligne->lastReponse = $reponseDAO->getLastForOneQuestion($ligne->id_question);
+
+			// Recuperation des mot-cles correspondant a la technote
+			$clarifierDAO = new ClarifierDAO(BDD::getInstancePDO());
+			$ligne->motsCles  = $clarifierDAO->getAllForOneQuestion($ligne->id_question);
+
+			$res[] = new Question(get_object_vars($ligne));
+		}
+		return $res;
+	}
+
 }

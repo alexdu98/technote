@@ -1,6 +1,31 @@
 {% extends "templates/base.twig" %}
 {% block contenu %}
 	{% include 'templates/pagination.twig' %}
-	Les questions...
+	{% for question in questions %}
+		<div class="col-md-12 question">
+			<div class="container-fluid">
+				<div class="row flex">
+					<div class="col-md-8">
+						<span class="titreQuestion">{{ question.titre }}</span><br>
+						{% if question.motsCles %}
+							{% for motCle in question.motsCles %}
+								<a href="/recherche?type=technote&submit=page&mots_cles={{ motCle.label }}">{{ motCle.label }}</a>{% if not loop.last %},{% endif %}
+							{% endfor %}
+							<br>
+						{% endif %}
+						<span class="dateQuestion"> créé par {{ question.auteur }}, le {{ question.date_question | date('d/m/Y à H:i') }}</span>
+					</div>
+					<div class="col-md-2">
+						{{ question.nbReponses }} réponses
+					</div>
+					<div class="col-md-2">
+						{% if question.lastReponse %}
+							dernière réponse par {{ question.lastReponse.auteur }}<br> le {{ question.lastReponse.date_reponse | date('d/m/Y à H:i') }}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
 	{% include 'templates/pagination.twig' %}
 {% endblock %}

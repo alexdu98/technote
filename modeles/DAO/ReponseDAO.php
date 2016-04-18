@@ -96,4 +96,31 @@ class ReponseDAO extends DAO{
 		return $res->nbRedige;
 	}
 
+	public function getCountForOneQuestion($id_question){
+		$req = $this->pdo->prepare('SELECT COUNT(*) AS nbReponses
+									FROM reponse
+									WHERE id_question = :id_question');
+		$req->execute(array(
+			'id_question' => $id_question
+		));
+		$res = $req->fetch();
+
+		return $res->nbReponses;
+	}
+
+	public function getLastForOneQuestion($id_question){
+		$req = $this->pdo->prepare('SELECT r.*, m.pseudo auteur
+									FROM reponse r
+									INNER JOIN membre m ON r.id_auteur=m.id_membre
+									WHERE id_question = :id_question
+									ORDER BY date_reponse DESC
+									LIMIT 1');
+		$req->execute(array(
+			'id_question' => $id_question
+		));
+		if(($res = $req->fetch()) !== false)
+			return new Reponse(get_object_vars($res));
+		return false;
+	}
+
 }
