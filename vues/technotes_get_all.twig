@@ -3,10 +3,10 @@
 	<div class="text-center">
 		<button class="btn btn-default" id="toggleRecherche">Formulaire de recherche</button>
 	</div>
+	{% include 'templates/messages.twig' with {'msgNoAjax': '1'} %}
 	<div class="panel panel-default" id="divRecherche" hidden>
 		<div class="panel-body text-center">
 			<p class="text-center text-danger text">Vous devez renseigné au moins un champ</p>
-			{% include 'templates/messages.twig' %}
 			<form method="GET" class="form-horizontal noAjax" name="rechercheTechnote">
 				<div class="form-inline">
 					<div class="form-group">

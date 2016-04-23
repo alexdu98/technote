@@ -9,7 +9,7 @@
 						<span class="titreQuestion">{{ question.titre }}</span><br>
 						{% if question.motsCles %}
 							{% for motCle in question.motsCles %}
-								<a href="/recherche?type=technote&submit=page&mots_cles={{ motCle.label }}">{{ motCle.label }}</a>{% if not loop.last %},{% endif %}
+								<a href="/technotes?recherche=&mots_cles={{ motCle.label }}">{{ motCle.label }}</a>{% if not loop.last %},{% endif %}
 							{% endfor %}
 							<br>
 						{% endif %}

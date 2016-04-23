@@ -103,7 +103,8 @@ class Main extends Controleur{
 					// Sinon si un formulaire a été envoyé alors envoi du mail avec le lien de réinitialisation du mot de passe
 					elseif(!empty($_POST)){
 						// On essaye d'envoyé le mail avec le lien de réinitialisation du mot de passe
-						$vars['res'] = Membre::sendMailLostPass($_POST);
+						echo json_encode(Membre::sendMailLostPass($_POST));
+						exit();
 					}
 					$this->vue->display('membre_lostMDP.twig', $vars);
 				}
@@ -161,6 +162,9 @@ class Main extends Controleur{
 						if($res->success){
 							$vars['pagination'] = $res->pagination;
 							$vars['technotes'] = $res->technotes;
+						}
+						else{
+							$vars['res'] = $res;
 						}
 					}
 					// Si on veut que les technotes non publié de l'utilisateur
