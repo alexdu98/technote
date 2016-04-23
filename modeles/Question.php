@@ -3,7 +3,7 @@
 class Question extends TableObject{
 
 	static public function addQuestion(&$param){
-		$resCheck = self::checkAdd($param);
+		$resCheck = self::check($param);
 		$res = $resCheck;
 		if($resCheck->success === true){
 			$questionDAO = new QuestionDAO(BDD::getInstancePDO());
@@ -42,7 +42,7 @@ class Question extends TableObject{
 		return $res;
 	}
 
-	static private function checkAdd(&$param){
+	static private function check(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
 		if(($res = Question::checkTitre($param['titre'])) !== true)
@@ -60,6 +60,44 @@ class Question extends TableObject{
 		if(empty($std->msg))
 			$std->success = true;
 		return $std;
+	}
+
+	static public function editQuestion(&$param, $id_question){
+		$resCheck = self::check($param);
+		$res = $resCheck;
+		if($resCheck->success === true){
+			$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+			$question = new Question(array(
+				'id_question' => $id_question,
+				'titre' => $param['titre'],
+				'question' => $param['question'],
+				'id_modificateur' => $_SESSION['user']->id_membre,
+				'resolu' => $param['resolu']
+			));
+			if(($resSaveQuestion = $questionDAO->save($question)) !== false){
+				$clarifierDAO = new ClarifierDAO(BDD::getInstancePDO());
+				if(!empty($param['id_mot_cle'])){
+					foreach($param['id_mot_cle'] as $id_mot_cle){
+						$clarifier = new Clarifier(array('id_question' => $id_question, 'id_mot_cle' => $id_mot_cle));
+						$clarifierDAO->save($clarifier);
+					}
+				}
+				$actionDAO = new ActionDAO(BDD::getInstancePDO());
+				$action = new Action(array(
+					'id_action' => DAO::UNKNOWN_ID,
+					'libelle' => "Modification d\'une question (question n°$id_question)",
+					'id_membre' => $_SESSION['user']->id_membre
+				));
+				$actionDAO->save($action);
+				$res->success = true;
+				$res->msg[] = 'Modification de la question réussie';
+			}
+			else{
+				$res->success = false;
+				$res->msg[] = 'Erreur BDD';
+			}
+		}
+		return $res;
 	}
 
 	static public function checkTitre(&$titre){

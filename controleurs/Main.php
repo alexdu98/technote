@@ -397,6 +397,32 @@ class Main extends Controleur{
 				$this->vue->display('questions_add.twig', $vars);
 				exit();
 
+			/**** EDIT ****/
+			case 'edit':
+				$vars['active_questions'] = 1; // Active le style dans le menu questions
+				$vars['titrePage'] = 'Modifier une question'; // <h1> de la page
+				$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+				$vars['question'] = $questionDAO->getOne($id);
+
+				// On récupère tous les mots clés
+				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+				$vars['motsCles'] = $motCleDAO->getAll();
+
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer la technote
+						$res = Question::editQuestion($_POST, $id);
+						if($res->success)
+							$res->redirect = "/questions/get/$id";
+						echo json_encode($res);
+						exit();
+					}
+				}
+				$this->vue->display('questions_edit.twig', $vars);
+				exit();
+
 			/**** DROP ****/
 			case 'drop':
 				if(!empty($_POST)){

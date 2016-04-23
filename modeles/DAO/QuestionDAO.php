@@ -78,6 +78,8 @@ class QuestionDAO extends DAO{
 				}
 			}
 			$newValeurs = substr($newValeurs, 0, -2);
+			$clarifierDAO = new ClarifierDAO(BDD::getInstancePDO());
+			$clarifierDAO->deleteAllForOneQuestion($fields['id_question']);
 			$req = $this->pdo->prepare("UPDATE question SET $newValeurs WHERE id_question = :id_question");
 			return $req->execute($fields);
 		}
