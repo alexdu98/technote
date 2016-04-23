@@ -457,11 +457,15 @@ class Main extends Controleur{
 						$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 						$res = $technoteDAO->getAllTitreComposedOf($_GET['term']);
 					}
+					elseif($_GET['type'] == 'titreQuestion'){
+						$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+						$res = $questionDAO->getAllTitreComposedOf($_GET['term']);
+					}
 					echo json_encode($res);
 					exit();
 				}
 				$this->vue->display('404.twig', $vars);
-
+				exit();
 
 			default:
 				$this->vue->display('404.twig', $vars);

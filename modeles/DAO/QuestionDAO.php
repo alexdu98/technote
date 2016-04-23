@@ -126,13 +126,125 @@ class QuestionDAO extends DAO{
 			$ligne->nbReponses = $reponseDAO->getCountForOneQuestion($ligne->id_question);
 			$ligne->lastReponse = $reponseDAO->getLastForOneQuestion($ligne->id_question);
 
-			// Recuperation des mot-cles correspondant a la technote
+			// Recuperation des mot-cles correspondant a la question
 			$clarifierDAO = new ClarifierDAO(BDD::getInstancePDO());
 			$ligne->motsCles  = $clarifierDAO->getAllForOneQuestion($ligne->id_question);
 
 			$res[] = new Question(get_object_vars($ligne));
 		}
 		return $res;
+	}
+
+	public function getQuestionsWithSearch($max, $conditions, $count = false, $debut = 0){
+		$res = array();
+
+		$where = '';
+		$join = '';
+		$param = array();
+
+		// Partie titre technote
+		if(!empty($conditions['titre'])){
+			$param['titre'] = '%' . $conditions['titre'] . '%';
+			$where .= " AND q.titre LIKE :titre";
+		}
+
+		// Partie date
+		if(!empty($conditions['date_debut']) && !empty($conditions['date_fin'])){
+			$conditions['date_debut'] .= ' 00:00:00';
+			$conditions['date_fin'] .= ' 23:59:59';
+			$param['date_debut'] = $conditions['date_debut'];
+			$param['date_fin'] = $conditions['date_fin'];
+			$where .= " AND date_question BETWEEN :date_debut AND :date_fin";
+		}
+		elseif(!empty($conditions['date_debut'])){
+			$conditions['date_debut'] .= ' 00:00:00';
+			$param['date_debut'] = $conditions['date_debut'];
+			$where .= " AND date_question BETWEEN :date_debut AND NOW()";
+		}
+		elseif(!empty($conditions['date_fin'])){
+			$conditions['date_fin'] .= ' 23:59:59';
+			$param['date_fin'] = $conditions['date_fin'];
+			$where .= " AND date_question < :date_fin";
+		}
+
+		// Partie auteur
+		if(!empty($conditions['resolu'])){
+			$param['resolu'] = $conditions['resolu'] == 'oui' ? '1' : '0';
+			$where .= " AND resolu = :resolu";
+		}
+
+		// Partie mots clés
+		if(!empty($conditions['mots_cles'])){
+			$sqlMCObligatoire = '';
+			$sqlMCNonObligatoire = '';
+			foreach($conditions['mots_cles'] as $mc){
+				if($mc[0] == '+'){
+					$sqlMCObligatoire .= '\'' . substr($mc, 1) . '\', '; // On enlee le + pour la requete
+				}
+				else{
+					$sqlMCNonObligatoire .= '\'' . $mc . '\', ';
+				}
+			}
+			$sqlMCObligatoire = substr($sqlMCObligatoire, 0, -2);
+			$sqlMCNonObligatoire = substr($sqlMCNonObligatoire, 0, -2);
+			if(!empty($sqlMCObligatoire)){
+				$where .= " AND NOT EXISTS(SELECT id_mot_cle FROM mot_cle mc WHERE label IN ($sqlMCObligatoire) AND NOT EXISTS(SELECT * FROM clarifier c WHERE mc.id_mot_cle=c.id_mot_cle AND c.id_question=q.id_question))";
+			}
+			else{
+				$join .= ' LEFT JOIN clarifier c ON c.id_question=q.id_question';
+				$where .= " AND c.id_mot_cle IN(SELECT id_mot_cle FROM mot_cle WHERE label IN($sqlMCNonObligatoire))";
+			}
+		}
+
+		if($count){
+			$sql = 'SELECT COUNT(DISTINCT q.id_question) nbRes
+									FROM question q
+									INNER JOIN membre ma ON ma.id_membre=q.id_auteur
+									LEFT JOIN membre mm ON mm.id_membre=q.id_modificateur
+									' . $join . '
+									WHERE 1 = 1
+									' . $where;
+			$req = $this->pdo->prepare($sql);
+			$req->execute($param);
+			$res = $req->fetch();
+			return $res->nbRes;
+		}
+
+		$sql = 'SELECT DISTINCT q.*, ma.pseudo auteur, mm.pseudo modificateur
+									FROM question q
+									INNER JOIN membre ma ON ma.id_membre=q.id_auteur
+									LEFT JOIN membre mm ON mm.id_membre=q.id_modificateur
+									' . $join . '
+									WHERE 1 = 1
+									' . $where . '
+									ORDER BY date_question DESC
+									LIMIT ' . $debut . ', ' . $max; // Ne peut pas etre preparé car échapé (LIMIT '10', '0' => FAIL)
+
+		$req = $this->pdo->prepare($sql);
+
+		$req->execute($param);
+
+		foreach($req->fetchAll() as $ligne){
+			// On recupere le nombre de réponses
+			$reponseDAO = new ReponseDAO(BDD::getInstancePDO());
+			$ligne->nbReponses = $reponseDAO->getCountForOneQuestion($ligne->id_question);
+			$ligne->lastReponse = $reponseDAO->getLastForOneQuestion($ligne->id_question);
+
+			// Recuperation des mot-cles correspondant a la question
+			$clarifierDAO = new ClarifierDAO(BDD::getInstancePDO());
+			$ligne->motsCles  = $clarifierDAO->getAllForOneQuestion($ligne->id_question);
+
+			$res[] = new Question(get_object_vars($ligne));
+		}
+		return $res;
+	}
+
+	public function getAllTitreComposedOf($exp){
+		$req = $this->pdo->prepare('SELECT titre FROM question WHERE titre LIKE :exp');
+		$req->execute(array(
+			'exp' => '%' . $exp . '%'
+		));
+		return $req->fetchAll();
 	}
 
 }

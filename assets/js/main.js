@@ -87,6 +87,18 @@ $(document).ready(function(){
     });
 
     // Autocomplétion pour la recherche de membre
+    $( "#search-titreQuestion" ).autocomplete({
+        minLength: 3,
+        source : function(request, response){
+            $.getJSON('/autocomplete?type=titreQuestion&term=' + request.term, function(data){
+                response($.map(data, function(item){
+                    return item.titre;
+                }));
+            });
+        }
+    });
+
+    // Autocomplétion pour la recherche de membre
     $( "#search-membre" ).autocomplete({
         minLength: 1,
         source : function(request, response){

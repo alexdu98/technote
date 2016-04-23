@@ -220,6 +220,9 @@ a.extraitTechnote{
     border: 1px solid #337ab7;
     border-bottom: 3px solid #337ab7;
 }
+img.questionResolu{
+    margin-left: -32px;
+}
 .titreQuestion{
     font-size: 1.2em;
     font-weight: bold;
