@@ -5,7 +5,7 @@ class Technote extends TableObject{
 	static public function recherche(&$param, $page){
 		$std = (object) array('success' => false, 'msg' => array());
 		$cond = array();
-		$strPagination = '&submit=page';
+		$strPagination = '';
 
 		if(!empty($param['titre'])){
 			$cond['titre'] = $param['titre'];
@@ -64,7 +64,7 @@ class Technote extends TableObject{
 		$count = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond, true);
 
 		// On créé la pagination
-		$std->pagination = new Pagination($page, $count, NB_TECHNOTES_PAGE, '/recherche/get?type=technote' . $strPagination . '&page=');
+		$std->pagination = new Pagination($page, $count, NB_TECHNOTES_PAGE, '/technotes?recherche=' . $strPagination . '&page=');
 
 		// On récupère les technotes
 		$std->technotes = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond, false, $std->pagination->debut);

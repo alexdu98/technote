@@ -20,7 +20,7 @@ $(document).ready(function(){
     /**
      * Tous les formulaires seront en Ajax
      */
-    $('form').ajaxForm(optionsAJAXFORM);
+    $('form:not(.noAjax)').ajaxForm(optionsAJAXFORM);
 
     /**
      * Au clic sur un lien pour répondre à un commentaire
@@ -59,6 +59,12 @@ $(document).ready(function(){
     $("[data-hide]").on("click", function(){
         // On le cache
         $("." + $(this).attr("data-hide")).hide();
+    });
+
+    $("#toggleRecherche").click(function(){
+        $("#divRecherche").toggle("slow", function(){
+
+        });
     });
 
     function split(val){

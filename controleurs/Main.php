@@ -123,7 +123,7 @@ class Main extends Controleur{
 	/*------------------------
 	 		TECHNOTES
 	 --------------------------*/
-	public function technotes($action, $id, $vars) {
+	public function technotes($action, $id, $vars){
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		switch($action){
 			
@@ -150,8 +150,21 @@ class Main extends Controleur{
 					$page = !empty($_GET['page']) ? $_GET['page'] : 1;
 					$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 
+					// Si on veut faire une recherche de technotes
+					if(isset($_GET['recherche'])){
+						$vars['titrePage'] = 'Chercher une technote'; // <h1> de la page
+
+						// on recupère la page
+						$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+						// On essaye de récupèrer les technotes avec les critères de recherche
+						$res = Technote::recherche($_GET, $page);
+						if($res->success){
+							$vars['pagination'] = $res->pagination;
+							$vars['technotes'] = $res->technotes;
+						}
+					}
 					// Si on veut que les technotes non publié de l'utilisateur
-					if(isset($_GET['nonpublie'])){
+					elseif(isset($_GET['nonpublie'])){
 						$vars['titrePage'] = 'Mes technotes non publié'; // <h1> de la page
 						$vars['active_technotes_non_publie'] = 1; // Active le style dans le sous menu toutes les technotes
 
@@ -242,6 +255,7 @@ class Main extends Controleur{
 					}
 				}
 				exit();
+
 			default:
 				$this->vue->display('404.twig', $vars);
 				exit();
@@ -320,19 +334,35 @@ class Main extends Controleur{
 				}
 				// si on veut voir toutes les questions
 				else{
-					$vars['titrePage'] = 'Les dernières questions'; // <h1> de la page
 
-					// On récupère la page
-					$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+					// Si on veut faire une recherche de technotes
+					if(isset($_GET['recherche'])){
+						$vars['titrePage'] = 'Chercher une question'; // <h1> de la page
 
-					$vars['active_questions_all'] = 1; // Active le style dans le sous menu toutes les questions
+						// on recupère la page
+						$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+						// On essaye de récupèrer les questions avec les critères de recherche
+						$res = Question::recherche($_GET, $page);
+						if($res->success){
+							$vars['pagination'] = $res->pagination;
+							$vars['questions'] = $res->questions;
+						}
+					}
+					else{
+						$vars['titrePage'] = 'Les dernières questions'; // <h1> de la page
 
-					// On récupère le nombre total de technotes
-					$count = $questionDAO->getCount();
-					// On créé la pagination
-					$vars['pagination'] = new Pagination($page, $count, NB_QUESTIONS_PAGE, '/questions/get?page=');
-					// On récupère les questions
-					$vars['questions'] = $questionDAO->getLastNQuestions(NB_QUESTIONS_PAGE, $vars['pagination']->debut);
+						// On récupère la page
+						$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+
+						$vars['active_questions_all'] = 1; // Active le style dans le sous menu toutes les questions
+
+						// On récupère le nombre total de technotes
+						$count = $questionDAO->getCount();
+						// On créé la pagination
+						$vars['pagination'] = new Pagination($page, $count, NB_QUESTIONS_PAGE, '/questions/get?page=');
+						// On récupère les questions
+						$vars['questions'] = $questionDAO->getLastNQuestions(NB_QUESTIONS_PAGE, $vars['pagination']->debut);
+					}
 
 					$this->vue->display('questions_get_all.twig', $vars);
 				}
@@ -401,68 +431,6 @@ class Main extends Controleur{
 				$this->vue->display('404.twig', $vars);
 				exit();
 		}
-	}
-	
-	/*--------------------------------
-	  			RECHERCHE
-	  ---------------------------------*/
-	public function recherche($action, $id, $vars){
-		if(!empty($_GET['type'])){
-			if($_GET['type'] == 'technote'){
-				$vars['active_recherche'] = 1; // Active le style dans le menu recherche
-				$vars['active_recherche_technote'] = 1; // Active le style dans le sous menu recherche de technote
-				$vars['titrePage'] = 'Chercher une technote'; // <h1> de la page
-
-				// Si un formulaire a été envoyé
-				if(!empty($_GET['submit'])){
-					// Si c'est de l'ajax (appui sur le bouton du formulaire)
-					if($_GET['submit'] == 'ajax'){
-						// On remet toujours à la première page
-						$page = 1;
-						// On essaye de récupèrer les technotes avec les critères de recherche
-						$res = Technote::recherche($_GET, $page);
-						if($res->success){
-							$res->get['pagination'] = $this->vue->render('templates/pagination.twig', array('pagination' => $res->pagination));
-							$res->get['technotes'] = $this->vue->render('templates/technotesExtraits.twig', array('technotes' => $res->technotes));
-						}
-						echo json_encode($res);
-						exit();
-					}
-					// Si on arrive sur la page direct
-					else{
-						// on recupère la page
-						$page = !empty($_GET['page']) ? $_GET['page'] : 1;
-						// On essaye de récupèrer les technotes avec les critères de recherche
-						$res = Technote::recherche($_GET, $page);
-						if($res->success){
-							$vars['pagination'] = $res->pagination;
-							$vars['technotes'] = $res->technotes;
-						}
-					}
-				}
-
-				$this->vue->display('recherche_technote_get.twig', $vars);
-				exit();
-			}elseif($_GET['type'] == 'question'){
-				$vars['active_recherche'] = 1; // Active le style dans le menu recherche
-				$vars['active_recherche_question'] = 1; // Active le style dans le sous menu recherche de question
-				$vars['titrePage'] = 'Chercher une question'; // <h1> de la page
-
-				// Si un formulaire a été envoyé
-				if(!empty($_GET)){
-					// On essaye de récupèrer les questions avec les critères de recherche
-					$res = Question::recherche($_GET);
-					echo json_encode($res);
-					exit();
-				}
-
-				$this->vue->display('recherche_question_get.twig', $vars);
-				exit();
-			}
-		}
-
-		$this->vue->display('404.twig', $vars);
-		exit();
 	}
 
 	/*------------------------

@@ -71,7 +71,7 @@
 					<img src="/assets/images/logo.png" alt="Logo">
 				</div>
 				<nav class="col-md-12 main">
-					<div class="col-md-10 col-md-offset-1">
+					<div class="col-md-8 col-md-offset-2">
 						<div class="navbar-header">
 							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menuColapse">
 								<span class="sr-only">Toggle navigation</span>
@@ -104,15 +104,6 @@
 										{% if session.user %}
 											<li class="{% if active_questions_add %}active{% endif %}"><a href="/questions/add">Poser une question</a></li>
 										{% endif %}
-									</ul>
-								</li>
-								<li class="dropdown {% if active_recherche %}active{% endif %}">
-									<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-										Recherche <span class="caret"></span>
-									</a>
-									<ul class="dropdown-menu">
-										<li class="{% if active_recherche_technote %}active{% endif %}"><a href="/recherche?type=technote">Chercher une technote</a></li>
-										<li class="{% if active_recherche_question %}active{% endif %}"><a href="/recherche?type=question">Chercher une question</a></li>
 									</ul>
 								</li>
 								{% if session.user %}
