@@ -96,6 +96,27 @@ class ReponseDAO extends DAO{
 		return $res->nbRedige;
 	}
 
+	public function getTreeForOneQuestion($id_question, $id_reponse_parent){
+		$res = array();
+		$op = empty($id_reponse_parent) ? 'IS' : '=';
+		$req = $this->pdo->prepare('SELECT r.*, ma.pseudo auteur, mm.pseudo modificateur
+									FROM reponse r
+									INNER JOIN membre ma ON ma.id_membre=r.id_auteur
+									LEFT JOIN membre mm ON mm.id_membre=r.id_modificateur
+									WHERE id_question = :id_question
+										AND id_reponse_parent ' . $op . ' :id_reponse_parent');
+		$req->execute(array(
+			'id_question' => $id_question,
+			'id_reponse_parent' => $id_reponse_parent
+		));
+		$reponseDAO = new ReponseDAO(BDD::getInstancePDO());
+		foreach($req->fetchAll() as $ligne){
+			$ligne->reponses = $reponseDAO->getTreeForOneQuestion($id_question, $ligne->id_reponse);
+			$res[] = new Reponse(get_object_vars($ligne));
+		}
+		return $res;
+	}
+
 	public function getCountForOneQuestion($id_question){
 		$req = $this->pdo->prepare('SELECT COUNT(*) AS nbReponses
 									FROM reponse

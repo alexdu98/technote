@@ -68,21 +68,21 @@
 							<img src="/assets/images/resolved.png" class="questionResolu">
 						{% endif %}
 						<div class="col-md-8">
-							<span class="titreQuestion">{{ question.titre }}</span><br>
+							<a href="/questions/get/{{ question.id_question }}"><span class="titreQuestion">{{ question.titre }}</span></a><br>
 							{% if question.motsCles %}
 								{% for motCle in question.motsCles %}
-									<a href="/questions?recherche=&mots_cles={{ motCle.label }}">{{ motCle.label }}</a>{% if not loop.last %},{% endif %}
+									<a href="/questions?recherche=&mots_cles={{ motCle.label }}" class="mots-cles">{{ motCle.label }}</a>{% if not loop.last %},{% endif %}
 								{% endfor %}
 								<br>
 							{% endif %}
 							<span class="dateQuestion"> créé par {{ question.auteur }}, le {{ question.date_question | date('d/m/Y à H:i') }}</span>
 						</div>
 						<div class="col-md-2">
-							{{ question.nbReponses }} réponses
+							<a href="/questions/get/{{ question.id_question }}">{{ question.nbReponses }} réponse(s)</a>
 						</div>
 						<div class="col-md-2">
 							{% if question.lastReponse %}
-								dernière réponse par {{ question.lastReponse.auteur }}<br> le {{ question.lastReponse.date_reponse | date('d/m/Y à H:i') }}
+							<a href="/questions/get/{{ question.id_question }}">dernière réponse par {{ question.lastReponse.auteur }}<br> le {{ question.lastReponse.date_reponse | date('d/m/Y à H:i') }}</a>
 							{% endif %}
 						</div>
 					</div>

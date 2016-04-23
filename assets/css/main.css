@@ -213,12 +213,34 @@ a.extraitTechnote{
     font-size: 0.9em;
     color: rgba(150,150,150,0.8);
 }
+#divReponses{
+    background: rgb(247,247,247);
+    margin-bottom: 10px;
+    padding: 3px 0;
+
+}
+.reponse{
+    padding-left: 5px;
+    margin: 5px 0 3px 10px;
+    border-left: 2px solid #337ab7;
+}
+.dateReponse{
+    font-size: 0.8em;
+    color: rgba(150,150,150,0.8);
+}
+.reponseSupprimer{
+    font-size: 0.9em;
+    color: rgba(150,150,150,0.8);
+}
 .question{
     background: white;
     margin-bottom: 10px;
     padding: 5px 10px;
     border: 1px solid #337ab7;
     border-bottom: 3px solid #337ab7;
+}
+.question a:not(.mots-cles){
+    color: inherit;
 }
 img.questionResolu{
     margin-left: -32px;
