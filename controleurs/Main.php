@@ -372,6 +372,31 @@ class Main extends Controleur{
 				}
 				exit();
 
+			/**** ADD ****/
+			case 'add':
+				$vars['active_questions'] = 1; // Active le style dans le menu questions
+				$vars['active_questions_add'] = 1; // Active le style dans le sous menu ajout de questions
+				$vars['titrePage'] = 'Poser une question'; // <h1> de la page
+
+				// On récupère tous les mots clés
+				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+				$vars['motsCles'] = $motCleDAO->getAll();
+
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer la technote
+						$res = Question::addQuestion($_POST);
+						if($res->success)
+							$res->redirect = "/questions/get/$res->id_question";
+						echo json_encode($res);
+						exit();
+					}
+				}
+				$this->vue->display('questions_add.twig', $vars);
+				exit();
+
 			default:
 				$this->vue->display('404.twig', $vars);
 				exit();

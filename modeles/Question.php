@@ -2,6 +2,89 @@
 
 class Question extends TableObject{
 
+	static public function addQuestion(&$param){
+		$resCheck = self::checkAdd($param);
+		$res = $resCheck;
+		if($resCheck->success === true){
+			$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+			$question = new Question(array(
+				'id_question' => DAO::UNKNOWN_ID,
+				'titre' => $param['titre'],
+				'question' => $param['question'],
+				'id_auteur' => $_SESSION['user']->id_membre,
+				'resolu' => '0',
+				'visible' => '1'
+			));
+			if(($resSaveQuestion = $questionDAO->save($question)) !== false){
+				$clarifierDAO = new ClarifierDAO(BDD::getInstancePDO());
+				if(!empty($param['id_mot_cle'])){
+					foreach($param['id_mot_cle'] as $id_mot_cle){
+						$clarifier = new Decrire(array('id_question' => $resSaveQuestion->id_question, 'id_mot_cle' => $id_mot_cle));
+						$clarifierDAO->save($clarifier);
+					}
+				}
+				$actionDAO = new ActionDAO(BDD::getInstancePDO());
+				$action = new Action(array(
+					'id_action' => DAO::UNKNOWN_ID,
+					'libelle' => "Ajout d\'une question (question n°$resSaveQuestion->id_question)",
+					'id_membre' => $_SESSION['user']->id_membre
+				));
+				$actionDAO->save($action);
+				$res->success = true;
+				$res->id_question = $resSaveQuestion->id_question;
+				$res->msg[] = 'Ajout de la question réussie';
+			}
+			else{
+				$res->success = false;
+				$res->msg[] = 'Erreur BDD';
+			}
+		}
+		return $res;
+	}
+
+	static private function checkAdd(&$param){
+		$std = (object) array('success' => false, 'msg' => array());
+
+		if(($res = Question::checkTitre($param['titre'])) !== true)
+			$std->msg[] = $res;
+		if(($res = Question::checkQuestion($param['question'])) !== true)
+			$std->msg[] = $res;
+
+		if(!empty($param['id_mot_cle'])){
+			foreach($param['id_mot_cle'] as $id_mot_cle){
+				if(($res = MotCle::checkExiste($id_mot_cle)) !== true)
+					$std->msg[] = $res;
+			}
+		}
+
+		if(empty($std->msg))
+			$std->success = true;
+		return $std;
+	}
+
+	static public function checkTitre(&$titre){
+		if(!empty($titre)){
+			if(mb_strlen(strip_tags($titre)) == mb_strlen($titre)){
+				if(mb_strlen($titre) >= 3 && mb_strlen($titre) <= 63){
+					return true;
+				}
+				return 'Le titre ne respecte pas les règles de longueur (3 à 63 caractères)';
+			}
+			return 'Les balises HTML sont interdites dans le titre (un espace est nécessaire après un \'<\')';
+		}
+		return 'Le titre n\'est pas renseigné';
+	}
+
+	static public function checkQuestion(&$question){
+		if(!empty($question)){
+			if(mb_strlen($question) >= 15 && mb_strlen($question) <= 65535){
+				return true;
+			}
+			return 'La question ne respecte pas les règles de longueur (15 à 65535 caractères)';
+		}
+		return 'La question n\'est pas renseigné';
+	}
+
 	static public function recherche(&$param, $page){
 		$std = (object) array('success' => false, 'msg' => array());
 		$cond = array();
