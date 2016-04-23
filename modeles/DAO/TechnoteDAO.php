@@ -271,4 +271,11 @@ class TechnoteDAO extends DAO{
 		return $req->fetchAll();
 	}
 
+	public function noVisible($id){
+		$req = $this->pdo->prepare('UPDATE technote SET visible = 0 WHERE id_technote = :id_technote');
+		return $req->execute(array(
+			'id_technote' => $id
+		));
+	}
+
 }

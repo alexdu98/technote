@@ -85,6 +85,25 @@ class Question extends TableObject{
 		return 'La question n\'est pas renseigné';
 	}
 
+	static public function dropQuestion($id_question){
+		$res = (object) array('success' => false, 'msg' => array());
+
+		$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+		if($_SESSION['user']->groupe == 'Membre' || $_SESSION['user']->groupe == 'Modérateur'){
+			$res->success = $questionDAO->noVisible($id_question);
+		}
+		elseif($_SESSION['user']->groupe == 'Administrateur'){
+			$res->success = $questionDAO->delete($id_question);
+		}
+
+		if($res->success)
+			$res->msg[] = 'La technote a bien été supprimée';
+		else
+			$res->msg[] = 'Erreur BDD';
+
+		return $res;
+	}
+
 	static public function recherche(&$param, $page){
 		$std = (object) array('success' => false, 'msg' => array());
 		$cond = array();

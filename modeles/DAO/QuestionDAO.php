@@ -10,13 +10,25 @@ class QuestionDAO extends DAO{
 	// #######################################
 
 	public function getOne($id){
-		$req = $this->pdo->prepare('SELECT * FROM question WHERE id_question = :id_question');
+		$req = $this->pdo->prepare('
+								SELECT q.*, ma.pseudo auteur, mm.pseudo modificateur
+								FROM question q
+								INNER JOIN membre ma ON ma.id_membre=q.id_auteur
+								LEFT JOIN membre mm ON mm.id_membre=q.id_modificateur
+								WHERE id_question = :id_question');
 		$req->execute(array(
 			'id_question' => $id
 		));
-		if(($res = $req->fetch()) !== false)
-			return new Question(get_object_vars($res));
-		return false;
+		if(($res = $req->fetch()) === false)
+			return false;
+
+		$clarifierDAO = new ClarifierDAO(BDD::getInstancePDO());
+		$res->motsCles = $clarifierDAO->getAllForOneQuestion($id);
+
+		$reponseDAO = new ReponseDAO(BDD::getInstancePDO());
+		$res->reponses = $reponseDAO->getTreeForOneQuestion($id, NULL);
+
+		return new Question(get_object_vars($res));
 	}
 
 	public function getAll(){
@@ -81,6 +93,13 @@ class QuestionDAO extends DAO{
 	// #######################################
 	// ######## MÉTHODES PERSONNELLES ########
 	// #######################################
+
+	public function noVisible($id){
+		$req = $this->pdo->prepare('UPDATE question SET visible = 0 WHERE id_question = :id_question');
+		return $req->execute(array(
+			'id_question' => $id
+		));
+	}
 
 	/**
 	 * Récupère le nombre de questions d'un membre

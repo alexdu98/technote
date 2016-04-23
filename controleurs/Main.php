@@ -397,6 +397,20 @@ class Main extends Controleur{
 				$this->vue->display('questions_add.twig', $vars);
 				exit();
 
+			/**** DROP ****/
+			case 'drop':
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Question::dropQuestion($id);
+						if($res->success)
+							$res->redirect = "/";
+						echo json_encode($res);
+					}
+				}
+				exit();
+
 			default:
 				$this->vue->display('404.twig', $vars);
 				exit();

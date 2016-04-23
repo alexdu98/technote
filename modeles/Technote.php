@@ -83,18 +83,17 @@ class Technote extends TableObject{
 
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		if($_SESSION['user']->groupe == 'Membre' || $_SESSION['user']->groupe == 'Modérateur'){
-
+			$res->success = $technoteDAO->noVisible($id_technote);
 		}
 		elseif($_SESSION['user']->groupe == 'Administrateur'){
-			if($technoteDAO->delete($id_technote)){
-				$res->success = true;
-				$res->msg[] = 'La technote a bien été supprimée';
-			}
-			else{
-				$res->success = false;
-				$res->msg[] = 'Erreur BDD';
-			}
+			$res->success = $technoteDAO->delete($id_technote);
 		}
+
+		if($res->success)
+			$res->msg[] = 'La technote a bien été supprimée';
+		else
+			$res->msg[] = 'Erreur BDD';
+
 		return $res;
 	}
 
