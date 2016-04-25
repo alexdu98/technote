@@ -25,24 +25,7 @@ $(document).ready(function(){
     /**
      * Au clic sur un lien pour répondre à un commentaire
      */
-    $('.repondreCommentaire').on('click', function(){
-        // On récupère l'id du commentaire parent
-        var id_commentaire_parent = $(this).closest('.commentaire').find('.id_commentaire').html();
-
-        // On copie le formulaire déjà présent et on le modifie
-        var clone = $('form[name=addCommentaire]').parent().clone();
-        $(this).closest('.commentaire').append(clone);
-        $(clone).find('form').attr('name', 'addCommentaireImbrique');
-        $(clone).find('label').attr('for', 'commentaire' + id_commentaire_parent);
-        $(clone).find('#commentaire').attr('id', 'commentaire' + id_commentaire_parent);
-        $(clone).find('form').append('<input type="hidden" name="id_commentaire_parent" value="' + id_commentaire_parent + '">');
-
-        // On rajoute l'auditeur d'événement AjaxForm sur ce nouveau formulaire
-        $(clone).find('form').ajaxForm(optionsAJAXFORM);
-
-        // On supprime le lien pour répondre au commentaire
-        $(this).remove();
-    });
+    $('.repondreCommentaire').on('click', addCommentaireForm);
 
     $('.lienSendAjax').on('click', dropCommentaireForm);
 
@@ -80,16 +63,11 @@ $(document).ready(function(){
     });
 
     $("#toggleRecherche").click(function(){
-        $("#divRecherche").toggle("slow", function(){
-
-        });
+        $("#divRecherche").toggle("slow");
     });
 
     function split(val){
         return val.split(/,\s*/);
-    }
-    function extractLast(term){
-        return split(term).pop();
     }
 
     // Autocomplétion pour la recherche de membre
@@ -227,10 +205,29 @@ $(document).ready(function(){
         return messagesHTML;
     }
 
-    function treatRechercheTechnote(data, form){
-        $('#technotes').empty();
-        if(data.success) {
-            $('#technotes').append(data.get.pagination).append(data.get.technotes).append(data.get.pagination);
+    function addCommentaireForm(){
+        if($(this).closest('.commentaire').find('form[name=addCommentaireImbrique]').length == 0){
+            // On récupère l'id du commentaire parent
+            var id_commentaire_parent = $(this).closest('.commentaire').find('.id_commentaire').html();
+
+            // On copie le formulaire déjà présent et on le modifie
+            var clone = $('form[name=addCommentaire]').parent().clone();
+
+            // On modifie la copie du formulaire
+            $(clone).find('form').attr('name', 'addCommentaireImbrique');
+            $(clone).find('label').attr('for', 'commentaire' + id_commentaire_parent);
+            $(clone).find('#commentaire').attr('id', 'commentaire' + id_commentaire_parent);
+            $(clone).find('form').append('<input type="hidden" name="id_commentaire_parent" value="' + id_commentaire_parent + '">');
+
+            // On affiche le formulaire
+            $(this).closest('.commentaire').append(clone).find('form[name=addCommentaireImbrique]').parent().hide().slideToggle(400);
+
+            // On ajoute l'auditeur d'événement AjaxForm sur ce nouveau formulaire
+            $(clone).find('form').ajaxForm(optionsAJAXFORM);
+        }
+        else{
+            //$(this).closest('.commentaire').find('form[name=addCommentaireImbrique]').parent().toggle(400);
+            $(this).closest('.commentaire').find('form[name=addCommentaireImbrique]:last').parent().toggle(400);
         }
     }
 
@@ -238,27 +235,31 @@ $(document).ready(function(){
      * Affiche le formulaire de modification d'un commentaire
      */
     function editCommentaireForm(){
-        // On récupère l'id du commentaire
-        var id_commentaire = $(this).closest('.commentaire').find('.id_commentaire').html();
+        if($(this).closest('.container-fluid').find('form[name=editCommentaire]').length == 0){
+            // On récupère l'id du commentaire
+            var id_commentaire = $(this).closest('.commentaire').find('.id_commentaire').html();
 
-        // On clone le formulaire déjà présent
-        var clone = $('form[name=addCommentaire]').parent().clone();
+            // On clone le formulaire déjà présent
+            var clone = $('form[name=addCommentaire]').parent().clone();
 
+            // On modifie la copie du formulaire
+            $(clone).find('form').attr('action', '/commentaires/edit/' + id_commentaire);
+            $(clone).find('form').attr('name', 'editCommentaire');
+            $(clone).find('form input[type=submit]').attr('value', 'Modifier');
+
+            // On affiche le formulaire
+            $(this).closest('.container-fluid').append(clone).find('form[name=editCommentaire]').parent().hide().slideToggle(400);
+
+            // On ajoute l'auditeur d'événement AjaxForm sur ce nouveau formulaire
+            $(clone).find('form').ajaxForm(optionsAJAXFORM);
+        }
+        else{
+            $(this).closest('.container-fluid').find('form[name=editCommentaire]').parent().toggle(400);
+        }
         // On récupère le texte actuel du commentaire
-        var texte = $(this).closest('.commentaire').find('.texteCommentaire').html().replace(/<br>/, '');
-        $(this).closest('.container-fluid').after(clone);
-
-        // On modifie la copie du formulaire
-        $(clone).find('form #commentaire').text(texte);
-        $(clone).find('form').attr('action', '/commentaires/edit/' + id_commentaire);
-        $(clone).find('form').attr('name', 'editCommentaire');
-        $(clone).find('form input[type=submit]').attr('value', 'Modifier');
-
-        // On ajoute l'auditeur d'événement AjaxForm sur ce nouveau formulaire
-        $(clone).find('form').ajaxForm(optionsAJAXFORM);
-
-        // On cache le lien pour éditer le commentaire
-        $(this).hide();
+        var commentaire = $(this).closest('.commentaire').find('.texteCommentaire:first').html();
+        var texte = $('<div>').html(commentaire).text();
+        $(this).closest('.container-fluid').find('form #commentaire').text(texte);
     }
 
     function treatConnexion(data, form){
@@ -297,21 +298,25 @@ $(document).ready(function(){
 
     function treatAddCommentaire(data, form){
         if(data.success){
+            $(form[0]).parent().slideToggle(400);
             $(form[0]).parent().before(data.add.commentaire);
+            $(form[0]).parent().prev().find('.repondreCommentaire').on('click', addCommentaireForm);
             $(form[0]).parent().prev().find('.modifierCommentaire').on('click', editCommentaireForm);
             $(form[0]).parent().prev().find('.lienSendAjax').on('click', dropCommentaireForm);
-            $(form[0]).parent().prev().find('.repondreCommentaire').remove();
         }
     }
 
     function treatEditCommentaire(data, form){
         if(data.success){
-            $(form[0]).closest('.commentaire').find('.texteCommentaire:first').replaceWith(data.edit.commentaire.commentaire);
+            $(form[0]).closest('.commentaire').find('.texteCommentaire:first').html(data.edit.commentaire.commentaire);
+            // On récupère le texte actuel du commentaire
+            var texte = $(form[0]).closest('.commentaire').find('.texteCommentaire:first').html().replace(/<br>/, '');
+            $(form[0]).find('#commentaire').html(texte);
+            $(form[0]).parent().slideToggle(400);
             if($(form[0]).parent().prev().find('.infosModificaton').length > 0)
                 $(form[0]).parent().prev().find('.infosModificaton').remove();
             $(form[0]).parent().prev().find('.dateCommentaire').append('<span class="glyphicon glyphicon-pencil infosModificaton" aria-hidden="true" title="modifié par ' + data.edit.commentaire.modificateur + ' le ' + data.edit.commentaire.date_modification + '"></span>');
-            $(form[0]).parent().prev().find('.modifierCommentaire').show();
-            $(form[0]).remove();
+            //$(form[0]).parent().prev().find('.modifierCommentaire').show();
         }
     }
 

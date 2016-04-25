@@ -121,13 +121,11 @@ class Commentaire extends TableObject{
 	}
 
 	static private function checkCommentaire(&$commentaire){
+		$commentaire = htmlentities($commentaire);
 		if(!empty($commentaire)){
-			if(mb_strlen(strip_tags($commentaire)) == mb_strlen($commentaire)){
-				if(mb_strlen($commentaire) >= 1 && mb_strlen($commentaire) <= 2047)
-					return true;
-				return 'Le commentaire ne respecte pas les règles de longueur (1 à 2047 caractères)';
-			}
-			return 'Les balises HTML sont interdites dans les commentaires (un espace est nécessaire après un \'<\')';
+			if(mb_strlen($commentaire) >= 1 && mb_strlen($commentaire) <= 2047)
+				return true;
+			return 'Le commentaire ne respecte pas les règles de longueur (1 à 2047 caractères)';
 		}
 		return 'Le commentaire n\'est pas renseigné';
 	}
