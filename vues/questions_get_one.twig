@@ -58,46 +58,40 @@
 	<hr>
 	<h4 class="text-center">Réponses</h4>
 	<div class="col-md-offset-1 col-md-10">
-		<div class="panel panel-default">
-			<div class="panel-body">
-				{% include 'templates/messages.twig' %}
-				<div id="divReponses">
-					{% if question.reponses %}
-						{% include 'templates/reponse.twig' with {'reponses': question.reponses} %}
-					{% endif %}
-					{% if session.user %}
-						<div>
-							<form method="POST" action="/reponses/add/" class="form-horizontal" name="addReponse">
-								<div class="form-group">
-									<label for="reponse" class="col-sm-2 control-label">Réponse*</label>
-									<div class="col-sm-10">
-										<textarea class="form-control col-md-12" rows="3" name="reponse" id="reponse" placeholder="Réponse" maxlength="2047" required>{{ post.reponse }}</textarea>
-									</div>
-									<script>
-										CKEDITOR.replace('reponse');
-									</script>
-								</div>
-								<div class="form-group">
-									<div class="col-sm-offset-2 col-sm-10">
-										<input type="submit" class="btn btn-default" value="Envoyer">
-									</div>
-								</div>
-								<input type="hidden" name="id_question" value="{{ question.id_question }}">
-								<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
-							</form>
+		{% include 'templates/messages.twig' %}
+		{% if question.reponses %}
+			{% include 'templates/reponse.twig' with {'reponses': question.reponses} %}
+		{% endif %}
+		{% if session.user %}
+			<div>
+				<form method="POST" action="/reponses/add/" class="form-horizontal" name="addReponse">
+					<div class="form-group">
+						<label for="reponse" class="col-sm-2 control-label">Réponse*</label>
+						<div class="col-sm-10">
+							<textarea class="form-control col-md-12" rows="3" name="reponse" id="reponse" placeholder="Réponse" maxlength="2047" required>{{ post.reponse }}</textarea>
 						</div>
-					{% else %}
-						<div class="alert alert-info" role="alert">
-							<div class="flex">
-								<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-								<ul>
-									<li>Vous devez être connecté pour répondre</li>
-								</ul>
-							</div>
+						<script>
+							CKEDITOR.replace('reponse');
+						</script>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<input type="submit" class="btn btn-default" value="Envoyer">
 						</div>
 					</div>
-				{% endif %}
+					<input type="hidden" name="id_question" value="{{ question.id_question }}">
+					<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+				</form>
 			</div>
-		</div>
+		{% else %}
+			<div class="alert alert-info" role="alert">
+				<div class="flex">
+					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+					<ul>
+						<li>Vous devez être connecté pour répondre</li>
+					</ul>
+				</div>
+			</div>
+		{% endif %}
 	</div>
 {% endblock %}

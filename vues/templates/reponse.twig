@@ -1,33 +1,42 @@
 {% for reponse in reponses %}
-	<div class="reponse">
-		<span class="id_reponse" hidden>{{ reponse.id_reponse }}</span>
-		<b class="texte-bleu">{{ reponse.auteur | capitalize }}</b> : <span class="texteReponse">{% if reponse.visible %}{{ reponse.reponse | raw }}{% else %}<span class="reponseSupprimer">// Réponse supprimé</span>{% endif %}</span><br>
-		{% if reponse.visible %}
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-md-6">
-						<a class="repondreReponse">Répondre</a>
-						{% if session.user.pseudo == reponse.auteur or session.user.groupe == 'Administrateur' or session.user.groupe == 'Modérateur' %}
-							<a class="modifierReponse">Modifier</a>
-							<a class="lienSendAjax" data-nameForm="dropReponse">Supprimer</a>
-							<form method="POST" action="/reponses/drop/{{ reponse.id_reponse }}" class="form-horizontal" name="dropReponse">
-								<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
-							</form>
-						{% endif %}
-					</div>
-					<div class="col-md-6 text-right">
-						<span class="dateReponse">
-							{{ reponse.date_reponse | date('d/m/Y à H:i') }}
-							{% if reponse.modificateur %}
-								<span class="glyphicon glyphicon-pencil infosModificaton" aria-hidden="true" title="modifié par {{ reponse.modificateur }} le {{ reponse.date_modification | date('d/m/Y à H:i') }}"></span>
-							{% endif %}
-						</span>
-					</div>
-				</div>
-			</div>
+	<div class="panel panel-default">
+		<div class="panel-footer">
+			<b class="texte-bleu">{{ reponse.auteur | capitalize }}</b>
+		</div>
+		<div class="panel-body">
+			<span class="id_reponse" hidden>{{ reponse.id_reponse }}</span>
+			<span class="texteReponse">{% if reponse.visible %}{{ reponse.reponse | raw }}{% else %}<span class="reponseSupprimer">// Réponse supprimé</span>{% endif %}</span><br>
 			{% if reponse.reponses is not null %}
 				{% include 'templates/reponse.twig' with {'reponses': reponse.reponses} %}
 			{% endif %}
-		{% endif %}
+		</div>
+		<div class="panel-footer">
+			{% if reponse.visible %}
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-6">
+							{% if session.user %}
+								<a class="repondreReponse">Répondre</a>
+								{% if session.user.pseudo == reponse.auteur or session.user.groupe == 'Administrateur' or session.user.groupe == 'Modérateur' %}
+									• <a class="modifierReponse">Modifier</a> •
+									<a class="lienSendAjax" data-nameForm="dropReponse">Supprimer</a>
+									<form method="POST" action="/reponses/drop/{{ reponse.id_reponse }}" class="form-horizontal" name="dropReponse">
+										<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+									</form>
+								{% endif %}
+							{% endif %}
+						</div>
+						<div class="col-md-6 text-right">
+							<span class="dateReponse">
+								{{ reponse.date_reponse | date('d/m/Y à H:i') }}
+								{% if reponse.modificateur %}
+									<span class="glyphicon glyphicon-pencil infosModificaton" aria-hidden="true" title="modifié par {{ reponse.modificateur }} le {{ reponse.date_modification | date('d/m/Y à H:i') }}"></span>
+								{% endif %}
+							</span>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
 	</div>
 {% endfor %}
