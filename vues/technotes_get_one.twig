@@ -33,14 +33,14 @@
 			<hr>
 			<div>
 				{% for motCle in technote.motsCles %}
-					<a href="motscles/get/{{ motCle.id_mot_cle }}">{{ motCle.label }}</a>{% if not loop.last %},{% endif %}
+					<a href="/technotes?recherche=&mots_cles={{ motCle.label }}">{{ motCle.label }}</a>{% if not loop.last %},{% endif %}
 				{% endfor %}
 			</div>
 			<div class="text-right">
-				créé par <a href="#">{{ technote.auteur }}</a> le {{ technote.date_creation | date('d/m/Y à H:i') }}
+				créé par <a href="/technotes?recherche=&auteur={{ technote.auteur }}">{{ technote.auteur }}</a> le {{ technote.date_creation | date('d/m/Y à H:i') }}
 				{% if technote.date_modification %}
 					<br>
-					modifié par <a href="#">{{ technote.modificateur }}</a> le {{ technote.date_modification | date('d/m/Y à H:i') }}
+					modifié par <a href="/technotes?recherche=&auteur={{ technote.modificateur }}">{{ technote.modificateur }}</a> le {{ technote.date_modification | date('d/m/Y à H:i') }}
 				{% endif %}
 			</div>
 		</div>
