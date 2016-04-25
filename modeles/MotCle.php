@@ -16,9 +16,6 @@ class MotCle extends TableObject{
 	}
 
 	static public function checkExisteByLabel($label){
-		if($label[0] == '+')
-			$label = substr($label, 1);
-
 		$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
 		if(($res = $motCleDAO->checkExiste($label)) !== false)
 			return true;

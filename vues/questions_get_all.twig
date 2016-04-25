@@ -1,10 +1,94 @@
 {% extends "templates/base.twig" %}
 {% block contenu %}
-	<section class="row">
-		<div class="container-fluid">
-			{% include 'templates/pagination.twig' %}
-			Les questions...
-			{% include 'templates/pagination.twig' %}
+	<div class="text-center">
+		<button class="btn btn-default" id="toggleRecherche">Formulaire de recherche</button>
+	</div>
+	{% include 'templates/messages.twig' with {'msgNoAjax': '1'} %}
+	<div class="panel panel-default" id="divRecherche" hidden>
+		<div class="panel-body text-center">
+			<p class="text-center text-danger text">Vous devez renseigné au moins une ligne</p>
+			<form method="GET" class="form-horizontal noAjax" name="rechercheTechnote">
+				<div class="form-inline">
+					<div class="form-group">
+						<label for="search-titreQuestion" class="control-label">Titre</label>
+						<input type="text" name="titre" class="form-control" id="search-titreQuestion" placeholder="Titre" value="{{ get.titre }}">
+					</div>
+				</div>
+				<br>
+				<div class="form-inline">
+					<div class="form-group">
+						<label for="dateDebut" class="control-label">Date de création</label>
+						<div class="input-group">
+							<div class="input-group-addon">Du</div>
+							<input type="date" name="date_debut" class="form-control" id="dateDebut" value="{{ get.date_debut }}">
+						</div>
+						<div class="input-group">
+							<div class="input-group-addon">Au</div>
+							<input type="date" name="date_fin" class="form-control" id="dateFin" value="{{ get.date_fin }}">
+						</div>
+					</div>
+				</div>
+				<br>
+				<div class="form-inline">
+					<div class="form-group">
+						<label for="resolu" class="col-md-2 control-label">Résolu</label>
+						<div class="col-md-10">
+							<label class="radio-inline">
+								<input type="radio" name="resolu" id="resolu" value="oui" {% if get.resolu == 'oui' %}checked{% endif %}> Oui
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="resolu" id="resolu" value="non" {% if get.resolu == 'non' %}checked{% endif %}> Non
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="resolu" id="resolu" value="0" {% if get.resolu == '0' %}checked{% endif %}> N'importe
+							</label>
+						</div>
+					</div>
+				</div>
+				<br>
+				<div class="form-inline">
+					<div class="form-group">
+						<label for="search-motsCles" class="control-label">Mots clés</label>
+						<input type="text" size="50" name="mots_cles" class="form-control" id="search-motsCles" placeholder="Mots clés" value="{{ get.mots_cles }}">
+					</div>
+					<p class="help-block">Séparez les mots clés par des ','<br>Précédé d'un '+', le mot clé devient obligatoire</p>
+				</div>
+				<br>
+				<button type="submit" class="btn btn-default" name="recherche">Chercher</button>
+			</form>
 		</div>
-	</section>
+	</div>
+	<div id="questions">
+		{% include 'templates/pagination.twig' %}
+		{% for question in questions %}
+			<div class="col-md-12 question">
+				<div class="container-fluid">
+					<div class="row flex">
+						{% if question.resolu %}
+							<img src="/assets/images/resolved.png" class="questionResolu">
+						{% endif %}
+						<div class="col-md-8">
+							<a href="/questions/get/{{ question.id_question }}"><span class="titreQuestion">{{ question.titre }}</span></a><br>
+							{% if question.motsCles %}
+								{% for motCle in question.motsCles %}
+									<a href="/questions?recherche=&mots_cles={{ motCle.label }}" class="mots-cles">{{ motCle.label }}</a>{% if not loop.last %},{% endif %}
+								{% endfor %}
+								<br>
+							{% endif %}
+							<span class="dateQuestion"> créé par {{ question.auteur }}, le {{ question.date_question | date('d/m/Y à H:i') }}</span>
+						</div>
+						<div class="col-md-2">
+							<a href="/questions/get/{{ question.id_question }}">{{ question.nbReponses }} réponse(s)</a>
+						</div>
+						<div class="col-md-2">
+							{% if question.lastReponse %}
+							<a href="/questions/get/{{ question.id_question }}">dernière réponse par {{ question.lastReponse.auteur }}<br> le {{ question.lastReponse.date_reponse | date('d/m/Y à H:i') }}</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		{% include 'templates/pagination.twig' %}
+	</div>
 {% endblock %}

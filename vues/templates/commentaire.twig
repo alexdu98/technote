@@ -6,13 +6,15 @@
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-6">
-						<a class="repondreCommentaire">Répondre</a>
-						{% if session.user.pseudo == commentaire.auteur or session.user.groupe == 'Administrateur' or session.user.groupe == 'Modérateur' %}
-							<a class="modifierCommentaire">Modifier</a>
-							<a class="lienSendAjax" data-nameForm="dropCommentaire">Supprimer</a>
-							<form method="POST" action="/commentaires/drop/{{ commentaire.id_commentaire }}" class="form-horizontal" name="dropCommentaire">
-								<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
-							</form>
+						{% if session.user %}
+							<a class="repondreCommentaire">Répondre</a>
+							{% if session.user.pseudo == commentaire.auteur or session.user.groupe == 'Administrateur' or session.user.groupe == 'Modérateur' %}
+								• <a class="modifierCommentaire">Modifier</a> •
+								<a class="lienSendAjax" data-nameForm="dropCommentaire">Supprimer</a>
+								<form method="POST" action="/commentaires/drop/{{ commentaire.id_commentaire }}" class="form-horizontal" name="dropCommentaire">
+									<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+								</form>
+							{% endif %}
 						{% endif %}
 					</div>
 					<div class="col-md-6 text-right">

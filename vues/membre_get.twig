@@ -1,49 +1,45 @@
 {% extends "templates/base.twig" %}
 {% block contenu %}
-	<section class="row">
-		<div class="container-fluid">
-			<div class="panel panel-default">
-				<div class="panel-body">
-					<ul class="nav nav-tabs">
-						<li role="presentation" class="active"><a href="/membre/get">Profil</a></li>
-						<li role="presentation"><a href="/membre/edit">Modifier</a></li>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<ul class="nav nav-tabs">
+				<li role="presentation" class="active"><a href="/membre/get">Profil</a></li>
+				<li role="presentation"><a href="/membre/edit">Modifier</a></li>
+			</ul>
+			<br>
+			{% include 'templates/messages.twig' %}
+			<div class="col-md-8">
+				<p>
+					Connexion automatique sur <span id="nbNavCoAuto">{{ profil.nbTokenActif }}</span> navigateur(s) <br>
+					{% for token in profil.tokenActif %}
+						<form method="POST" action="/token/drop/{{ token.id_token }}" class="form-horizontal" name="dropToken">
+							<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+							IP de création : {{ token.ip }} / Expire le {{ token.date_expiration | date('d/m/Y à H:i') }} : <input type="submit" class="btn btn-link" value="Déconnecter">
+						</form>
+					{% endfor %}
+				</p>
+				<br>
+				<p>
+					Vous avez rédigé :
+					<ul>
+						<li><b>{{ profil.nbTechnoteRedige }}</b> technote(s)</li>
+						<li><b>{{ profil.nbCommentaireRedige }}</b> commentaire(s)</li>
+						<li><b>{{ profil.nbQuestionRedige }}</b> question(s)</li>
+						<li><b>{{ profil.nbReponseRedige }}</b> réponse(s)</li>
 					</ul>
-					<br>
-					{% include 'templates/messages.twig' %}
-					<div class="col-md-8">
-						<p>
-							Connexion automatique sur <span id="nbNavCoAuto">{{ profil.nbTokenActif }}</span> navigateur(s) <br>
-							{% for token in profil.tokenActif %}
-								<form method="POST" action="/token/drop/{{ token.id_token }}" class="form-horizontal" name="dropToken">
-									<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
-									IP de création : {{ token.ip }} / Expire le {{ token.date_expiration | date('d/m/Y à H:i') }} : <input type="submit" class="btn btn-link" value="Déconnecter">
-								</form>
-							{% endfor %}
-						</p>
-						<br>
-						<p>
-							Vous avez rédigé :
-							<ul>
-								<li><b>{{ profil.nbTechnoteRedige }}</b> technote(s)</li>
-								<li><b>{{ profil.nbCommentaireRedige }}</b> commentaire(s)</li>
-								<li><b>{{ profil.nbQuestionRedige }}</b> question(s)</li>
-								<li><b>{{ profil.nbReponseRedige }}</b> réponse(s)</li>
-							</ul>
-						</p>
-					</div>
-					<div class="col-md-4 text-right">
-						<p><b>Date d'inscription :</b> {{ session.user.date_inscription | date('d/m/Y à H:i') }}</p>
-						<p><b>Dernière connexion :</b> {{ session.user.date_connexion | date('d/m/Y à H:i') }}</p>
-						<p><b>Groupe :</b> {{ session.user.groupe }}</p>
-					</div>
-					<div class="col-md-12 text-center"><hr>
-						<h4>Dernières actions</h4>
-						{% for action in profil.actions %}
-							<p>{{ action.date_action | date('d/m/Y à H:i') }} : <b>{{ action.libelle }}</b></p>
-						{% endfor %}
-					</div>
-				</div>
+				</p>
+			</div>
+			<div class="col-md-4 text-right">
+				<p><b>Date d'inscription :</b> {{ session.user.date_inscription | date('d/m/Y à H:i') }}</p>
+				<p><b>Dernière connexion :</b> {{ session.user.date_connexion | date('d/m/Y à H:i') }}</p>
+				<p><b>Groupe :</b> {{ session.user.groupe }}</p>
+			</div>
+			<div class="col-md-12 text-center"><hr>
+				<h4>Dernières actions</h4>
+				{% for action in profil.actions %}
+					<p>{{ action.date_action | date('d/m/Y à H:i') }} : <b>{{ action.libelle }}</b></p>
+				{% endfor %}
 			</div>
 		</div>
-	</section>
+	</div>
 {% endblock %}

@@ -20,7 +20,7 @@ $(document).ready(function(){
     /**
      * Tous les formulaires seront en Ajax
      */
-    $('form').ajaxForm(optionsAJAXFORM);
+    $('form:not(.noAjax)').ajaxForm(optionsAJAXFORM);
 
     /**
      * Au clic sur un lien pour répondre à un commentaire
@@ -55,10 +55,34 @@ $(document).ready(function(){
         $(location).attr('href', '/technotes/edit/' + $(this).attr('data-id_technote'));
     });
 
+    // Au clic sur un lien pour supprimer une technote
+    $('#supprimerTechnote').on('click', function(){
+        // On redirige sur la bonne page
+        $(location).attr('href', '/technotes/drop/' + $(this).attr('data-id_technote'));
+    });
+
+    // Au clic sur un lien pour modifier une question
+    $('#modifierQuestion').on('click', function(){
+        // On redirige sur la bonne page
+        $(location).attr('href', '/questions/edit/' + $(this).attr('data-id_question'));
+    });
+
+    // Au clic sur un lien pour supprimer une question
+    $('#supprimerQuestion').on('click', function(){
+        // On redirige sur la bonne page
+        $(location).attr('href', '/questions/drop/' + $(this).attr('data-id_question'));
+    });
+
     // Au clic sur un élement avec un attribut data-hide
     $("[data-hide]").on("click", function(){
         // On le cache
         $("." + $(this).attr("data-hide")).hide();
+    });
+
+    $("#toggleRecherche").click(function(){
+        $("#divRecherche").toggle("slow", function(){
+
+        });
     });
 
     function split(val){
@@ -67,6 +91,30 @@ $(document).ready(function(){
     function extractLast(term){
         return split(term).pop();
     }
+
+    // Autocomplétion pour la recherche de membre
+    $( "#search-titreTechnote" ).autocomplete({
+        minLength: 3,
+        source : function(request, response){
+            $.getJSON('/autocomplete?type=titreTechnote&term=' + request.term, function(data){
+                response($.map(data, function(item){
+                    return item.titre;
+                }));
+            });
+        }
+    });
+
+    // Autocomplétion pour la recherche de membre
+    $( "#search-titreQuestion" ).autocomplete({
+        minLength: 3,
+        source : function(request, response){
+            $.getJSON('/autocomplete?type=titreQuestion&term=' + request.term, function(data){
+                response($.map(data, function(item){
+                    return item.titre;
+                }));
+            });
+        }
+    });
 
     // Autocomplétion pour la recherche de membre
     $( "#search-membre" ).autocomplete({
@@ -148,8 +196,8 @@ $(document).ready(function(){
             treatDropCommentaire(data, form);
         else if(form[0].name == "dropToken")
             treatDropToken(data, form);
-        else if(form[0].name == "rechercheTechnote")
-            treatRechercheTechnote(data, form);
+        else if(form[0].name == "dropQuestion")
+            treatDropQuestion(data, form);
         
 
         $('#divResultatAJAX').hide();
@@ -180,8 +228,9 @@ $(document).ready(function(){
     }
 
     function treatRechercheTechnote(data, form){
+        $('#technotes').empty();
         if(data.success) {
-            $('#technotes').empty().append(data.get.technotes);
+            $('#technotes').append(data.get.pagination).append(data.get.technotes).append(data.get.pagination);
         }
     }
 
@@ -271,6 +320,12 @@ $(document).ready(function(){
             $(form[0]).closest('.commentaire').find('.texteCommentaire').html('<span class="commentaireSupprimer">// Commentaire supprimé</span>');
             $(form[0]).closest('.container-fluid').prev().nextAll().remove();
         }
+    }
+
+    function treatDropQuestion(data, form){
+        $('#dropQuestionConfirmModal').modal('hide');
+        var messages = $('#divResultatAJAX').detach().show();
+        $('h1').after(messages);
     }
 
 });

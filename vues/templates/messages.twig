@@ -1,8 +1,23 @@
-<div id="divResultatAJAX" class="alert" role="alert" hidden>
-	<button type="button" class="close" data-hide="alert" aria-label="Hide"><span aria-hidden="true">&times;</span></button>
-	<div class="flex">
-		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-		<ul id="messagesResultatAJAX">
-		</ul>
+{% if msgNoAjax == 1 and res.msg is not empty %}
+	<br>
+	<div id="divResultatAJAX" class="alert alert-{% if res.success %}success{% else %}danger{% endif %}" role="alert" >
+		<button type="button" class="close" data-hide="alert" aria-label="Hide"><span aria-hidden="true">&times;</span></button>
+		<div class="flex">
+			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+			<ul id="messagesResultatAJAX">
+				{% for message in res.msg %}
+					<li>{{ message }}</li>
+				{% endfor %}
+			</ul>
+		</div>
 	</div>
-</div>
+{% else %}
+	<div id="divResultatAJAX" class="alert" hidden>
+		<button type="button" class="close" data-hide="alert" aria-label="Hide"><span aria-hidden="true">&times;</span></button>
+		<div class="flex">
+			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+			<ul id="messagesResultatAJAX">
+			</ul>
+		</div>
+	</div>
+{% endif %}

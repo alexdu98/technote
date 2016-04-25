@@ -4,32 +4,20 @@
 		<div class="panel-body">
 			<p class="text-center text-danger text">* champs obligatoires</p>
 			{% include 'templates/messages.twig' %}
-			<form method="POST" class="form-horizontal" name="editTechnote">
+			<form method="POST" class="form-horizontal" name="addQuestion">
 				<div class="form-group">
 					<label for="titre" class="col-md-2 control-label">Titre*</label>
 					<div class="col-md-10">
-						<input type="text" name="titre" class="form-control" id="titre" placeholder="Titre" maxlength="63" value="{{ technote.titre }}" required>
+						<input type="text" name="titre" class="form-control" id="titre" placeholder="Titre" maxlength="63" value="{{ question.titre }}" required>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="image" class="col-md-2 control-label">Image</label>
-					<input type="file" name="image" id="image" accept="image/*">
-					<input type="hidden" name="url_image" value="{{ technote.url_image }}">
-					Actuellement : <img src="{{ technote.url_image }}" class="img-technote-edit">
-				</div>
-				<div class="form-group">
-					<label for="description" class="col-sm-2 control-label">Description*</label>
-					<div class="col-sm-10">
-						<textarea class="form-control col-md-12" rows="3" name="description" id="description" placeholder="Description" maxlength="383" required>{{ technote.description }}</textarea>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="contenu" class="col-md-2 control-label">Contenu*</label>
+					<label for="question" class="col-md-2 control-label">Question*</label>
 					<div class="col-md-10">
-						<textarea name="contenu" id="contenu" class="form-control" rows="25" cols="10" required>{{ technote.contenu }}</textarea>
+						<textarea name="question" id="question" class="form-control" rows="25" cols="10" required>{{ question.question }}</textarea>
 					</div>
 					<script>
-		                CKEDITOR.replace('contenu');
+		                CKEDITOR.replace('question');
 					</script>
 				</div>
 				<div class="form-group">
@@ -38,9 +26,9 @@
 						<select name="id_mot_cle[]" class="form-control" id="mots-cles" multiple="multiple">
 							{% for motCle in motsCles %}
 								<option value="{{ motCle.id_mot_cle }}"
-							        {% for id_mc in technote.motsCles %}
-							            {% if motCle.id_mot_cle == id_mc.id_mot_cle %}selected{% endif %}
-									{% endfor %}
+										{% for id_mc in question.motsCles %}
+											{% if motCle.id_mot_cle == id_mc.id_mot_cle %}selected{% endif %}
+										{% endfor %}
 								>{{ motCle.label }}</option>
 							{% endfor %}
 						</select>
@@ -60,13 +48,13 @@
 					</script>
 				</div>
 				<div class="form-group">
-					<label for="publieOui" class="col-md-2 control-label">Publié*</label>
+					<label for="resoluOui" class="col-md-2 control-label">Résolu*</label>
 					<div class="col-md-10">
 						<label class="radio-inline">
-							<input type="radio" name="publie" id="publieOui" value="1" required {% if technote.publie %}checked{% endif %}> Oui
+							<input type="radio" name="resolu" id="resoluOui" value="1" required {% if question.resolu %}checked{% endif %}> Oui
 						</label>
 						<label class="radio-inline">
-							<input type="radio" name="publie" id="publieNon" value="0" required {% if not technote.publie %}checked{% endif %}> Non
+							<input type="radio" name="resolu" id="resoluNon" value="0" required {% if not question.resolu %}checked{% endif %}> Non
 						</label>
 					</div>
 				</div>

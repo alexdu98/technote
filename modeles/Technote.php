@@ -5,27 +5,39 @@ class Technote extends TableObject{
 	static public function recherche(&$param, $page){
 		$std = (object) array('success' => false, 'msg' => array());
 		$cond = array();
+		$strPagination = '';
+
+		if(!empty($param['titre'])){
+			$cond['titre'] = $param['titre'];
+			$strPagination .= '&titre=' . urlencode($param['titre']);
+		}
 
 		if(!empty($param['date_debut'])){
 			if(($res = Date::verifierDate($param['date_debut'])) !== true)
 				$std->msg[] = $res . ' (date de début)';
-			else
+			else{
 				$cond['date_debut'] = $param['date_debut'];
+				$strPagination .= '&date_debut=' . $param['date_debut'];
+			}
 		}
 
 		if(!empty($param['date_fin'])){
 			if(($res = Date::verifierDate($param['date_fin'])) !== true)
 				$std->msg[] = $res . ' (date de fin)';
-			else
+			else{
 				$cond['date_fin'] = $param['date_fin'];
+				$strPagination .= '&date_fin=' . $param['date_fin'];
+			}
 		}
 
 		if(!empty($param['auteur'])){
 			$membreDAO = new MembreDAO(BDD::getInstancePDO());
 			if(($res = $membreDAO->checkPseudoExiste($param['auteur'])) === false)
 				$std->msg[] = 'Aucun membre avec ce pseudo';
-			else
+			else{
 				$cond['auteur'] = $param['auteur'];
+				$strPagination .= '&auteur=' . $param['auteur'];
+			}
 		}
 
 		if(!empty($param['mots_cles'])){
@@ -35,10 +47,10 @@ class Technote extends TableObject{
 				$valueClean = trim($value);
 				if($valueClean != ''){
 					$tabMCClean[] = $valueClean;
-					if($valueClean[0] == '+'){
-						if(($res = MotCle::checkExisteByLabel(substr($value, 1))) !== true)
-							$std->msg[] = $res;
-					}
+					if($valueClean[0] == '+')
+						$valueClean = substr($valueClean, 1);
+					if(($res = MotCle::checkExisteByLabel($valueClean)) !== true)
+						$std->msg[] = $res;
 				}
 			}
 			$cond['mots_cles'] = $tabMCClean;
@@ -48,9 +60,18 @@ class Technote extends TableObject{
 			return $std;
 
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
-		$std->get = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond);
+		// On récupère le nombre de technotes qu'on a en résultat
+		$count = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond, true);
 
-		if(!empty($std->get))
+		// On créé la pagination
+		$std->pagination = new Pagination($page, $count, NB_TECHNOTES_PAGE, '/technotes?recherche=' . $strPagination . '&page=');
+
+		// On récupère les technotes
+		$std->technotes = $technoteDAO->getTechnotesWithSearch(NB_TECHNOTES_PAGE, $cond, false, $std->pagination->debut);
+
+		if(empty($std->technotes))
+			$std->msg[] = 'Aucune technote avec ces critères';
+		else
 			$std->success = true;
 		return $std;
 	}
@@ -62,18 +83,17 @@ class Technote extends TableObject{
 
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		if($_SESSION['user']->groupe == 'Membre' || $_SESSION['user']->groupe == 'Modérateur'){
-
+			$res->success = $technoteDAO->noVisible($id_technote);
 		}
 		elseif($_SESSION['user']->groupe == 'Administrateur'){
-			if($technoteDAO->delete($id_technote)){
-				$res->success = true;
-				$res->msg[] = 'La technote a bien été supprimée';
-			}
-			else{
-				$res->success = false;
-				$res->msg[] = 'Erreur BDD';
-			}
+			$res->success = $technoteDAO->delete($id_technote);
 		}
+
+		if($res->success)
+			$res->msg[] = 'La technote a bien été supprimée';
+		else
+			$res->msg[] = 'Erreur BDD';
+
 		return $res;
 	}
 

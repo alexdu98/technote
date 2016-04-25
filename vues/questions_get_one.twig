@@ -1,0 +1,97 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	{% if question.resolu %}
+		<div class="alert alert-success">
+			<div class="flex">
+				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+				<ul id="messagesResultatAJAX">
+					<li>Cette question est résolue</li>
+				</ul>
+			</div>
+		</div>
+	{% endif %}
+	<div class="panel panel-default">
+		<div class="panel-body">
+			{% if question.auteur == session.user.pseudo or session.user.groupe == 'Administrateur' or session.user.groupe == 'Modérateur' %}
+				<div>
+					<button type="button" class="btn btn-primary" id="modifierQuestion" data-id_question="{{ question.id_question }}">Modifier</button>
+					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#dropQuestionConfirmModal">Supprimer</button>
+				</div>
+				<div class="modal fade" id="dropQuestionConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="myModalLabel">{{ question.titre }}</h4>
+							</div>
+							<div class="modal-body">
+								Voulez-vous vraiment supprimer cette question ?
+							</div>
+							<div class="modal-footer">
+								<form method="POST" action="/questions/drop/{{ question.id_question }}" class="form-horizontal" name="dropQuestion">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+									<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+									<input type="submit" class="btn btn-danger" value="Supprimer">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+			{% endif %}
+			{{ question.question | raw }}
+			<hr>
+			<div>
+				{% for motCle in question.motsCles %}
+					<a href="/questions?recherche=&mots_cles={{ motCle.label }}">{{ motCle.label }}</a>{% if not loop.last %},{% endif %}
+				{% endfor %}
+			</div>
+			<div class="text-right">
+				créé par <a href="/technotes?recherche=&auteur={{ question.auteur }}">{{ question.auteur }}</a> le {{ question.date_question | date('d/m/Y à H:i') }}
+				{% if question.date_modification %}
+					<br>
+					modifié par <a href="/technotes?recherche=&auteur={{ question.modificateur }}">{{ question.modificateur }}</a> le {{ question.date_modification | date('d/m/Y à H:i') }}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<hr>
+	<h4 class="text-center">Réponses</h4>
+	<div class="col-md-offset-1 col-md-10">
+		{% include 'templates/messages.twig' %}
+		{% if question.reponses %}
+			{% include 'templates/reponse.twig' with {'reponses': question.reponses} %}
+		{% endif %}
+		{% if session.user %}
+			<div>
+				<form method="POST" action="/reponses/add/" class="form-horizontal" name="addReponse">
+					<div class="form-group">
+						<label for="reponse" class="col-sm-2 control-label">Réponse*</label>
+						<div class="col-sm-10">
+							<textarea class="form-control col-md-12" rows="3" name="reponse" id="reponse" placeholder="Réponse" maxlength="2047" required>{{ post.reponse }}</textarea>
+						</div>
+						<script>
+							CKEDITOR.replace('reponse');
+						</script>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<input type="submit" class="btn btn-default" value="Envoyer">
+						</div>
+					</div>
+					<input type="hidden" name="id_question" value="{{ question.id_question }}">
+					<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+				</form>
+			</div>
+		{% else %}
+			<div class="alert alert-info" role="alert">
+				<div class="flex">
+					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+					<ul>
+						<li>Vous devez être connecté pour répondre</li>
+					</ul>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

@@ -1326,34 +1326,34 @@ void foo()
 );
 
 -- Insertion pour la table mot_cle
-INSERT IGNORE INTO `technote`.`mot_cle` (label) VALUES
-  ('HTML/CSS'),
-  ('JavaScript'),
-  ('PHP'),
-  ('C'),
-  ('C++'),
-  ('.NET'),
-  ('Java'),
-  ('Python'),
-  ('BDD'),
-  ('Mobile'),
-  ('VBA'),
-  ('Ruby'),
-  ('Windows'),
-  ('Linux'),
-  ('Mac'),
-  ('Graphisme'),
-  ('Jeux vidéos'),
-  ('Mathématiques'),
-  ('Physique'),
-  ('Chimie'),
-  ('Électronique'),
-  ('Sécurité'),
-  ('Expressions régulières'),
-  ('Sessions'),
-  ('Android'),
-  ('Mémoire'),
-  ('Navigateur')
+INSERT IGNORE INTO `technote`.`mot_cle` (label, actif) VALUES
+  ('HTML/CSS', 1),
+  ('JavaScript', 1),
+  ('PHP', 1),
+  ('C', 1),
+  ('C++', 1),
+  ('.NET', 1),
+  ('Java', 1),
+  ('Python', 1),
+  ('BDD', 1),
+  ('Mobile', 1),
+  ('VBA', 1),
+  ('Ruby', 1),
+  ('Windows', 1),
+  ('Linux', 1),
+  ('Mac', 1),
+  ('Graphisme', 1),
+  ('Jeux vidéos', 1),
+  ('Mathématiques', 1),
+  ('Physique', 1),
+  ('Chimie', 1),
+  ('Électronique', 1),
+  ('Sécurité', 1),
+  ('Expressions régulières', 1),
+  ('Sessions', 1),
+  ('Android', 1),
+  ('Mémoire', 1),
+  ('Navigateur', 1)
 ;
 
 -- Insertion pour la table decrire
@@ -1426,3 +1426,771 @@ INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, da
 VALUES ('27', 'Fantastique technote !', '2', '2016-04-09 10:07:54', '19', NULL, NULL, NULL, '1');
 INSERT INTO `technote`.`commentaire` (id_commentaire, commentaire, id_auteur, date_creation, id_technote, id_commentaire_parent, date_modification, id_modificateur, visible)
 VALUES ('28', 'Il sera supprimer', '2', '2016-04-09 10:08:24', '19', NULL, NULL, NULL, '0');
+
+-- Insertion pour la table question
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (1, 'Lorem ipsum dolor sit amet',
+'At hoc in eo M. A mene tu ?
+Et quidem, inquit, vehementer errat; Facillimum id quidem est, inquam. Duo Reges: constructio interrete. Sit sane ista voluptas.
+<pre>
+<code class="language-css">body {
+    background-color: #d0e4fe;
+}
+
+h1 {
+    color: orange;
+    text-align: center;
+}
+
+p {
+    font-family: "Times New Roman";
+    font-size: 20px;
+}</code></pre>'
+  , '2016-03-18 14:37:17', 1, 1, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (2, 'Consectetur adipiscing elit in a urna finibus',
+'Tamen a proposito, inquam, aberramus. Frater et T. Cave putes quicquam esse verius. Invidiosum nomen est, infame, suspectum. Duo Reges: constructio interrete. Primum quid tu dicis breve?',
+'2016-03-18 15:17:47', 1, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (3, 'Donec ultrices dolor sed diam ultrices', 'Memini vero, inquam; Simus igitur contenti his. Duo Reges: constructio interrete. Est, ut dicis, inquit;', '2016-03-18 17:54:07', 2, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (4, 'Proin ac volutpat eros', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. De hominibus dici non necesse est. Falli igitur possumus. <i>At multis se probavit.</i> Quis istud, quaeso, nesciebat? Primum divisit ineleganter; </p>
+
+', '2016-03-18 22:27:11', 3, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (5, 'Cras eget dictum dui', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. An nisi populari fama? Peccata paria.', '2016-03-19 04:57:03', 10, 1, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (6, 'Integer et est tristique nulla pharetra ultrices', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tu quidem reddes; Quid adiuvas? <b>Duo Reges: constructio interrete.</b> <mark>Graccho, eius fere, aequalí?</mark> Quae diligentissime contra Aristonem dicuntur a Chryippo. Stoici scilicet. </p>
+
+<ol>
+	<li>Hoc enim identidem dicitis, non intellegere nos quam dicatis voluptatem.</li>
+	<li>Ergo, si semel tristior effectus est, hilara vita amissa est?</li>
+	<li>Illa tamen simplicia, vestra versuta.</li>
+	<li>Ex quo illud efficitur, qui bene cenent omnis libenter cenare, qui libenter, non continuo bene.</li>
+</ol>
+
+<pre>
+<code class="language-css">body {
+    background-color: #d0e4fe;
+}
+
+h1 {
+    color: orange;
+    text-align: center;
+}
+
+p {
+    font-family: "Times New Roman";
+    font-size: 20px;
+}</code></pre>
+
+
+', '2016-03-19 08:07:04', 8, 1, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (7, 'Praesent egestas risus in diam aliquet fringilla', 'Quod cum dixissent, ille contra. Esse enim, nisi eris, non potes.
+
+<pre>
+<code class="language-html5">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;
+   Exemple de HTML
+  &lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  Ceci est une phrase avec un &lt;a href="cible.html"&gt;hyperlien&lt;/a&gt;.
+  &lt;p&gt;
+   Ceci est un paragraphe où il n’y a pas d’hyperlien.
+  &lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+Duo Reges: constructio interrete. Quae sequuntur igitur?', '2016-03-19 09:37:17', 5, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (8, 'Sed nec condimentum ante', 'Esse enim, nisi eris, non potes. Cave putes quicquam esse verius.', '2016-03-19 11:01:28', 12, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (9, 'Etiam arcu mi', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Sed fac ista esse non inportuna;</a> Quam si explicavisset, non tam haesitaret. Nunc de hominis summo bono quaeritur; Nos commodius agimus. <a href=''http://loripsum.net/'' target=''_blank''>Duo Reges: constructio interrete.</a> Sed ad bona praeterita redeamus. </p>
+
+<ul>
+	<li>Virtutis, magnitudinis animi, patientiae, fortitudinis fomentis dolor mitigari solet.</li>
+	<li>Quid de Platone aut de Democrito loquar?</li>
+</ul>
+
+
+<ol>
+	<li>Totum genus hoc Zeno et qui ab eo sunt aut non potuerunt aut noluerunt, certe reliquerunt.</li>
+	<li>Quae cum dixisset paulumque institisset, Quid est?</li>
+	<li>Non enim, si malum est dolor, carere eo malo satis est ad bene vivendum.</li>
+	<li>Nunc ita separantur, ut disiuncta sint, quo nihil potest esse perversius.</li>
+</ol>
+
+
+', '2016-03-19 15:58:18', 4, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (10, 'Fusce tellus ligula, elementum non erat a', 'Iam in altera philosophiae parte. Quantum Aristoxeni ingenium consumptum videmus in musicis?
+<pre>
+<code class="language-css">body {
+    background-color: #d0e4fe;
+}
+
+h1 {
+    color: orange;
+    text-align: center;
+}
+
+p {
+    font-family: "Times New Roman";
+    font-size: 20px;
+}</code></pre>
+', '2016-03-19 20:20:19', 9, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (11, 'Praesent laoreet nunc risus', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quare attende, quaeso. Ut id aliis narrare gestiant? At certe gravius. Refert tamen, quo modo. </p>
+
+<ul>
+	<li>Duo Reges: constructio interrete.</li>
+	<li>Non enim, si malum est dolor, carere eo malo satis est ad bene vivendum.</li>
+	<li>Primum Theophrasti, Strato, physicum se voluit;</li>
+	<li>Hoc est dicere: Non reprehenderem asotos, si non essent asoti.</li>
+	<li>Est enim effectrix multarum et magnarum voluptatum.</li>
+</ul>
+
+
+', '2016-03-19 23:56:57', 11, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (12, 'Mollis in, consequat quis', 'Sed haec omittamus; Nullus est igitur cuiusquam dies natalis. Qui convenit? Ut pulsi recurrant?
+
+<pre>
+<code class="language-html5">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;
+   Exemple de HTML
+  &lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  Ceci est une phrase avec un &lt;a href="cible.html"&gt;hyperlien&lt;/a&gt;.
+  &lt;p&gt;
+   Ceci est un paragraphe où il n’y a pas d’hyperlien.
+  &lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+Et quidem, inquit, vehementer errat; Non semper, inquam;', '2016-03-20 12:09:52', 3, 1, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (13, 'Maecenas semper dolor id arcu auctor interdum', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non semper, inquam; Cur iustitia laudatur? <a href=''http://loripsum.net/'' target=''_blank''>Disserendi artem nullam habuit.</a> <a href=''http://loripsum.net/'' target=''_blank''>Traditur, inquit, ab Epicuro ratio neglegendi doloris.</a> <b>Immo alio genere;</b> Duo Reges: constructio interrete. Satis est ad hoc responsum. <b>Nihilo beatiorem esse Metellum quam Regulum.</b> Pugnant Stoici cum Peripateticis. </p>
+
+<pre>
+Amicitiae vero locus ubi esse potest aut quis amicus esse
+cuiquam, quem non ipsum amet propter ipsum?
+
+Atque ut a corpore ordiar, videsne ut, si quae in membris
+prava aut debilitata aut inminuta sint, occultent homines?
+</pre>
+
+
+<dl>
+	<dt><dfn>Memini vero, inquam;</dfn></dt>
+	<dd>Nam Pyrrho, Aristo, Erillus iam diu abiecti.</dd>
+	<dt><dfn>Praeclare hoc quidem.</dfn></dt>
+	<dd>Si est nihil nisi corpus, summa erunt illa: valitudo, vacuitas doloris, pulchritudo, cetera.</dd>
+	<dt><dfn>Quis enim redargueret?</dfn></dt>
+	<dd>Quis istud, quaeso, nesciebat?</dd>
+	<dt><dfn>At coluit ipse amicitias.</dfn></dt>
+	<dd>Sed tamen intellego quid velit.</dd>
+	<dt><dfn>Sed videbimus.</dfn></dt>
+	<dd>Sed tamen intellego quid velit.</dd>
+</dl>
+
+
+<ul>
+	<li>Apud ceteros autem philosophos, qui quaesivit aliquid, tacet;</li>
+	<li>Nec lapathi suavitatem acupenseri Galloni Laelius anteponebat, sed suavitatem ipsam neglegebat;</li>
+</ul>
+
+
+<ol>
+	<li>Terram, mihi crede, ea lanx et maria deprimet.</li>
+	<li>Egone non intellego, quid sit don Graece, Latine voluptas?</li>
+	<li>Idcirco enim non desideraret, quia, quod dolore caret, id in voluptate est.</li>
+	<li>Cupit enim dícere nihil posse ad beatam vitam deesse sapienti.</li>
+	<li>Ut alios omittam, hunc appello, quem ille unum secutus est.</li>
+</ol>
+
+
+<blockquote cite=''http://loripsum.net''>
+	Aliud igitur esse censet gaudere, aliud non dolere.
+</blockquote>
+
+
+', '2016-03-20 21:36:47', 10, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (14, 'Suspendisse sit amet fringilla', 'Quid vero? Graece donan, Latine voluptatem vocant.
+
+<pre>
+<code class="language-html5">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;
+   Exemple de HTML
+  &lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  Ceci est une phrase avec un &lt;a href="cible.html"&gt;hyperlien&lt;/a&gt;.
+  &lt;p&gt;
+   Ceci est un paragraphe où il n’y a pas d’hyperlien.
+  &lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+Igitur ne dolorem quidem. Stoicos roga.', '2016-03-21 03:03:18', 12, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (15, 'Morbi vestibulum vel neque a laoreet', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Ita prorsus, inquam;</a> Quonam modo? Pollicetur certe. Praeclare hoc quidem. <a href=''http://loripsum.net/'' target=''_blank''>Duo Reges: constructio interrete.</a> Ita multa dicunt, quae vix intellegam. </p>
+
+<ul>
+	<li>Immo istud quidem, inquam, quo loco quidque, nisi iniquum postulo, arbitratu meo.</li>
+	<li>Nam si +omnino nos+ neglegemus, in Aristonea vitia incidemus et peccata obliviscemurque quae virtuti ipsi principia dederimus;</li>
+	<li>Duarum enim vitarum nobis erunt instituta capienda.</li>
+	<li>Hoc positum in Phaedro a Platone probavit Epicurus sensitque in omni disputatione id fieri oportere.</li>
+	<li>An hoc usque quaque, aliter in vita?</li>
+</ul>
+
+
+<pre>
+Negabat igitur ullam esse artem, quae ipsa a se
+proficisceretur;
+
+Quamquam id quidem licebit iis existimare, qui legerint.
+</pre>
+
+
+<ol>
+	<li>Paulum, cum regem Persem captum adduceret, eodem flumine invectio?</li>
+	<li>Nos commodius agimus.</li>
+	<li>Nam quibus rebus efficiuntur voluptates, eae non sunt in potestate sapientis.</li>
+	<li>Itaque hic ipse iam pridem est reiectus;</li>
+</ol>
+
+
+<blockquote cite=''http://loripsum.net''>
+	Quibus natura iure responderit non esse verum aliunde finem beate vivendi, a se principia rei gerendae peti;
+</blockquote>
+
+
+<dl>
+	<dt><dfn>Qui convenit?</dfn></dt>
+	<dd>Quo modo autem optimum, si bonum praeterea nullum est?</dd>
+	<dt><dfn>Tu quidem reddes;</dfn></dt>
+	<dd>Sin eam, quam Hieronymus, ne fecisset idem, ut voluptatem illam Aristippi in prima commendatione poneret.</dd>
+</dl>
+
+
+', '2016-03-21 09:05:36', 11, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (16, 'Nulla eu rhoncus tincidunt', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Satis est ad hoc responsum.</a> <b>Sed residamus, inquit, si placet.</b> </p>
+
+<ul>
+	<li>Duo Reges: constructio interrete.</li>
+	<li>Sed in rebus apertissimis nimium longi sumus.</li>
+</ul>
+
+
+<pre>
+An me, inquis, tam amentem putas, ut apud imperitos isto
+modo loquar?
+
+Quis contra in illa aetate pudorem, constantiam, etiamsi sua
+nihil intersit, non tamen diligat?
+</pre>
+
+
+<ol>
+	<li>Quippe, inquieta cum tam docuerim gradus istam rem non habere quam virtutem, in qua sit ipsum etíam beatum.</li>
+	<li>Maximus dolor, inquit, brevis est.</li>
+	<li>At miser, si in flagitiosa et vitiosa vita afflueret voluptatibus.</li>
+	<li>Laelius clamores sofòw ille so lebat Edere compellans gumias ex ordine nostros.</li>
+	<li>Nulla erit controversia.</li>
+	<li>Octavio fuit, cum illam severitatem in eo filio adhibuit, quem in adoptionem D.</li>
+</ol>
+
+
+<blockquote cite=''http://loripsum.net''>
+	Cur igitur easdem res, inquam, Peripateticis dicentibus verbum nullum est, quod non intellegatur?
+</blockquote>
+
+
+<dl>
+	<dt><dfn>At certe gravius.</dfn></dt>
+	<dd>Quorum altera prosunt, nocent altera.</dd>
+	<dt><dfn>Age sane, inquam.</dfn></dt>
+	<dd>Quid loquor de nobis, qui ad laudem et ad decus nati, suscepti, instituti sumus?</dd>
+	<dt><dfn>Hic ambiguo ludimur.</dfn></dt>
+	<dd>Quo invento omnis ab eo quasi capite de summo bono et malo disputatio ducitur.</dd>
+	<dt><dfn>Numquam facies.</dfn></dt>
+	<dd>Duarum enim vitarum nobis erunt instituta capienda.</dd>
+</dl>
+
+
+', '2016-03-21 20:01:36', 6, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (17, 'Class aptent taciti sociosqu ad litora', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Summae mihi videtur inscitiae. <b>Ego vero isti, inquam, permitto.</b> Hoc non est positum in nostra actione. Equidem e Cn. Illi enim inter se dissentiunt. Duo Reges: constructio interrete. </p>
+
+<dl>
+	<dt><dfn>Quis hoc dicit?</dfn></dt>
+	<dd>Tum Triarius: Posthac quidem, inquit, audacius.</dd>
+	<dt><dfn>Negare non possum.</dfn></dt>
+	<dd>Tanti autem aderant vesicae et torminum morbi, ut nihil ad eorum magnitudinem posset accedere.</dd>
+	<dt><dfn>Eam stabilem appellas.</dfn></dt>
+	<dd>Ego vero volo in virtute vim esse quam maximam;</dd>
+	<dt><dfn>Falli igitur possumus.</dfn></dt>
+	<dd>Qui potest igitur habitare in beata vita summi mali metus?</dd>
+</dl>
+
+
+<pre>
+Nam si dicent ab illis has res esse tractatas, ne ipsos
+quidem Graecos est cur tam multos legant, quam legendi sunt.
+
+Licet hic rursus ea commemores, quae optimis verbis ab
+Epicuro de laude amicitiae dicta sunt.
+</pre>
+
+
+<blockquote cite=''http://loripsum.net''>
+	Omnis sermo elegans sumi potest, tum varietas est tanta artium, ut nemo sine eo instrumento ad ullam rem illustriorem satis ornatus possit accedere.
+</blockquote>
+
+
+<ul>
+	<li>Non enim solum Torquatus dixit quid sentiret, sed etiam cur.</li>
+	<li>Te ipsum, dignissimum maioribus tuis, voluptasne induxit, ut adolescentulus eriperes P.</li>
+</ul>
+
+
+<ol>
+	<li>Sin autem ad animum, falsum est, quod negas animi ullum esse gaudium, quod non referatur ad corpus.</li>
+	<li>Commoda autem et incommoda in eo genere sunt, quae praeposita et reiecta diximus;</li>
+	<li>Hi curatione adhibita levantur in dies, valet alter plus cotidie, alter videt.</li>
+	<li>Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;</li>
+	<li>Istam voluptatem perpetuam quis potest praestare sapienti?</li>
+</ol>
+
+
+', '2016-03-22 07:55:39', 8, 1, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (18, 'Torquent per conubia nostra', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quid enim possumus hoc agere divinius? Quis istud possit, inquit, negare? Quae cum essent dicta, discessimus. Praeteritis, inquit, gaudeo. Quis enim redargueret? Venit ad extremum; </p>
+
+<ul>
+	<li>Duo Reges: constructio interrete.</li>
+	<li>O magnam vim ingenii causamque iustam, cur nova existeret disciplina! Perge porro.</li>
+	<li>Quae similitudo in genere etiam humano apparet.</li>
+	<li>Sed est forma eius disciplinae, sicut fere ceterarum, triplex: una pars est naturae, disserendi altera, vivendi tertia.</li>
+</ul>
+
+
+<ol>
+	<li>Theophrastum tamen adhibeamus ad pleraque, dum modo plus in virtute teneamus, quam ille tenuit, firmitatis et roboris.</li>
+	<li>Collatio igitur ista te nihil iuvat.</li>
+	<li>Sed quid minus probandum quam esse aliquem beatum nec satis beatum?</li>
+	<li>Si ad corpus pertinentibus, rationes tuas te video compensare cum istis doloribus, non memoriam corpore perceptarum voluptatum;</li>
+</ol>
+
+
+<blockquote cite=''http://loripsum.net''>
+	Constituto autem illo, de quo ante diximus, quod honestum esset, id esse solum bonum, intellegi necesse est pluris id, quod honestum sit, aestimandum esse quam illa media, quae ex eo comparentur.
+</blockquote>
+
+
+<pre>
+Me ipsum esse dicerem, inquam, nisi mihi viderer habere bene
+cognitam voluptatem et satis firme conceptam animo atque
+comprehensam.
+
+Nunc ita separantur, ut disiuncta sint, quo nihil potest
+esse perversius.
+</pre>
+
+
+<dl>
+	<dt><dfn>Quo tandem modo?</dfn></dt>
+	<dd>Si mala non sunt, iacet omnis ratio Peripateticorum.</dd>
+	<dt><dfn>Ut pulsi recurrant?</dfn></dt>
+	<dd>Virtutibus igitur rectissime mihi videris et ad consuetudinem nostrae orationis vitia posuisse contraria.</dd>
+	<dt><dfn>Sed haec omittamus;</dfn></dt>
+	<dd>Nam Metrodorum non puto ipsum professum, sed, cum appellaretur ab Epicuro, repudiare tantum beneficium noluisse;</dd>
+	<dt><dfn>Magna laus.</dfn></dt>
+	<dd>Sed quid attinet de rebus tam apertis plura requirere?</dd>
+	<dt><dfn>Quis enim redargueret?</dfn></dt>
+	<dd>Aliena dixit in physicis nec ea ipsa, quae tibi probarentur;</dd>
+</dl>
+
+
+', '2016-03-22 17:00:30', 9, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (19, 'Facilisis in ex id mollis', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href=''http://loripsum.net/'' target=''_blank''>Qui est in parvis malis.</a> Multoque hoc melius nos veriusque quam Stoici. <mark>Huius, Lyco, oratione locuples, rebus ipsis ielunior.</mark> <a href=''http://loripsum.net/'' target=''_blank''>Non quam nostram quidem, inquit Pomponius iocans;</a> Sed virtutem ipsam inchoavit, nihil amplius. Duo Reges: constructio interrete. <i>Idem iste, inquam, de voluptate quid sentit?</i> </p>
+
+<ol>
+	<li>Ut scias me intellegere, primum idem esse dico voluptatem, quod ille don.</li>
+	<li>Nec enim, dum metuit, iustus est, et certe, si metuere destiterit, non erit;</li>
+	<li>Partim cursu et peragratione laetantur, congregatione aliae coetum quodam modo civitatis imitantur;</li>
+	<li>Dic in quovis conventu te omnia facere, ne doleas.</li>
+	<li>Si quicquam extra virtutem habeatur in bonis.</li>
+	<li>Ita ceterorum sententiis semotis relinquitur non mihi cum Torquato, sed virtuti cum voluptate certatio.</li>
+</ol>
+
+<pre><code class="language-php-brief">// la fonction strtolower renvoie en minuscules la chaîne de caractères passée en paramètre
+$lang = strtolower($_POST[''lang'']);
+
+if ($lang === ''fr'')
+    echo ''Vous parlez français !'';
+elseif ($lang === ''en'')
+    echo ''You speak English!'';
+else
+    echo ''Je ne vois pas quelle est votre langue !'';
+</code></pre>
+
+<dl>
+	<dt><dfn>Poterat autem inpune;</dfn></dt>
+	<dd>Pudebit te, inquam, illius tabulae, quam Cleanthes sane commode verbis depingere solebat.</dd>
+	<dt><dfn>Haec dicuntur inconstantissime.</dfn></dt>
+	<dd>Unum nescio, quo modo possit, si luxuriosus sit, finitas cupiditates habere.</dd>
+	<dt><dfn>Nos commodius agimus.</dfn></dt>
+	<dd>At multis se probavit.</dd>
+</dl>
+
+
+<ul>
+	<li>Expressa vero in iis aetatibus, quae iam confirmatae sunt.</li>
+	<li>Non dolere, inquam, istud quam vim habeat postea videro;</li>
+	<li>Indicant pueri, in quibus ut in speculis natura cernitur.</li>
+	<li>Sin autem eos non probabat, quid attinuit cum iis, quibuscum re concinebat, verbis discrepare?</li>
+</ul>
+
+
+<blockquote cite=''http://loripsum.net''>
+	Concede nihil esse bonum, nisi quod bonestum sit: concedendum est in virtute esse positam beatam vitam vide rursus retro: dato hoc dandum erit illud.
+</blockquote>
+
+
+<pre>
+Sed nonne merninisti licere mihi ista probare, quae sunt a
+te dicta?
+
+Quae in controversiam veniunt, de iis, si placet,
+disseramus.
+</pre>
+
+
+', '2016-03-22 19:35:06', 2, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (20, 'Hendrerit sem sed fermentum condimentum', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quid enim? <a href=''http://loripsum.net/'' target=''_blank''>Cur deinde Metrodori liberos commendas?</a> Duo Reges: constructio interrete. Nescio quo modo praetervolavit oratio. Quodsi ipsam honestatem undique pertectam atque absolutam. <a href=''http://loripsum.net/'' target=''_blank''>Omnes enim iucundum motum, quo sensus hilaretur.</a> </p>
+
+<ul>
+	<li>Huius, Lyco, oratione locuples, rebus ipsis ielunior.</li>
+	<li>Superiores tres erant, quae esse possent, quarum est una sola defensa, eaque vehementer.</li>
+	<li>Ut in voluptate sit, qui epuletur, in dolore, qui torqueatur.</li>
+	<li>In primo enim ortu inest teneritas ac mollitia quaedam, ut nec res videre optimas nec agere possint.</li>
+	<li>Ita multo sanguine profuso in laetitia et in victoria est mortuus.</li>
+	<li>Cur igitur, cum de re conveniat, non malumus usitate loqui?</li>
+</ul>
+
+
+<dl>
+	<dt><dfn>Sint ista Graecorum;</dfn></dt>
+	<dd>Pudebit te, inquam, illius tabulae, quam Cleanthes sane commode verbis depingere solebat.</dd>
+	<dt><dfn>Quis enim redargueret?</dfn></dt>
+	<dd>Atque ab his initiis profecti omnium virtutum et originem et progressionem persecuti sunt.</dd>
+	<dt><dfn>Scaevolam M.</dfn></dt>
+	<dd>Non est igitur summum malum dolor.</dd>
+	<dt><dfn>Paria sunt igitur.</dfn></dt>
+	<dd>Ea, quae dialectici nunc tradunt et docent, nonne ab illis instituta sunt aut inventa sunt?</dd>
+	<dt><dfn>Quonam, inquit, modo?</dfn></dt>
+	<dd>Quid autem habent admirationis, cum prope accesseris?</dd>
+	<dt><dfn>Stoici scilicet.</dfn></dt>
+	<dd>Numquam facies.</dd>
+</dl>
+
+
+<ol>
+	<li>At quicum ioca seria, ut dicitur, quicum arcana, quicum occulta omnia?</li>
+	<li>Quae similitudo in genere etiam humano apparet.</li>
+	<li>Tu vero, inquam, ducas licet, si sequetur;</li>
+	<li>Nosti, credo, illud: Nemo pius est, qui pietatem-;</li>
+</ol>
+
+
+<blockquote cite=''http://loripsum.net''>
+	An, si id probas, fieri ita posse negas, ut ii, qui virtutis compotes sint, etiam malis quibusdam affecti beati sint?
+</blockquote>
+
+
+<pre>
+Is hoc melior, quam Pyrrho, quod aliquod genus appetendi
+dedit, deterior quam ceteri, quod penitus a natura recessit.
+
+Quid in isto egregio tuo officio et tanta fide-sic enim
+existimo-ad corpus refers?
+</pre>
+
+
+', '2016-03-24 10:55:31', 4, 0, NULL, NULL, 1);
+INSERT INTO `technote`.`question` (id_question, titre, question, date_question, id_auteur, resolu, date_modification, id_modificateur, visible) VALUES (21, 'Phasellus eleifend tempor tortor', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sullae consulatum? <mark>Non est igitur summum malum dolor.</mark> <code>Duo Reges: constructio interrete.</code> Quid iudicant sensus? Tubulo putas dicere? </p>
+
+<pre>
+Primum enim, si vera sunt ea, quorum recordatione te gaudere
+dicis, hoc est, si vera sunt tua scripta et inventa, gaudere
+non potes.
+
+Epicurus autem cum in prima commendatione voluptatem
+dixisset, si eam, quam Aristippus, idem tenere debuit
+ultimum bonorum, quod ille;
+</pre>
+
+<pre><code class="language-php-brief">// la fonction strtolower renvoie en minuscules la chaîne de caractères passée en paramètre
+$lang = strtolower($_POST[''lang'']);
+
+if ($lang === ''fr'')
+    echo ''Vous parlez français !'';
+elseif ($lang === ''en'')
+    echo ''You speak English!'';
+else
+    echo ''Je ne vois pas quelle est votre langue !'';
+</code></pre>
+
+<ul>
+	<li>Ad corpus diceres pertinere-, sed ea, quae dixi, ad corpusne refers?</li>
+	<li>Summus dolor plures dies manere non potest?</li>
+	<li>Duarum enim vitarum nobis erunt instituta capienda.</li>
+	<li>Idemque diviserunt naturam hominis in animum et corpus.</li>
+	<li>Res enim concurrent contrariae.</li>
+	<li>Vitiosum est enim in dividendo partem in genere numerare.</li>
+</ul>
+
+
+<blockquote cite=''http://loripsum.net''>
+	Alia quaedam dicent, credo, magna antiquorum esse peccata, quae ille veri investigandi cupidus nullo modo ferre potuerit.
+</blockquote>
+
+
+<dl>
+	<dt><dfn>Hunc vos beatum;</dfn></dt>
+	<dd>Quis contra in illa aetate pudorem, constantiam, etiamsi sua nihil intersit, non tamen diligat?</dd>
+	<dt><dfn>Quae sequuntur igitur?</dfn></dt>
+	<dd>Quod ea non occurrentia fingunt, vincunt Aristonem;</dd>
+	<dt><dfn>Audeo dicere, inquit.</dfn></dt>
+	<dd>Sed venio ad inconstantiae crimen, ne saepius dicas me aberrare;</dd>
+</dl>
+
+
+<ol>
+	<li>Sed ille, ut dixi, vitiose.</li>
+	<li>Hoc est non modo cor non habere, sed ne palatum quidem.</li>
+	<li>Nullus est igitur cuiusquam dies natalis.</li>
+	<li>Nonne videmus quanta perturbatio rerum omnium consequatur, quanta confusio?</li>
+	<li>Qui enim voluptatem ipsam contemnunt, iis licet dicere se acupenserem maenae non anteponere.</li>
+</ol>
+
+
+', '2016-03-24 18:45:16', 5, 1, NULL, NULL, 1);
+
+-- Insertion pour la table clarifier
+INSERT IGNORE INTO `technote`.`clarifier` (id_question, id_mot_cle) VALUES
+  ('1', '1'), ('1', '12'),
+  ('2', '4'), ('2', '7'), ('2', '16'),
+  ('5', '17'), ('5', '13'),
+  ('10', '15'), ('10', '16'),
+  ('5', '11'), ('5', '9'),
+  ('16', '14'), ('16', '11'),
+  ('17', '12'),
+  ('18', '21'), ('18', '4'), ('18', '5'),
+  ('19', '4'), ('19', '14'),
+  ('20', '11'),
+  ('21', '1')
+;
+
+-- Insertion pour la table reponse
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (1, 'Et prima post Osdroenam quam, ut dictum est, ab hac descriptione discrevimus,
+<pre>
+<code class="language-css">body {
+    background-color: #d0e4fe;
+}
+
+h1 {
+    color: orange;
+    text-align: center;
+}
+
+p {
+    font-family: "Times New Roman";
+    font-size: 20px;
+}</code></pre>
+Commagena, nunc Euphratensis, clementer adsurgit, Hierapoli, vetere Nino et Samosata civitatibus amplis inlustris.', '2016-03-28 08:15:16', '1', NULL, '1', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (2, '<p>Cur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. <b>Lorem ipsum dolor sit amet, consectetur adipiscing elit</b>. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>', '2016-03-28 10:16:18', '1', NULL, '2', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (3, '<p>Piscing elit. Sit enim idem caecus, debilis. Quonam modo? Id Sextilius factum negabat. Si longus, levis. Duo Reges: constructio interrete. Sed quot homines, tot sententiae; </p>
+
+<p>Sumenda potius quam expetenda. Id enim natura desiderat. Sed ad bona praeterita redeamus. Quid ergo? </p>
+
+', '2016-03-28 12:41:43', '2', NULL, '4', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (4, '<p>Quidem reddes; Hoc simile tandem est? Res enim concurrent contrariae. Nos commodius agimus. Nobis aliter videtur, recte secusne, postea; </p>
+<pre>
+<code class="language-html5">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;
+   Exemple de HTML
+  &lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  Ceci est une phrase avec un &lt;a href="cible.html"&gt;hyperlien&lt;/a&gt;.
+  &lt;p&gt;
+   Ceci est un paragraphe où il n’y a pas d’hyperlien.
+  &lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Refert tamen, quo modo. Duo Reges: constructio interrete. Tenent mordicus. Odium autem et invidiam facile vitabis. Utilitatis causa amicitia est quaesita. Immo alio genere; </p>
+
+', '2016-03-28 15:53:34', '4', NULL, '8', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (5, '<p>Elit. Tanta vis admonitionis inest in locis; <i>Contemnit enim disserendi elegantiam, confuse loquitur.</i> </p>
+
+<p><i>Quid adiuvas?</i> Polycratem Samium felicem appellabant. Duo Reges: constructio interrete. Scaevolam M. </p>
+
+', '2016-03-28 19:11:19', '4', '4', '3', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (6, '<p>Tamen a proposito, inquam, aberramus. Quonam, inquit, modo? Ea possunt paria non esse. Sint modo partes vitae beatae. Certe, nisi voluptatem tanti aestimaretis. </p>
+<pre><code class="language-php-brief">// la fonction strtolower renvoie en minuscules la chaîne de caractères passée en paramètre
+$lang = strtolower($_POST[''lang'']);
+
+if ($lang === ''fr'')
+    echo ''Vous parlez français !'';
+elseif ($lang === ''en'')
+    echo ''You speak English!'';
+else
+    echo ''Je ne vois pas quelle est votre langue !'';
+</code></pre>
+<p>Duo Reges: constructio interrete. Tubulo putas dicere? Sed ille, ut dixi, vitiose. Vide, quantum, inquam, fallare, Torquate. Cur iustitia laudatur? A mene tu? </p>
+
+', '2016-03-28 19:22:56', '7', NULL, '10', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (7, '<p>Tollenda est atque extrahenda radicitus. Efficiens dici potest. Equidem e Cn. Sequitur disserendi ratio cognitioque naturae; </p>
+
+<pre>
+<code class="language-html5">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;
+   Exemple de HTML
+  &lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  Ceci est une phrase avec un &lt;a href="cible.html"&gt;hyperlien&lt;/a&gt;.
+  &lt;p&gt;
+   Ceci est un paragraphe où il n’y a pas d’hyperlien.
+  &lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Nihil enim hoc differt. Duo Reges: constructio interrete. Simus igitur contenti his. Verum hoc idem saepe faciamus. </p>
+
+', '2016-03-28 20:36:46', '10', NULL, '12', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (8, 'Quod cum dixissent, ille contra. Cur haec eadem Democritus? Nos commodius agimus. Frater et T. Quibus ego vehementer assentior.
+
+Duo Reges: constructio interrete. Cur id non ita fit?', '2016-03-28 21:55:34', '10', NULL, '6', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (9, '<p><b>Idem iste, inquam, de voluptate quid sentit?</b> Confecta res esset. <i>Equidem e Cn.</i> Graece donan, Latine voluptatem vocant. Cur deinde Metrodori liberos commendas? Duo Reges: constructio interrete. Sed tamen intellego quid velit. Sin aliud quid voles, postea. </p>
+
+<p>Frater et T. Prioris generis est docilitas, memoria; Sed quot homines, tot sententiae; Nulla erit controversia. Sed videbimus. Quid Zeno? </p>
+
+', '2016-03-28 23:08:06', '10', '8', '1', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (10, '<p>Lorem ipsum adipiscing elit. <i>At hoc in eo M.</i> <i>Duo Reges: constructio interrete.</i> Quo tandem modo? Tum mihi Piso: Quid ergo? Peccata paria. </p>
+
+<pre><code class="language-php-brief">// la fonction strtolower renvoie en minuscules la chaîne de caractères passée en paramètre
+$lang = strtolower($_POST[''lang'']);
+
+if ($lang === ''fr'')
+    echo ''Vous parlez français !'';
+elseif ($lang === ''en'')
+    echo ''You speak English!'';
+else
+    echo ''Je ne vois pas quelle est votre langue !'';
+</code></pre>
+
+<p>Prioris generis est docilitas, memoria; <b>Simus igitur contenti his.</b> Si id dicis, vicimus. Egone quaeris, inquit, quid sentiam? </p>
+
+', '2016-03-29 03:51:45', '14', NULL, '3', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (11, '<p>Sit amet, consectetur adipiscing elit. <i>Res enim concurrent contrariae.</i> Mihi enim satis est, ipsis non satis. Sedulo, inquam, faciam. Id Sextilius factum negabat. <i>Si longus, levis.</i> <i>Sed ea mala virtuti magnitudine obruebantur.</i> </p>
+
+<p>Duo Reges: constructio interrete. <i>Perge porro;</i> Quis hoc dicit? Sullae consulatum? Non semper, inquam; </p>
+
+', '2016-03-29 07:59:56', '14', '10', '1', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (12, '<p>Tetur adipiscing elit. Praeteritis, inquit, gaudeo. Bonum integritas corporis: misera debilitas. Si longus, levis dictata sunt. Quid Zeno? At eum nihili facit; Aliter enim explicari, quod quaeritur, non potest. </p>
+
+<pre>
+<code class="language-css">body {
+    background-color: #d0e4fe;
+}
+
+h1 {
+    color: orange;
+    text-align: center;
+}
+
+p {
+    font-family: "Times New Roman";
+    font-size: 20px;
+}</code></pre>
+<p>Tum Torquatus: Prorsus, inquit, assentior; Duo Reges: constructio interrete. Eam stabilem appellas. Eadem nunc mea adversum te oratio est. <mark>Quod equidem non reprehendo;</mark> Urgent tamen et nihil remittunt. </p>
+
+', '2016-03-29 08:02:31', '18', NULL, '11', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (13, '<p><mark>Qualem igitur hominem natura inchoavit?</mark> Quid igitur, inquit, eos responsuros putas? Zenonis est, inquam, hoc Stoici. Quis hoc dicit? <i>Duo Reges: constructio interrete.</i> Certe, nisi voluptatem tanti aestimaretis. Haec dicuntur inconstantissime. Utilitatis causa amicitia est quaesita. </p>
+
+<p><i>Cyrenaici quidem non recusant;</i> Summae mihi videtur inscitiae. <mark>Cur id non ita fit?</mark> Nihil sane. Prodest, inquit, mihi eo esse animo. Praeteritis, inquit, gaudeo. Est, ut dicis, inquam. Hic ambiguo ludimur. </p>
+
+', '2016-03-29 12:00:01', '18', NULL, '1', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (14, '<p>Amet, consectetur adipiscing elit. At coluit ipse amicitias. Quaerimus enim finem bonorum. Est, ut dicis, inquit; Frater et T. Collatio igitur ista te nihil iuvat. Quid ergo hoc loco intellegit honestum? </p>
+
+<p>Equidem, sed audistine modo de Carneade? <b>Refert tamen, quo modo.</b> Iam contemni non poteris. Et ille ridens: Video, inquit, quid agas; Igitur ne dolorem quidem. </p>
+
+<p>Duo Reges: constructio interrete. Quid de Pythagora? </p>
+
+', '2016-03-29 13:08:09', '19', NULL, '6', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (15, '<p>Adipiscing elit. Duo Reges: constructio interrete. Primum in nostrane potestate est, quid meminerimus? Sed residamus, inquit, si placet. Proclivi currit oratio. An hoc usque quaque, aliter in vita? Sed nunc, quod agimus; Collige omnia, quae soletis: Praesidium amicorum. </p>
+
+<p>Quantum Aristoxeni ingenium consumptum videmus in musicis? Haeret in salebra. Que Manilium, ab iisque M. Quod quidem iam fit etiam in Academia. Fortemne possumus dicere eundem illum Torquatum? Rationis enim perfectio est virtus; </p>
+
+<pre>
+<code class="language-css">body {
+    background-color: #d0e4fe;
+}
+
+h1 {
+    color: orange;
+    text-align: center;
+}
+
+p {
+    font-family: "Times New Roman";
+    font-size: 20px;
+}</code></pre>
+<p>Bonum patria: miserum exilium. Cave putes quicquam esse verius. Efficiens dici potest. <i>Poterat autem inpune;</i> At certe gravius. Tollenda est atque extrahenda radicitus. Qui est in parvis malis. </p>
+
+', '2016-03-29 14:05:18', '20', NULL, '7', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (16, '<p>Lorem consectetur adipiscing elit. <mark>Tubulo putas dicere?</mark> Negare non possum. Falli igitur possumus. <b>Non potes, nisi retexueris illa.</b> Qualem igitur hominem natura inchoavit? </p>
+
+<p>Duo Reges: constructio interrete. <b>Tu quidem reddes;</b> Si longus, levis dictata sunt. Magna laus. Eaedem res maneant alio modo. <mark>Non igitur bene.</mark> <b>Hic nihil fuit, quod quaereremus.</b> </p>
+
+', '2016-03-29 18:15:00', '20', '15', '2', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (17, '<p>Dolor sit amet, consectetur adipiscing elit. Cur haec eadem Democritus? Qua tu etiam inprudens utebare non numquam. Bonum patria: miserum exilium. <b>Duo Reges: constructio interrete.</b> Immo videri fortasse. Respondeat totidem verbis. </p>
+<pre>
+<code class="language-html5">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;
+   Exemple de HTML
+  &lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  Ceci est une phrase avec un &lt;a href="cible.html"&gt;hyperlien&lt;/a&gt;.
+  &lt;p&gt;
+   Ceci est un paragraphe où il n’y a pas d’hyperlien.
+  &lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Expectoque quid ad id, quod quaerebam, respondeas. Idemne, quod iucunde? Nihil illinc huc pervenit. <mark>Tollitur beneficium, tollitur gratia, quae sunt vincla concordiae.</mark> Scrupulum, inquam, abeunti; </p>
+
+', '2016-03-29 18:20:54', '20', NULL, '8', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (18, '<p>Consectetur adipiscing elit. Sin aliud quid voles, postea. <i>Quis enim redargueret?</i> </p>
+
+<p>Tu quidem reddes; Nunc agendum est subtilius. </p>
+
+', '2016-03-29 19:09:21', '21', NULL, '9', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (19, '<p><b>Ergo, inquit, tibi Q.</b> Sed tamen intellego quid velit. Tria genera bonorum; Sequitur disserendi ratio cognitioque naturae; </p>
+
+<p><mark>Rationis enim perfectio est virtus;</mark> At ille pellit, qui permulcet sensum voluptate. Esse enim, nisi eris, non potes. Duo Reges: constructio interrete. Quaerimus enim finem bonorum. Que Manilium, ab iisque M. Quod equidem non reprehendo; Quid enim possumus hoc agere divinius? </p>
+
+', '2016-03-29 19:59:48', '21', NULL, '5', NULL, NULL, '1');
+INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (20, '<p>Sed fortuna fortis; Qui convenit? Quare attende, quaeso. <mark>Id est enim, de quo quaerimus.</mark> Duo Reges: constructio interrete. </p>
+<pre><code class="language-php-brief">// la fonction strtolower renvoie en minuscules la chaîne de caractères passée en paramètre
+$lang = strtolower($_POST[''lang'']);
+
+if ($lang === ''fr'')
+    echo ''Vous parlez français !'';
+elseif ($lang === ''en'')
+    echo ''You speak English!'';
+else
+    echo ''Je ne vois pas quelle est votre langue !'';
+</code></pre>
+<p>Memini vero, inquam; Si quae forte-possumus. Sed mehercule pergrata mihi oratio tua. Contemnit enim disserendi elegantiam, confuse loquitur. </p>
+
+', '2016-03-29 20:22:33', '21', '19', '4', NULL, NULL, '1');

@@ -103,7 +103,8 @@ class Main extends Controleur{
 					// Sinon si un formulaire a été envoyé alors envoi du mail avec le lien de réinitialisation du mot de passe
 					elseif(!empty($_POST)){
 						// On essaye d'envoyé le mail avec le lien de réinitialisation du mot de passe
-						$vars['res'] = Membre::sendMailLostPass($_POST);
+						echo json_encode(Membre::sendMailLostPass($_POST));
+						exit();
 					}
 					$this->vue->display('membre_lostMDP.twig', $vars);
 				}
@@ -123,7 +124,7 @@ class Main extends Controleur{
 	/*------------------------
 	 		TECHNOTES
 	 --------------------------*/
-	public function technotes($action, $id, $vars) {
+	public function technotes($action, $id, $vars){
 		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 		switch($action){
 			
@@ -150,8 +151,24 @@ class Main extends Controleur{
 					$page = !empty($_GET['page']) ? $_GET['page'] : 1;
 					$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
 
+					// Si on veut faire une recherche de technotes
+					if(isset($_GET['recherche'])){
+						$vars['titrePage'] = 'Chercher une technote'; // <h1> de la page
+
+						// on recupère la page
+						$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+						// On essaye de récupèrer les technotes avec les critères de recherche
+						$res = Technote::recherche($_GET, $page);
+						if($res->success){
+							$vars['pagination'] = $res->pagination;
+							$vars['technotes'] = $res->technotes;
+						}
+						else{
+							$vars['res'] = $res;
+						}
+					}
 					// Si on veut que les technotes non publié de l'utilisateur
-					if(isset($_GET['nonpublie'])){
+					elseif(isset($_GET['nonpublie'])){
 						$vars['titrePage'] = 'Mes technotes non publié'; // <h1> de la page
 						$vars['active_technotes_non_publie'] = 1; // Active le style dans le sous menu toutes les technotes
 
@@ -242,6 +259,7 @@ class Main extends Controleur{
 					}
 				}
 				exit();
+
 			default:
 				$this->vue->display('404.twig', $vars);
 				exit();
@@ -301,19 +319,122 @@ class Main extends Controleur{
 	public function questions($action, $id, $vars){
 		switch($action){
 			case 'get':
-				$vars['titrePage'] = 'Les dernières questions'; // <h1> de la page
-				$vars['active_questions'] = 1; // Active le style dans le menu contact
+
+				$vars['active_questions'] = 1; // Active le style dans le menu questions
+				$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+
+				// Si on veut voir une question précise
+				if(!empty($id)){
+					// On récupère la technote
+					$vars['question'] = $questionDAO->getOne($id);
+					// Si la question existe
+					if($vars['question'] !== false){
+						$vars['titrePage'] = $vars['question']->titre; // <h1> de la page
+						$this->vue->display('questions_get_one.twig', $vars);
+					}
+					// Si la question n'existe pas
+					else
+						$this->vue->display('404.twig', $vars);
+				}
+				// si on veut voir toutes les questions
+				else{
+
+					// Si on veut faire une recherche de technotes
+					if(isset($_GET['recherche'])){
+						$vars['titrePage'] = 'Chercher une question'; // <h1> de la page
+
+						// on recupère la page
+						$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+						// On essaye de récupèrer les questions avec les critères de recherche
+						$res = Question::recherche($_GET, $page);
+						if($res->success){
+							$vars['pagination'] = $res->pagination;
+							$vars['questions'] = $res->questions;
+						}
+					}
+					else{
+						$vars['titrePage'] = 'Les dernières questions'; // <h1> de la page
+
+						// On récupère la page
+						$page = !empty($_GET['page']) ? $_GET['page'] : 1;
+
+						$vars['active_questions_all'] = 1; // Active le style dans le sous menu toutes les questions
+
+						// On récupère le nombre total de technotes
+						$count = $questionDAO->getCount();
+						// On créé la pagination
+						$vars['pagination'] = new Pagination($page, $count, NB_QUESTIONS_PAGE, '/questions/get?page=');
+						// On récupère les questions
+						$vars['questions'] = $questionDAO->getLastNQuestions(NB_QUESTIONS_PAGE, $vars['pagination']->debut);
+					}
+
+					$this->vue->display('questions_get_all.twig', $vars);
+				}
+				exit();
+
+			/**** ADD ****/
+			case 'add':
+				$vars['active_questions'] = 1; // Active le style dans le menu questions
+				$vars['active_questions_add'] = 1; // Active le style dans le sous menu ajout de questions
+				$vars['titrePage'] = 'Poser une question'; // <h1> de la page
+
+				// On récupère tous les mots clés
+				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+				$vars['motsCles'] = $motCleDAO->getAll();
 
 				// Si un formulaire a été envoyé
 				if(!empty($_POST)){
-					// On essaye de se connecter
-					/*$res = Membre::connexion($_POST);
-					if($res->success)
-						$res->redirect = "/membre";
-					echo json_encode($res);*/
-					exit();
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer la technote
+						$res = Question::addQuestion($_POST);
+						if($res->success)
+							$res->redirect = "/questions/get/$res->id_question";
+						echo json_encode($res);
+						exit();
+					}
 				}
-				$this->vue->display('questions_get_all.twig', $vars);
+				$this->vue->display('questions_add.twig', $vars);
+				exit();
+
+			/**** EDIT ****/
+			case 'edit':
+				$vars['active_questions'] = 1; // Active le style dans le menu questions
+				$vars['titrePage'] = 'Modifier une question'; // <h1> de la page
+				$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+				$vars['question'] = $questionDAO->getOne($id);
+
+				// On récupère tous les mots clés
+				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+				$vars['motsCles'] = $motCleDAO->getAll();
+
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer la technote
+						$res = Question::editQuestion($_POST, $id);
+						if($res->success)
+							$res->redirect = "/questions/get/$id";
+						echo json_encode($res);
+						exit();
+					}
+				}
+				$this->vue->display('questions_edit.twig', $vars);
+				exit();
+
+			/**** DROP ****/
+			case 'drop':
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Question::dropQuestion($id);
+						if($res->success)
+							$res->redirect = "/";
+						echo json_encode($res);
+					}
+				}
 				exit();
 
 			default:
@@ -380,79 +501,6 @@ class Main extends Controleur{
 				exit();
 		}
 	}
-	
-	/*--------------------------------
-	  			RECHERCHE
-	  ---------------------------------*/
-	public function recherche($action, $id, $vars){
-		if(!empty($_GET['type'])){
-			if($_GET['type'] == 'technote'){
-				$vars['active_recherche'] = 1; // Active le style dans le menu recherche
-				$vars['active_recherche_technote'] = 1; // Active le style dans le sous menu recherche de technote
-				$vars['titrePage'] = 'Chercher une technote'; // <h1> de la page
-
-				// Si un formulaire a été envoyé
-				if(!empty($_POST)){
-					$page = !empty($_GET['page']) ? $_GET['page'] : 1;
-					// On essaye de récupèrer les technotes avec les critères de recherche
-					$res = Technote::recherche($_POST, $page);
-					if($res->success)
-						$res->get['technotes'] = $this->vue->render('templates/technotesExtraits.twig', array('technotes' => $res->get));
-					echo json_encode($res);
-					exit();
-				}
-
-				$this->vue->display('recherche_technote_get.twig', $vars);
-				exit();
-			}elseif($_GET['type'] == 'question'){
-				$vars['active_recherche'] = 1; // Active le style dans le menu recherche
-				$vars['active_recherche_question'] = 1; // Active le style dans le sous menu recherche de question
-				$vars['titrePage'] = 'Chercher une question'; // <h1> de la page
-
-				// Si un formulaire a été envoyé
-				if(!empty($_POST)){
-					// On essaye de récupèrer les questions avec les critères de recherche
-					$res = Question::recherche($_POST);
-					echo json_encode($res);
-					exit();
-				}
-
-				$this->vue->display('recherche_question_get.twig', $vars);
-				exit();
-			}
-		}
-
-		
-		/*// On récupère tous les mots clés
-		$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
-		$vars['motsCles'] = $motCleDAO->getAll();
-		
-		// On récupère tous les auteurs
-		$membreDAO = new MembreDAO(BDD::getInstancePDO());
-		$vars['auteurs'] = $membreDAO->getAll();
-		
-		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
-		
-		if(!empty($_POST)){
-			$technotes = $technoteDAO->getTechnotesRecherchees($_POST);
-			
-		}
-		else {
-			// On récupère la page
-			$page = !empty($_GET['page']) ? $_GET['page'] : 1;
-			
-			// On récupère le nombre total de technotes
-			$count = $technoteDAO->getCount();
-			// On créé la pagination
-			$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTE_PAGE, '/recherche/get?page=');
-			// On récupère les technotes
-			$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTE_PAGE, $vars['pagination']->debut);
-			
-
-		}*/
-		$this->vue->display('404.twig', $vars);
-		exit();
-	}
 
 	/*------------------------
 	 		AUTOCOMPLETE
@@ -464,17 +512,25 @@ class Main extends Controleur{
 					$res = NULL;
 					if($_GET['type'] == 'motcle'){
 						$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
-						$res = $motCleDAO->getAllStartBy($_GET['term']);
+						$res = $motCleDAO->getAllComposedOf($_GET['term']);
 					}
 					elseif($_GET['type'] == 'membre'){
 						$membreDAO = new MembreDAO(BDD::getInstancePDO());
-						$res = $membreDAO->getAllStartBy($_GET['term']);
+						$res = $membreDAO->getAllComposedOf($_GET['term']);
+					}
+					elseif($_GET['type'] == 'titreTechnote'){
+						$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+						$res = $technoteDAO->getAllTitreComposedOf($_GET['term']);
+					}
+					elseif($_GET['type'] == 'titreQuestion'){
+						$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+						$res = $questionDAO->getAllTitreComposedOf($_GET['term']);
 					}
 					echo json_encode($res);
 					exit();
 				}
 				$this->vue->display('404.twig', $vars);
-
+				exit();
 
 			default:
 				$this->vue->display('404.twig', $vars);

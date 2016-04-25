@@ -148,11 +148,18 @@ class TechnoteDAO extends DAO{
 		return $res;
 	}
 
-	public function getTechnotesWithSearch($max, $conditions, $debut = 0){
+	public function getTechnotesWithSearch($max, $conditions, $count = false, $debut = 0){
 		$res = array();
 
 		$where = '';
+		$join = '';
 		$param = array();
+
+		// Partie titre technote
+		if(!empty($conditions['titre'])){
+			$param['titre'] = '%' . $conditions['titre'] . '%';
+			$where .= " AND t.titre LIKE :titre";
+		}
 
 		// Partie date
 		if(!empty($conditions['date_debut']) && !empty($conditions['date_fin'])){
@@ -160,26 +167,23 @@ class TechnoteDAO extends DAO{
 			$conditions['date_fin'] .= ' 23:59:59';
 			$param['date_debut'] = $conditions['date_debut'];
 			$param['date_fin'] = $conditions['date_fin'];
-			$where .= "WHERE date_creation BETWEEN :date_debut AND :date_fin";
+			$where .= " AND date_creation BETWEEN :date_debut AND :date_fin";
 		}
 		elseif(!empty($conditions['date_debut'])){
 			$conditions['date_debut'] .= ' 00:00:00';
 			$param['date_debut'] = $conditions['date_debut'];
-			$where .= "WHERE date_creation BETWEEN :date_debut AND NOW()";
+			$where .= " AND date_creation BETWEEN :date_debut AND NOW()";
 		}
 		elseif(!empty($conditions['date_fin'])){
 			$conditions['date_fin'] .= ' 23:59:59';
 			$param['date_fin'] = $conditions['date_fin'];
-			$where .= "WHERE date_creation < :date_fin";
+			$where .= " AND date_creation < :date_fin";
 		}
 
 		// Partie auteur
 		if(!empty($conditions['auteur'])){
 			$param['auteur'] = $conditions['auteur'];
-			if(empty($where))
-				$where .= "WHERE ma.pseudo = :auteur";
-			else
-				$where .= " AND ma.pseudo = :auteur";
+			$where .= " AND ma.pseudo = :auteur";
 		}
 
 		// Partie mots clés
@@ -188,26 +192,43 @@ class TechnoteDAO extends DAO{
 			$sqlMCNonObligatoire = '';
 			foreach($conditions['mots_cles'] as $mc){
 				if($mc[0] == '+'){
-					$sqlMCObligatoire .= $mc . ' AND ';
+					$sqlMCObligatoire .= '\'' . substr($mc, 1) . '\', '; // On enlee le + pour la requete
 				}
 				else{
-					$sqlMCNonObligatoire = $mc . ' OR ';
+					$sqlMCNonObligatoire .= '\'' . $mc . '\', ';
 				}
 			}
-			$sqlMCObligatoire = substr($sqlMCObligatoire, 0, -5);
-			$sqlMCNonObligatoire = substr($sqlMCNonObligatoire, 0, -4);
-			$concat = $sqlMCNonObligatoire . ' AND ' .$sqlMCObligatoire;
-			var_dump($sqlMCObligatoire, $sqlMCNonObligatoire, $concat);die;
+			$sqlMCObligatoire = substr($sqlMCObligatoire, 0, -2);
+			$sqlMCNonObligatoire = substr($sqlMCNonObligatoire, 0, -2);
+			if(!empty($sqlMCObligatoire)){
+				$where .= " AND NOT EXISTS(SELECT id_mot_cle FROM mot_cle mc WHERE label IN ($sqlMCObligatoire) AND NOT EXISTS(SELECT * FROM decrire d WHERE mc.id_mot_cle=d.id_mot_cle AND d.id_technote=t.id_technote))";
+			}
+			else{
+				$join .= ' LEFT JOIN decrire d ON d.id_technote=t.id_technote';
+				$where .= " AND d.id_mot_cle IN(SELECT id_mot_cle FROM mot_cle WHERE label IN($sqlMCNonObligatoire))";
+			}
+		}
 
-
+		if($count){
+			$sql = 'SELECT COUNT(DISTINCT t.id_technote) nbRes
+									FROM technote t
+									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
+									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
+									' . $join . '
+									WHERE publie = 1
+									' . $where;
+			$req = $this->pdo->prepare($sql);
+			$req->execute($param);
+			$res = $req->fetch();
+			return $res->nbRes;
 		}
 
 		$sql = 'SELECT DISTINCT t.*, ma.pseudo auteur, mm.pseudo modificateur
 									FROM technote t
 									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
-									INNER JOIN decrire d ON d.id_technote=t.id_technote
-									INNER JOIN mot_cle mc ON mc.id_mot_cle=d.id_mot_cle
+									' . $join . '
+									WHERE publie = 1
 									' . $where . '
 									ORDER BY date_creation DESC
 									LIMIT ' . $debut . ', ' . $max; // Ne peut pas etre preparé car échapé (LIMIT '9', '0' => FAIL)
@@ -242,106 +263,19 @@ class TechnoteDAO extends DAO{
 		return $res->nbTechnotes;
 	}
 
-	
-	/**
-	 * Récupère les $limit dernières technotes
-	 * @param string $author Le nom de l'auteur pour lequel on veut récupérer
-	 * les technotes
-	 * @return array Le tableau des technotes écries par $author
-	 */
-	public function getTechnotesByAuthor($author) {
-		$res = array();
-
-		$req = $this->pdo->prepare('SELECT t.*, m.pseudo auteur
-									FROM technote t
-									JOIN membre m ON m.id_membre = t.id_auteur
-									WHERE m.pseudo = :authorName');
-		
+	public function getAllTitreComposedOf($exp){
+		$req = $this->pdo->prepare('SELECT titre FROM technote WHERE titre LIKE :exp');
 		$req->execute(array(
-				'authorName' => $author
+			'exp' => '%' . $exp . '%'
 		));
-		
-		foreach($req->fetchAll() as $ligne){
-
-			// Recuperation des mot-cles correspondant a la technote
-			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
-			$ligne->motsCles  = $decrireDAO->getAllForOneTechnote($ligne->id_technote);
-
-			$res[] = new Technote(get_object_vars($ligne));
-		}
-		return $res;
+		return $req->fetchAll();
 	}
-	
-	public function getTechnotesByKeyWord($keyWord) {
-		$res = array();
-		$req = $this->pdo->prepare('SELECT t.*, m.pseudo auteur
-									FROM technote t
-									JOIN decrire d ON t.id_technote = d.id_technote
-									JOIN mot_cle mc ON mc.id_mot_cle = d.id_mot_cle
-									INNER JOIN membre m ON m.id_membre=t.id_auteur
-									WHERE mc.label = :keyWord');
-	
-		$req->execute(array(
-				'keyWord' => $keyWord
+
+	public function noVisible($id){
+		$req = $this->pdo->prepare('UPDATE technote SET visible = 0 WHERE id_technote = :id_technote');
+		return $req->execute(array(
+			'id_technote' => $id
 		));
-	
-		foreach($req->fetchAll() as $ligne){
-
-			// Recuperation des mot-cles correspondant a la technote
-			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
-			$ligne->motsCles  = $decrireDAO->getAllForOneTechnote($ligne->id_technote);
-
-			$res[] = new Technote(get_object_vars($ligne));
-		}
-	
-		return $res;
-	
 	}
-	
-	public function getTechnotesRecherchees($vars) {
-		$res = array();
-		
-		$les_mots_cles = "(";
-		$les_auteurs = "(";
-		
-		if(!empty($vars['id_mot_cle'])){
-			foreach ($vars['id_mot_cle'] as $id_mot_cle){
-				$les_mots_cles += $id_mot_cle.',';
-			}
-			
-		}
-		$les_mots_cles += ')';
-		
-		if(!empty($vars['id_auteurs'])){
-			foreach ($vars['id_auteurs'] as $id_auteur){
-				$les_auteurs += $id_auteur.',';
-			}
-				
-		}
-		$les_auteurs += ')';
-		
-		$req = $this->pdo->prepare('SELECT t.*
-									FROM technote t
-									JOIN decrire d ON t.id_technote = d.id_technote
-									JOIN mot_cle mc ON mc.id_mot_cle = d.id_mot_cle
-									WHERE mc.id_mot_cle IN :les_mot_cles 
-										AND t.id_auteur IN :les_auteurs');
-	
-		$req->execute(array(
-				'les_mots_cles' => $les_mots_cles,
-				'les_auteurs' => $les_auteurs
-		));
-	
-		foreach($req->fetchAll() as $ligne){
-	
-			// Recuperation des mot-cles correspondant a la technote
-			$decrireDAO = new DecrireDAO(BDD::getInstancePDO());
-			$ligne->motsCles  = $decrireDAO->getAllForOneTechnote($ligne->id_technote);
-	
-			$res[] = new Technote(get_object_vars($ligne));
-		}
-	
-		return $res;
-	
-	}
+
 }
