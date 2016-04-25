@@ -25,7 +25,7 @@ class Token extends TableObject{
 
 		$tokenDAO = new TokenDAO(BDD::getInstancePDO());
 		$token = $tokenDAO->getOne($id_token);
-		if($token->id_membre == $_SESSION['user']->id_membre){
+		if($token->id_membre == $_SESSION['user']->id_membre || $_SESSION['user']->groupe == 'Administrateur'){
 			if($tokenDAO->desactiver($id_token)){
 				$std->msg[] = 'Token désactivé';
 				$std->success = true;

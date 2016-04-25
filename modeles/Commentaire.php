@@ -7,7 +7,7 @@ class Commentaire extends TableObject{
 
 		$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
 		$commentaire = $commentaireDAO->getOne($id_commentaire);
-		if($commentaire->id_auteur == $_SESSION['user']->id_membre){
+		if($commentaire->id_auteur == $_SESSION['user']->id_membre || $_SESSION['user']->groupe == 'Administrateur' || $_SESSION['user']->groupe == 'Modérateur'){
 			if($commentaireDAO->desactiver($id_commentaire)){
 				$std->msg[] = 'Commentaire supprimé';
 				$std->success = true;
