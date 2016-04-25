@@ -2181,6 +2181,7 @@ INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question
 
 ', '2016-03-29 19:59:48', '21', NULL, '5', NULL, NULL, '1');
 INSERT INTO `technote`.`reponse` (id_reponse, reponse, date_reponse, id_question, id_reponse_parent, id_auteur, date_modification, id_modificateur, visible) VALUES (20, '<p>Sed fortuna fortis; Qui convenit? Quare attende, quaeso. <mark>Id est enim, de quo quaerimus.</mark> Duo Reges: constructio interrete. </p>
+<pre><code class="language-php-brief">// la fonction strtolower renvoie en minuscules la chaîne de caractères passée en paramètre
 $lang = strtolower($_POST[''lang'']);
 
 if ($lang === ''fr'')
