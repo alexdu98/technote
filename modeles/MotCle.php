@@ -91,10 +91,12 @@ class MotCle extends TableObject{
 		if(!empty($std->msg))
 			return $std;
 
+		$actif = $_SESSION['user']->groupe == 'Administrateur' || $_SESSION['user']->groupe == 'Modérateur' ? 1 : 0;
+
 		$motCle = new MotCle(array(
 			'id_mot_cle' => DAO::UNKNOWN_ID,
 			'label' => $param['label'],
-			'actif' => 0
+			'actif' => $actif
 		));
 
 		$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
