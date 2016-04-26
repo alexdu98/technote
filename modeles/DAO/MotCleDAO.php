@@ -83,7 +83,7 @@ class MotCleDAO extends DAO{
 	// #######################################
 
 	public function getAllComposedOf($exp){
-		$req = $this->pdo->prepare('SELECT label FROM mot_cle WHERE label LIKE :exp');
+		$req = $this->pdo->prepare('SELECT label FROM mot_cle WHERE actif = 1 AND label LIKE :exp');
 		$req->execute(array(
 			'exp' => '%' . $exp . '%'
 		));
@@ -91,13 +91,31 @@ class MotCleDAO extends DAO{
 	}
 
 	public function checkExiste($motCle){
-		$req = $this->pdo->prepare('SELECT * FROM mot_cle WHERE label = :motcle');
+		$req = $this->pdo->prepare('SELECT * FROM mot_cle WHERE actif = 1 AND label = :motcle');
 		$req->execute(array(
 			'motcle' => $motCle
 		));
 		if(($res = $req->fetch()) !== false)
 			return true;
 		return false;
+	}
+
+	public function getAllForTable(){
+		$res = array();
+		$req = $this->pdo->prepare('SELECT id_mot_cle id, label mot, actif FROM mot_cle');
+		$req->execute();
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new MotCle(get_object_vars($ligne));
+		return $res;
+	}
+
+	public function getAllActif(){
+		$res = array();
+		$req = $this->pdo->prepare('SELECT * FROM mot_cle WHERE actif = 1');
+		$req->execute();
+		foreach($req->fetchAll() as $ligne)
+			$res[] = new MotCle(get_object_vars($ligne));
+		return $res;
 	}
 
 }

@@ -353,6 +353,17 @@ $(document).ready(function(){
 
 
     // ############################################
+    // ################ MOTS CLES #################
+    // ############################################
+
+    function treatAddMotCle(data, form){
+        if(data.success){
+            $('#addMotCleModal').modal('hide');
+        }
+    }
+
+
+    // ############################################
     // ################## DIVERS ##################
     // ############################################
 
@@ -369,7 +380,7 @@ $(document).ready(function(){
         // S'il y a un ordre de redirection, redirection après 3 secondes
         if(data.redirect){
             form[0].reset();
-            data.msg.push('Vous allez être redirectionné dans 3 secondes');
+            data.msg.push('Vous allez être redirigé dans 3 secondes');
             setTimeout(function(){
                 $(location).attr('href', data.redirect);
             }, 3000);
@@ -408,8 +419,8 @@ $(document).ready(function(){
             treatEditReponse(data, form);
         else if(form[0].name == "dropReponse")
             treatDropReponse(data, form);
-        else
-            exit();
+        else if(form[0].name == "addMotCle")
+            treatAddMotCle(data, form);
 
 
         $('#divResultatAJAX').hide();
