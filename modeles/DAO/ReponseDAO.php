@@ -144,4 +144,11 @@ class ReponseDAO extends DAO{
 		return false;
 	}
 
+	public function desactiver($id){
+		$req = $this->pdo->prepare('UPDATE reponse SET visible = 0 WHERE id_reponse = :id_reponse');
+		return $req->execute(array(
+			'id_reponse' => $id
+		));
+	}
+
 }

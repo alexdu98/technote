@@ -254,7 +254,7 @@ class Main extends Controleur{
 						// On essaye d'enregistrer le commentaire
 						$res = Technote::dropTechnote($id);
 						if($res->success)
-							$res->redirect = "/";
+							$res->redirect = "/technotes";
 						echo json_encode($res);
 					}
 				}
@@ -339,7 +339,7 @@ class Main extends Controleur{
 				// si on veut voir toutes les questions
 				else{
 
-					// Si on veut faire une recherche de technotes
+					// Si on veut faire une recherche de question
 					if(isset($_GET['recherche'])){
 						$vars['titrePage'] = 'Chercher une question'; // <h1> de la page
 
@@ -351,6 +351,9 @@ class Main extends Controleur{
 							$vars['pagination'] = $res->pagination;
 							$vars['questions'] = $res->questions;
 						}
+						else{
+							$vars['res'] = $res;
+						}
 					}
 					else{
 						$vars['titrePage'] = 'Les dernières questions'; // <h1> de la page
@@ -360,7 +363,7 @@ class Main extends Controleur{
 
 						$vars['active_questions_all'] = 1; // Active le style dans le sous menu toutes les questions
 
-						// On récupère le nombre total de technotes
+						// On récupère le nombre total de questions
 						$count = $questionDAO->getCount();
 						// On créé la pagination
 						$vars['pagination'] = new Pagination($page, $count, NB_QUESTIONS_PAGE, '/questions/get?page=');
@@ -431,7 +434,54 @@ class Main extends Controleur{
 						// On essaye d'enregistrer le commentaire
 						$res = Question::dropQuestion($id);
 						if($res->success)
-							$res->redirect = "/";
+							$res->redirect = "/questions";
+						echo json_encode($res);
+					}
+				}
+				exit();
+
+			default:
+				$this->vue->display('404.twig', $vars);
+				exit();
+		}
+	}
+
+	/*------------------------
+	 		REPONSES
+	 --------------------------*/
+	public function reponses($action, $id, $vars){
+		switch($action){
+			case 'add':
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer la réponse
+						$res = Reponse::addReponse($_POST);
+						if($res->success){
+							$res->add['reponse'] = $this->vue->render('templates/reponse.twig', array('reponses' => $res->add));
+						}
+						echo json_encode($res);
+					}
+				}
+				exit();
+
+			case 'edit':
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Reponse::editReponse($_POST, $id);
+						echo json_encode($res);
+					}
+				}
+				exit();
+
+			case 'drop':
+				if(!empty($_POST)){
+					// Si le formulaire est valide au niveau faille CSRF
+					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
+						// On essaye d'enregistrer le commentaire
+						$res = Reponse::dropReponse($_POST, $id);
 						echo json_encode($res);
 					}
 				}

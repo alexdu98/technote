@@ -135,7 +135,7 @@ class Question extends TableObject{
 		}
 
 		if($res->success)
-			$res->msg[] = 'La technote a bien été supprimée';
+			$res->msg[] = 'La question a bien été supprimée';
 		else
 			$res->msg[] = 'Erreur BDD';
 
