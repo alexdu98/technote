@@ -88,7 +88,7 @@ class CommentaireDAO extends DAO{
 	 * @return int Le nombre de commentaires du membre
 	 */
 	public function getNbRedige($id_auteur){
-		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM commentaire WHERE id_auteur = :id_auteur');
+		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM commentaire WHERE visible = 1 AND id_auteur = :id_auteur');
 		$req->execute(array(
 			'id_auteur' => $id_auteur
 		));
