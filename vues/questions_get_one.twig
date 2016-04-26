@@ -4,7 +4,7 @@
 		<div class="alert alert-success">
 			<div class="flex">
 				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-				<ul id="messagesResultatAJAX">
+				<ul>
 					<li>Cette question est résolue</li>
 				</ul>
 			</div>
@@ -63,7 +63,7 @@
 			{% include 'templates/reponse.twig' with {'reponses': question.reponses} %}
 		{% endif %}
 		{% if session.user %}
-			<div>
+			<div class="divReponse">
 				<form method="POST" action="/reponses/add/" class="form-horizontal" name="addReponse">
 					<div class="form-group">
 						<label for="reponse" class="col-sm-2 control-label">Réponse*</label>
