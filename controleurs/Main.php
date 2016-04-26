@@ -203,7 +203,7 @@ class Main extends Controleur{
 
 				// On récupère tous les mots clés
 				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
-				$vars['motsCles'] = $motCleDAO->getAll();
+				$vars['motsCles'] = $motCleDAO->getAllActif();
 
 				// Si un formulaire a été envoyé
 				if(!empty($_POST)){
@@ -229,7 +229,7 @@ class Main extends Controleur{
 
 				// On récupère tous les mots clés
 				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
-				$vars['motsCles'] = $motCleDAO->getAll();
+				$vars['motsCles'] = $motCleDAO->getAllActif();
 
 				// Si un formulaire a été envoyé
 				if(!empty($_POST)){
@@ -383,7 +383,7 @@ class Main extends Controleur{
 
 				// On récupère tous les mots clés
 				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
-				$vars['motsCles'] = $motCleDAO->getAll();
+				$vars['motsCles'] = $motCleDAO->getAllActif();
 
 				// Si un formulaire a été envoyé
 				if(!empty($_POST)){
@@ -409,7 +409,7 @@ class Main extends Controleur{
 
 				// On récupère tous les mots clés
 				$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
-				$vars['motsCles'] = $motCleDAO->getAll();
+				$vars['motsCles'] = $motCleDAO->getAllActif();
 
 				// Si un formulaire a été envoyé
 				if(!empty($_POST)){
@@ -485,6 +485,29 @@ class Main extends Controleur{
 						echo json_encode($res);
 					}
 				}
+				exit();
+
+			default:
+				$this->vue->display('404.twig', $vars);
+				exit();
+		}
+	}
+
+	/*------------------------
+	 		MOTS CLES
+	 --------------------------*/
+	public function mots_cles($action, $id, $vars){
+		switch($action){
+			case 'add':
+				// Si un formulaire a été envoyé
+				if(!empty($_POST)){
+					// On essaye de se connecter
+					$res = MotCle::add($_POST);
+					echo json_encode($res);
+					exit();
+				}
+
+				$this->vue->display('403.twig', $vars);
 				exit();
 
 			default:

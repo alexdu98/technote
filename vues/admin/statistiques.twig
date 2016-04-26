@@ -1,0 +1,92 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<ul class="nav nav-tabs">
+				<li role="presentation"><a href="/admin">Gestion</a></li>
+				<li role="presentation" class="active"><a href="/admin/statistiques">Statistiques</a></li>
+			</ul>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-user imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">66</span><br>
+										<span class="texteStat">membres</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-minus-sign imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">66</span><br>
+										<span class="texteStat">membres bloqués</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-pencil imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">66</span><br>
+										<span class="texteStat">technotes publié</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-comment imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">66</span><br>
+										<span class="texteStat">commentaires</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-pencil imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">66</span><br>
+										<span class="texteStat">commentaires visibles</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

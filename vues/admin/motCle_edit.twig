@@ -1,0 +1,40 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<p class="text-center text-danger text">* champs obligatoires</p>
+			{% include 'templates/messages.twig' %}
+			<form method="POST" class="form-horizontal" name="editMembre">
+				<div class="form-group">
+					<label for="id" class="col-sm-2 control-label">Id</label>
+					<div class="col-sm-10">
+						<input type="text" name="id" class="form-control" id="id" placeholder="Id" value="{{ motCle.id_mot_cle }}" disabled>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="label" class="col-sm-2 control-label">Label*</label>
+					<div class="col-sm-10">
+						<input type="text" name="label" class="form-control" id="label" placeholder="Label" maxlength="31" value="{{ motCle.label }}" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="actifOui" class="col-md-2 control-label">Actif*</label>
+					<div class="col-md-10">
+						<label class="radio-inline">
+							<input type="radio" name="actif" id="actifOui" value="1" required {% if motCle.actif %}checked{% endif %}> Oui
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="actif" id="actifNon" value="0" required {% if not motCle.actif %}checked{% endif %}> Non
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<input type="submit" class="btn btn-warning" value="Modifier">
+					</div>
+				</div>
+				<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+			</form>
+		</div>
+	</div>
+{% endblock %}

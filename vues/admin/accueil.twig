@@ -1,0 +1,25 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<ul class="nav nav-tabs">
+				<li role="presentation" class="active"><a href="/admin">Gestion</a></li>
+				<li role="presentation"><a href="/admin/statistiques">Statistiques</a></li>
+			</ul>
+			<br>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-3">
+						<a href="/admin/membres"><button class="btn btn-default btn-lg btn-block">Membres</button></a>
+					</div>
+					<div class="col-md-3">
+						<a href="/admin/groupes"><button class="btn btn-default btn-lg btn-block">Groupes</button></a>
+					</div>
+					<div class="col-md-3">
+						<a href="/admin/mots_cles"><button class="btn btn-default btn-lg btn-block">Mots-clés</button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

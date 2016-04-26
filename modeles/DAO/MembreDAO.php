@@ -183,4 +183,15 @@ class MembreDAO extends DAO{
 		return $req->fetchAll();
 	}
 
+	public function getAllForTable(){
+		$res = array();
+		$req = $this->pdo->prepare('SELECT id_membre id, pseudo, email, date_inscription inscription, date_connexion connexion, g.libelle, bloquer FROM membre NATURAL JOIN groupe g');
+		$req->execute();
+		foreach($req->fetchAll() as $ligne){
+			unset($ligne->password, $ligne->cle_reset_pass);
+			$res[] = new Membre(get_object_vars($ligne));
+		}
+		return $res;
+	}
+
 }
