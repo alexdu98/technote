@@ -10,6 +10,7 @@ class Admin extends Controleur{
 	 --------------------------*/
 	public function connexion($action, $id, $vars){
 		switch($action){
+			/**** GET ****/
 			case 'get':
 				$vars['titrePage'] = 'Connexion à l\'administration'; // <h1> de la page
 
@@ -37,7 +38,7 @@ class Admin extends Controleur{
 	--------------------------*/
 	public function accueil($action, $id, $vars){
 		switch($action){
-
+			/**** GET ****/
 			case 'get':
 				$vars['titrePage'] = 'Administration'; // <h1> de la page
 
@@ -55,7 +56,7 @@ class Admin extends Controleur{
 	--------------------------*/
 	public function membres($action, $id, $vars){
 		switch($action){
-
+			/**** GET ****/
 			case 'get':
 				$vars['titrePage'] = 'Les membres'; // <h1> de la page
 
@@ -91,6 +92,7 @@ class Admin extends Controleur{
 
 				exit();
 
+			/**** DROP ****/
 			case 'drop':
 				if(!empty($_POST)){
 					// Si le formulaire est valide au niveau faille CSRF
@@ -112,6 +114,7 @@ class Admin extends Controleur{
 	public function mots_cles($action, $id, $vars){
 		switch($action){
 
+			/**** GET ****/
 			case 'get':
 				$vars['titrePage'] = 'Les mots clés'; // <h1> de la page
 
@@ -144,6 +147,7 @@ class Admin extends Controleur{
 
 				exit();
 
+			/**** DROP ****/
 			case 'drop':
 				if(!empty($_POST)){
 					// Si le formulaire est valide au niveau faille CSRF
@@ -165,6 +169,7 @@ class Admin extends Controleur{
 	public function statistiques($action, $id, $vars){
 		switch($action){
 
+			/**** GET ****/
 			case 'get':
 				$vars['titrePage'] = 'Statistiques'; // <h1> de la page
 
