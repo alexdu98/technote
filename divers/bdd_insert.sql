@@ -23,9 +23,10 @@ INSERT INTO `technote`.`droit_groupe` (type, cible, id_groupe, autoriser) VALUES
   ('add', 'commentaires', '2', '1'), ('edit', 'commentaires', '2', '1'), ('drop', 'commentaires', '2', '1'),
   ('add', 'questions', '2', '1'), ('edit', 'questions', '2', '1'), ('drop', 'questions', '2', '1'),
   ('add', 'reponses', '2', '1'), ('edit', 'reponses', '2', '1'), ('drop', 'reponses', '2', '1'),
+  ('add', 'mots_cles', '2', '1'),
   # Membre = droit visiteur + membre
   ('get', 'connexion', '3', '1'), # Un modérateur peut se connecter (administration)
-  ('add', 'mots_cles', '3', '1'), ('edit', 'mots_cles', '3', '1'), ('drop', 'mots_cles', '3', '1'),
+  ('edit', 'mots_cles', '3', '1'), ('drop', 'mots_cles', '3', '1'),
   # Administrateur = droit visiteur + membre + administrateur
   ('add', 'membre', '4', '1'),
   ('add', 'membres', '4', '1'), ('edit', 'membres', '4', '1'), ('drop', 'membres', '4', '1');
