@@ -126,7 +126,7 @@ class VisiteDAO extends DAO{
 									FROM visite
 									WHERE date_visite > :now');
 
-		$req->execute(array('now' => date('Y-m-d H:i', time() - (60 * 60))));
+		$req->execute(array('now' => date('Y-m-d H:i', time() - (NB_SEC_ENTRE_2_VISITES))));
 		$res = $req->fetch();
 		return $res->now;
 	}
