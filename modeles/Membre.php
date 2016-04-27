@@ -321,8 +321,10 @@ class Membre extends TableObject{
 	private function checkEdit(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
-		if(!empty($param['updateEmail']) && ($res = Membre::checkEmail($param['email'])) !== true)
-			$std->msg[] = $res;
+		if(!empty($param['updateEmail'])){
+			if(($res = Membre::checkEmail($param['email'])) !== true)
+				$std->msg[] = $res;
+		}
 		elseif(!empty($param['updateMDP'])){
 			if(($res = Membre::checkPassUser($param['passwordNow'])) !== true)
 				$std->msg[] = $res;
