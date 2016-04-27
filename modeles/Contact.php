@@ -22,6 +22,10 @@ class Contact{
 		$this->message = $param['message'];
 	}
 
+	/**
+	 * Envoi un email
+	 * @return object 2 attributs, bool success et array string msg
+	 */
 	public function sendMail(){
 		$resCheck = $this->check();
 		$res = $resCheck;
@@ -50,6 +54,10 @@ class Contact{
 		return $res;
 	}
 
+	/**
+	 * Vérifie un email
+	 * @return object 2 attributs, bool success et array string msg
+	 */
 	private function check(){
 		$std = (object) array('success' => false, 'msg' => array());
 
@@ -72,6 +80,11 @@ class Contact{
 		return $std;
 	}
 
+	/**
+	 * Vérifie le message d'un email
+	 * @param $message Le message à vérifier
+	 * @return bool|string Vrai si sujet valide, string sinon
+	 */
 	private function checkMessage(&$message){
 		if(!empty($message)){
 			if(mb_strlen(strip_tags($message)) == mb_strlen($message)){
@@ -84,6 +97,11 @@ class Contact{
 		return 'Le message n\'est pas renseigné';
 	}
 
+	/**
+	 * Vérifie le sujet d'un email
+	 * @param $sujet Le sujet à vérifier
+	 * @return bool|string Vrai si sujet valide, string sinon
+	 */
 	private function checkSujet(&$sujet){
 		if(!empty($sujet)){
 			if(mb_strlen(strip_tags($sujet)) == mb_strlen($sujet)){

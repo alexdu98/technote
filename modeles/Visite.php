@@ -22,6 +22,11 @@ class Visite extends TableObject{
 		}
 	}
 
+	/**
+	 * Récupère les statistiques des visites
+	 * @return array Un tableau des statistiques sur les visites
+	 * @static
+	 */
 	static public function getStat(){
 		$visiteDAO = new VisiteDAO(BDD::getInstancePDO());
 		$arr['total'] = $visiteDAO->getCount();

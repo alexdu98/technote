@@ -2,6 +2,12 @@
 
 class Date{
 
+	/**
+	 * Vérifie la validité d'une date
+	 * @param $date La date à vérifier
+	 * @return bool|string Vrai si date valide, string sinon
+	 * @static
+	 */
 	static public function verifierDate(&$date){
 		if(!empty($date)){
 			$tdate = explode('-', $date);

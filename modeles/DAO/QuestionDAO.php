@@ -167,6 +167,14 @@ class QuestionDAO extends DAO{
 		return $res;
 	}
 
+	/**
+	 * Effectue une recherche de Question, ou compte le nombre de résultats pour cette recherche
+	 * @param      $max Le nombre de question par page
+	 * @param      $conditions Le tableau contenant les parametres de recherche
+	 * @param bool $count True si c'est pour avoir le nombre de résultat (pagination), false si c'est pour avoir les questions
+	 * @param int  $debut La première question à récupérer
+	 * @return array|mixed Les questions correspondant à la recherche
+	 */
 	public function getQuestionsWithSearch($max, $conditions, $count = false, $debut = 0){
 		$res = array();
 
@@ -211,7 +219,7 @@ class QuestionDAO extends DAO{
 			$sqlMCNonObligatoire = '';
 			foreach($conditions['mots_cles'] as $mc){
 				if($mc[0] == '+'){
-					$sqlMCObligatoire .= '\'' . substr($mc, 1) . '\', '; // On enlee le + pour la requete
+					$sqlMCObligatoire .= '\'' . substr($mc, 1) . '\', '; // On enleve le + pour la requete
 				}
 				else{
 					$sqlMCNonObligatoire .= '\'' . $mc . '\', ';
@@ -228,6 +236,7 @@ class QuestionDAO extends DAO{
 			}
 		}
 
+		// Si c'est pour savoir le nombre de résultats (pagination)
 		if($count){
 			$sql = 'SELECT COUNT(DISTINCT q.id_question) nbRes
 									FROM question q

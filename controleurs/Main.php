@@ -638,7 +638,7 @@ class Main extends Controleur{
 					// Si le formulaire est valide au niveau faille CSRF
 					if(!empty($_POST['jetonCSRF']) && $_POST['jetonCSRF'] == $_SESSION['jetonCSRF']){
 						// On essaye d'enregistrer le commentaire
-						$res = Token::dropToken($_POST, $id);
+						$res = Token::dropToken($id);
 						echo json_encode($res);
 					}
 				}

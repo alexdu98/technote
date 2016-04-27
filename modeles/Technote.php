@@ -14,6 +14,8 @@ class Technote extends TableObject{
 		$cond = array();
 		$strPagination = '';
 
+		// On construit l'URL pour la pagination, et on construit un tableau pour la requête SQL
+
 		if(!empty($param['titre'])){
 			$cond['titre'] = $param['titre'];
 			$strPagination .= '&titre=' . urlencode($param['titre']);
@@ -48,12 +50,15 @@ class Technote extends TableObject{
 		}
 
 		if(!empty($param['mots_cles'])){
+			// Construit un tableau de mots clés
 			$tabMC = explode(',', $param['mots_cles']);
 			$tabMCClean = array();
 			foreach($tabMC as $key => $value){
+				// On enlève les espaces de début et de fin
 				$valueClean = trim($value);
 				if($valueClean != ''){
 					$tabMCClean[] = $valueClean;
+					// Si le mot clé est obligatoire, on supprime le + de début
 					if($valueClean[0] == '+')
 						$valueClean = substr($valueClean, 1);
 					if(($res = MotCle::checkExisteByLabel($valueClean)) !== true)
@@ -63,6 +68,7 @@ class Technote extends TableObject{
 			$cond['mots_cles'] = $tabMCClean;
 		}
 
+		// S'il y a des erreurs, on s'arrête
 		if(!empty($std->msg))
 			return $std;
 

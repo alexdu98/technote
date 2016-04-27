@@ -3,7 +3,7 @@
 class Token extends TableObject{
 
 	/**
-	 * Créer le token pour rester connecté et le sauvegarde en BDD et en cookie client
+	 * Créer le token pour rester connecté et le sauvegarde en BDD et l'enregistre en cookie chez le client
 	 * @static
 	 */
 	static public function createToken(){
@@ -20,7 +20,13 @@ class Token extends TableObject{
 		setcookie('token', $cle, time() + DUREE_COOKIE_AUTOCONNECT_SEC);
 	}
 
-	static public function dropToken(&$param, $id_token){
+	/**
+	 * Supprimer un Token
+	 * @param $id_token L'identifiant du Token à supprimer
+	 * @return object 2 attributs, bool success et array string msg
+	 * @static
+	 */
+	static public function dropToken($id_token){
 		$std = (object) array('success' => false, 'msg' => array());
 
 		$tokenDAO = new TokenDAO(BDD::getInstancePDO());

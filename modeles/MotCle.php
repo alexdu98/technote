@@ -98,6 +98,7 @@ class MotCle extends TableObject{
 		if(!empty($std->msg))
 			return $std;
 
+		// Si c'est un modérateur ou un admin actif, sinon non actif
 		$actif = $_SESSION['user']->groupe == 'Administrateur' || $_SESSION['user']->groupe == 'Modérateur' ? 1 : 0;
 
 		$motCle = new MotCle(array(
