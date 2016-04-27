@@ -96,6 +96,15 @@ class ReponseDAO extends DAO{
 		return $res->nbRedige;
 	}
 
+	public function getCountTotal(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) total
+									FROM reponse');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->total;
+	}
+
 	public function getTreeForOneQuestion($id_question, $id_reponse_parent){
 		$res = array();
 		$op = empty($id_reponse_parent) ? 'IS' : '=';

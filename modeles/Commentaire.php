@@ -2,6 +2,12 @@
 
 class Commentaire extends TableObject{
 
+	static public function getStat(){
+		$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
+		$arr['total'] = $commentaireDAO->getCountTotal();
+		return $arr;
+	}
+
 	static public function dropCommentaire(&$param, $id_commentaire){
 		$std = (object) array('success' => false, 'msg' => array());
 

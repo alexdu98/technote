@@ -2,6 +2,13 @@
 
 class Membre extends TableObject{
 
+	static public function getStat(){
+		$membreDAO = new MembreDAO(BDD::getInstancePDO());
+		$arr['total'] = $membreDAO->getCount();
+		$arr['bloque'] = $membreDAO->getCountBloque();
+		return $arr;
+	}
+
 	static public function edit(&$param, $id){
 		$std = (object) array('success' => false, 'msg' => array());
 

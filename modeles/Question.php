@@ -2,6 +2,12 @@
 
 class Question extends TableObject{
 
+	static public function getStat(){
+		$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+		$arr['total'] = $questionDAO->getCountTotal();
+		return $arr;
+	}
+
 	static public function addQuestion(&$param){
 		$resCheck = self::check($param);
 		$res = $resCheck;

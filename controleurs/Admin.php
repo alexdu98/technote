@@ -168,6 +168,14 @@ class Admin extends Controleur{
 			case 'get':
 				$vars['titrePage'] = 'Statistiques'; // <h1> de la page
 
+				$vars['visites'] = Visite::getStat();
+				$vars['membres'] = Membre::getStat();
+				$vars['technotes'] = Technote::getStat();
+				$vars['commentaires'] = Commentaire::getStat();
+				$vars['questions'] = Question::getStat();
+				$vars['reponses'] = Reponse::getStat();
+				$vars['motsCles'] = MotCle::getStat();
+
 				$this->vue->display('admin/statistiques.twig', $vars);
 				exit();
 

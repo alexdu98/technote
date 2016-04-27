@@ -96,6 +96,15 @@ class CommentaireDAO extends DAO{
 		return $res->nbRedige;
 	}
 
+	public function getCountTotal(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) total
+									FROM commentaire');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->total;
+	}
+
 	public function getTreeForOneTechnote($id_technote, $id_commentaire_parent){
 		$res = array();
 		$op = empty($id_commentaire_parent) ? 'IS' : '=';

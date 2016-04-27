@@ -2,6 +2,12 @@
 
 class Reponse extends TableObject{
 
+	static public function getStat(){
+		$reponseDAO = new ReponseDAO(BDD::getInstancePDO());
+		$arr['total'] = $reponseDAO->getCountTotal();
+		return $arr;
+	}
+
 	static public function dropReponse(&$param, $id_reponse){
 		$std = (object) array('success' => false, 'msg' => array());
 

@@ -194,4 +194,23 @@ class MembreDAO extends DAO{
 		return $res;
 	}
 
+	public function getCount(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) total
+									FROM membre');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->total;
+	}
+
+	public function getCountBloque(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) bloque
+									FROM membre
+									WHERE bloquer = 1');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->bloque;
+	}
+
 }

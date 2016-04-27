@@ -2,6 +2,13 @@
 
 class MotCle extends TableObject{
 
+	static public function getStat(){
+		$motCleDAO = new MotCleDAO(BDD::getInstancePDO());
+		$arr['actifs'] = $motCleDAO->getCountActifs();
+		$arr['attente'] = $motCleDAO->getCountNonActifs();
+		return $arr;
+	}
+
 	/**
 	 * Vérifie si un mot clé existe
 	 * @param int $id_mot_cle Le mot clé à vérifier

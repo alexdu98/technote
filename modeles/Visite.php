@@ -22,4 +22,12 @@ class Visite extends TableObject{
 		}
 	}
 
+	static public function getStat(){
+		$visiteDAO = new VisiteDAO(BDD::getInstancePDO());
+		$arr['total'] = $visiteDAO->getCount();
+		$arr['today'] = $visiteDAO->getCountToday();
+		$arr['now'] = $visiteDAO->getCountNow();
+		return $arr;
+	}
+
 }

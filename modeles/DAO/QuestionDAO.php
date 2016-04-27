@@ -127,6 +127,15 @@ class QuestionDAO extends DAO{
 		return $res->nbQuestions;
 	}
 
+	public function getCountTotal(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) total
+									FROM question');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->total;
+	}
+
 	public function getLastNQuestions($max, $debut = 0){
 		$res = array();
 

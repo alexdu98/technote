@@ -263,6 +263,26 @@ class TechnoteDAO extends DAO{
 		return $res->nbTechnotes;
 	}
 
+	public function getCountPublie(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) publie
+									FROM technote
+									WHERE publie = 1');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->publie;
+	}
+
+	public function getCountNonPublie(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) nonPublie
+									FROM technote
+									WHERE publie = 0');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->nonPublie;
+	}
+
 	public function getAllTitreComposedOf($exp){
 		$req = $this->pdo->prepare('SELECT titre FROM technote WHERE publie = 1 AND visible = 1 AND titre LIKE :exp');
 		$req->execute(array(

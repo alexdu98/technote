@@ -118,4 +118,24 @@ class MotCleDAO extends DAO{
 		return $res;
 	}
 
+	public function getCountActifs(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) actifs
+									FROM mot_cle
+									WHERE actif = 1');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->actifs;
+	}
+
+	public function getCountNonActifs(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) attente
+									FROM mot_cle
+									WHERE actif = 0');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->attente;
+	}
+
 }
