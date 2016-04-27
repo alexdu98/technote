@@ -109,7 +109,7 @@ class QuestionDAO extends DAO{
 	 * @return int Le nombre de questions du membre
 	 */
 	public function getNbRedige($id_auteur){
-		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM question WHERE id_auteur = :id_auteur');
+		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM question WHERE visible = 1 AND id_auteur = :id_auteur');
 		$req->execute(array(
 			'id_auteur' => $id_auteur
 		));
@@ -119,11 +119,21 @@ class QuestionDAO extends DAO{
 
 	public function getCount(){
 		$req = $this->pdo->prepare('SELECT COUNT(*) AS nbQuestions
-									FROM question');
+									FROM question
+									WHERE visible = 1');
 		$req->execute();
 		$res = $req->fetch();
 
 		return $res->nbQuestions;
+	}
+
+	public function getCountTotal(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) total
+									FROM question');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->total;
 	}
 
 	public function getLastNQuestions($max, $debut = 0){
@@ -133,6 +143,7 @@ class QuestionDAO extends DAO{
 									FROM question q
 									INNER JOIN membre ma ON ma.id_membre=q.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=q.id_modificateur
+									WHERE visible = 1
 									ORDER BY date_question DESC
 									LIMIT :max OFFSET :debut');
 
@@ -223,7 +234,7 @@ class QuestionDAO extends DAO{
 									INNER JOIN membre ma ON ma.id_membre=q.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=q.id_modificateur
 									' . $join . '
-									WHERE 1 = 1
+									WHERE visible = 1
 									' . $where;
 			$req = $this->pdo->prepare($sql);
 			$req->execute($param);
@@ -236,7 +247,7 @@ class QuestionDAO extends DAO{
 									INNER JOIN membre ma ON ma.id_membre=q.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=q.id_modificateur
 									' . $join . '
-									WHERE 1 = 1
+									WHERE visible = 1
 									' . $where . '
 									ORDER BY date_question DESC
 									LIMIT ' . $debut . ', ' . $max; // Ne peut pas etre preparé car échapé (LIMIT '10', '0' => FAIL)
@@ -261,7 +272,7 @@ class QuestionDAO extends DAO{
 	}
 
 	public function getAllTitreComposedOf($exp){
-		$req = $this->pdo->prepare('SELECT titre FROM question WHERE titre LIKE :exp');
+		$req = $this->pdo->prepare('SELECT titre FROM question WHERE visible = 1 AND titre LIKE :exp');
 		$req->execute(array(
 			'exp' => '%' . $exp . '%'
 		));

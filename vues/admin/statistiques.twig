@@ -1,0 +1,213 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<ul class="nav nav-tabs">
+				<li role="presentation"><a href="/admin">Gestion</a></li>
+				<li role="presentation" class="active"><a href="/admin/statistiques">Statistiques</a></li>
+			</ul>
+			<div class="container-fluid">
+				<div class="text-center"><h3>Visites</h3></div>
+				<hr>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-user imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ visites.total }}</span><br>
+										<span class="texteStat">Total</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-user imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ visites.today }}</span><br>
+										<span class="texteStat">Aujourd'hui</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-user imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ visites.now }}</span><br>
+										<span class="texteStat">Actuellement</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="text-center"><h3>Membres</h3></div>
+				<hr>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-user imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ membres.total }}</span><br>
+										<span class="texteStat">Total</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-ban-circle imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ membres.bloque }}</span><br>
+										<span class="texteStat">Bloqués</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="text-center"><h3>Technotes</h3></div>
+				<hr>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-pencil imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ technotes.publie }}</span><br>
+										<span class="texteStat">Publiées</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-pencil imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ technotes.nonPublie }}</span><br>
+										<span class="texteStat">Non publiées</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-comment imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ commentaires.total }}</span><br>
+										<span class="texteStat">Commentaires</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="text-center"><h3>Questions</h3></div>
+				<hr>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-pencil imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ questions.total }}</span><br>
+										<span class="texteStat">Publiées</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-comment imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ reponses.total }}</span><br>
+										<span class="texteStat">Réponses</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="text-center"><h3>Mots-clés</h3></div>
+				<hr>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-ok imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ motsCles.actifs }}</span><br>
+										<span class="texteStat">Actifs</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading bg-bleu">
+								<div class="row">
+									<div class="col-md-4">
+										<span class="glyphicon glyphicon-remove imgStat" aria-hidden="true"></span>
+									</div>
+									<div class="col-md-8 text-right">
+										<span class="chiffreStat">{{ motsCles.attente }}</span><br>
+										<span class="texteStat">En attente de validation</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

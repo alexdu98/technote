@@ -88,12 +88,21 @@ class ReponseDAO extends DAO{
 	 * @return int Le nombre de réponses du membre
 	 */
 	public function getNbRedige($id_auteur){
-		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM reponse WHERE id_auteur = :id_auteur');
+		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige FROM reponse WHERE visible = 1 AND id_auteur = :id_auteur');
 		$req->execute(array(
 			'id_auteur' => $id_auteur
 		));
 		$res = $req->fetch();
 		return $res->nbRedige;
+	}
+
+	public function getCountTotal(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) total
+									FROM reponse');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->total;
 	}
 
 	public function getTreeForOneQuestion($id_question, $id_reponse_parent){
@@ -142,6 +151,13 @@ class ReponseDAO extends DAO{
 		if(($res = $req->fetch()) !== false)
 			return new Reponse(get_object_vars($res));
 		return false;
+	}
+
+	public function desactiver($id){
+		$req = $this->pdo->prepare('UPDATE reponse SET visible = 0 WHERE id_reponse = :id_reponse');
+		return $req->execute(array(
+			'id_reponse' => $id
+		));
 	}
 
 }

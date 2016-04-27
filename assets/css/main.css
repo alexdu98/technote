@@ -47,9 +47,13 @@ a:hover{
     border-bottom: 1px dashed #337ab7;
     text-decoration: inherit;
 }
+a:focus{
+    text-decoration: inherit;
+}
 textarea{
     resize: vertical;
 }
+
 
 /*
     #####################################################################
@@ -284,6 +288,7 @@ footer #copyright{
     ############################### DIVERS ##############################
     #####################################################################
 */
+
  /* FOOTER FIXED BOTTOM */
 .page-row{
     display: table-row;
@@ -294,6 +299,10 @@ footer #copyright{
 }
 .texte-bleu{
     color: #337ab7;
+}
+.bg-bleu{
+    background: #2aabd2 !important;
+    color: white !important;
 }
 .margeTop{
     margin-top: 15px;

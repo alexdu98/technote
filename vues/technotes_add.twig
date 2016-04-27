@@ -32,7 +32,7 @@
 				</div>
 				<div class="form-group">
 					<label for="mots-cles" class="col-md-2 control-label">Mots-clés</label>
-					<div class="col-md-10">
+					<div class="col-md-8">
 						<select name="id_mot_cle[]" class="form-control" id="mots-cles" multiple="multiple">
 							{% for motCle in motsCles %}
 								<option value="{{ motCle.id_mot_cle }}" {% if motCle.id_mot_cle in post.id_mot_cle %}selected{% endif %}>{{ motCle.label }}</option>
@@ -52,6 +52,9 @@
 							});
 						});
 					</script>
+					<div class="col-md-2">
+						<a class="btn btn-primary" data-toggle="modal" data-target="#addMotCleModal">Ajouter un mot clé</a>
+					</div>
 				</div>
 				<div class="form-group">
 					<label for="publieOui" class="col-md-2 control-label">Publié*</label>
@@ -71,6 +74,32 @@
 				</div>
 				<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
 			</form>
+			<div class="modal fade" id="addMotCleModal" tabindex="-1" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">Ajouter un mot clé</h4>
+						</div>
+						<form action="/mots_cles/add" method="POST" class="form-horizontal" name="addMotCle">
+							<div class="modal-body">
+								<p class="text-center text-danger text">* Un administrateur devra d'abord confirmer son ajout</p>
+								<div class="form-group">
+									<label for="label" class="col-md-2 control-label">Label*</label>
+									<div class="col-md-10">
+										<input type="text" name="label" class="form-control" id="label" placeholder="Label" maxlength="31" value="{{ post.label }}" required>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+								<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+								<input type="submit" class="btn btn-primary" value="Ajouter">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 {% endblock %}

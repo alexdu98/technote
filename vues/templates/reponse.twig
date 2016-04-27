@@ -1,11 +1,18 @@
 {% for reponse in reponses %}
 	<div class="panel panel-default">
-		<div class="panel-footer">
+		<div class="panel-heading">
 			<b class="texte-bleu">{{ reponse.auteur | capitalize }}</b>
+			{% if session.user.pseudo == reponse.auteur or session.user.groupe == 'Administrateur' or session.user.groupe == 'Modérateur' %}
+				• <a class="modifierReponse">Modifier</a> •
+				<a class="supprimerReponse" data-nameForm="dropReponse">Supprimer</a>
+				<form method="POST" action="/reponses/drop/{{ reponse.id_reponse }}" class="form-horizontal" name="dropReponse">
+					<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
+				</form>
+			{% endif %}
 		</div>
 		<div class="panel-body">
 			<span class="id_reponse" hidden>{{ reponse.id_reponse }}</span>
-			<span class="texteReponse">{% if reponse.visible %}{{ reponse.reponse | raw }}{% else %}<span class="reponseSupprimer">// Réponse supprimé</span>{% endif %}</span><br>
+			<span class="texteReponse">{% if reponse.visible %}{{ reponse.reponse | raw }}{% else %}<span class="reponseSupprimer">// Réponse supprimé</span>{% endif %}</span>
 			{% if reponse.reponses is not null %}
 				{% include 'templates/reponse.twig' with {'reponses': reponse.reponses} %}
 			{% endif %}
@@ -17,13 +24,6 @@
 						<div class="col-md-6">
 							{% if session.user %}
 								<a class="repondreReponse">Répondre</a>
-								{% if session.user.pseudo == reponse.auteur or session.user.groupe == 'Administrateur' or session.user.groupe == 'Modérateur' %}
-									• <a class="modifierReponse">Modifier</a> •
-									<a class="lienSendAjax" data-nameForm="dropReponse">Supprimer</a>
-									<form method="POST" action="/reponses/drop/{{ reponse.id_reponse }}" class="form-horizontal" name="dropReponse">
-										<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
-									</form>
-								{% endif %}
 							{% endif %}
 						</div>
 						<div class="col-md-6 text-right">

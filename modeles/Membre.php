@@ -2,6 +2,81 @@
 
 class Membre extends TableObject{
 
+	static public function getStat(){
+		$membreDAO = new MembreDAO(BDD::getInstancePDO());
+		$arr['total'] = $membreDAO->getCount();
+		$arr['bloque'] = $membreDAO->getCountBloque();
+		return $arr;
+	}
+
+	static public function edit(&$param, $id){
+		$std = (object) array('success' => false, 'msg' => array());
+
+		$membreDAO = new MembreDAO(BDD::getInstancePDO());
+		$membreOld = $membreDAO->getOne($id);
+
+		if($membreOld->pseudo != $param['pseudo']){
+			if(($res = Membre::checkPseudo($param['pseudo'])) !== true)
+				$std->msg[] = $res;
+		}
+		if($membreOld->email != $param['email']){
+			if(($res = Membre::checkEmail($param['email'])) !== true)
+				$std->msg[] = $res;
+		}
+		$groupeDAO = new GroupeDAO(BDD::getInstancePDO());
+		if(($res = $groupeDAO->getone($param['groupe'])) === false)
+			$std->msg[] = 'Ce groupe n\'existe pas';
+		if($param['bloquer'] != 0 && $param['bloquer'] != 1)
+			$std->msg[] = 'Le champ bloquer n\'est pas valide';
+
+		if(!empty($std->msg))
+			return $std;
+
+		$membre = new Membre(array(
+			'id_membre' => $id,
+			'pseudo' => $param['pseudo'],
+			'email' => $param['email'],
+			'id_groupe' => $param['groupe'],
+			'bloquer' => $param['bloquer']
+		));
+		if(($std->success = $membreDAO->save($membre)) === true)
+			$std->msg[] = 'Membre modifié avec succès';
+		else
+			$std->msg[] = 'Erreur BDD';
+
+		$actionDAO = new ActionDAO(BDD::getInstancePDO());
+		$action = new Action(array(
+			'id_action' => DAO::UNKNOWN_ID,
+			'libelle' => "Modification d\'un membre (membre n°$id : $membreOld->pseudo)",
+			'id_membre' => $_SESSION['user']->id_membre
+		));
+		$actionDAO->save($action);
+
+		return $std;
+	}
+
+	static public function delete($id){
+		$std = (object) array('success' => false, 'msg' => array());
+
+		$membreDAO = new MembreDAO(BDD::getInstancePDO());
+		$membre = $membreDAO->getOne($id);
+
+		if(($std->success = $membreDAO->delete($id)) === true)
+			$std->msg[] = 'Membre supprimé avec succès';
+		else
+			$std->msg[] = 'Erreur BDD';
+
+		$actionDAO = new ActionDAO(BDD::getInstancePDO());
+		$action = new Action(array(
+			'id_action' => DAO::UNKNOWN_ID,
+			'libelle' => "Suppression d\'un membre (membre n°$id : $membre->pseudo)",
+			'id_membre' => $_SESSION['user']->id_membre
+		));
+		$actionDAO->save($action);
+
+		return $std;
+	}
+
 	/**
 	 * @return \stdClass Objet Contient les informations du profil d'un membre
 	 */
@@ -92,6 +167,32 @@ class Membre extends TableObject{
 		}
 		else
 			$std->msg[] = 'Couple login / mot de passe incorrect';
+		return $std;
+	}
+
+	static public function connexionAdmin(&$param){
+		$std = (object) array('success' => false, 'msg' => array());
+
+		if(empty($param['mdp'])){
+			$std->msg[] = 'Le mot de passe n\'est pas renseigné';
+			return $std;
+		}
+
+		$membreDAO = new MembreDAO(BDD::getInstancePDO());
+		if($membreDAO->checkUserPass($_SESSION['user']->pseudo, $param['mdp']) === true){
+			$actionDAO = new ActionDAO(BDD::getInstancePDO());
+			$action = new Action(array(
+				'id_action' => DAO::UNKNOWN_ID,
+				'libelle' => "Connexion à l\'administration ($_SERVER[REMOTE_ADDR])",
+				'id_membre' => $_SESSION['user']->id_membre
+			));
+			$actionDAO->save($action);
+			$std->success = true;
+			$_SESSION['admin'] = true;
+			return $std;
+		}
+		else
+			$std->msg[] = 'Mot de passe incorrect';
 		return $std;
 	}
 
@@ -220,8 +321,10 @@ class Membre extends TableObject{
 	private function checkEdit(&$param){
 		$std = (object) array('success' => false, 'msg' => array());
 
-		if(!empty($param['updateEmail']) && ($res = Membre::checkEmail($param['email'])) !== true)
-			$std->msg[] = $res;
+		if(!empty($param['updateEmail'])){
+			if(($res = Membre::checkEmail($param['email'])) !== true)
+				$std->msg[] = $res;
+		}
 		elseif(!empty($param['updateMDP'])){
 			if(($res = Membre::checkPassUser($param['passwordNow'])) !== true)
 				$std->msg[] = $res;

@@ -102,4 +102,33 @@ class VisiteDAO extends DAO{
 		}
 	}
 
+	public function getCount(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) total
+									FROM visite');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->total;
+	}
+
+	public function getCountToday(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) today
+									FROM visite
+									WHERE date_visite > :today');
+
+		$req->execute(array('today' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))));
+		$res = $req->fetch();
+		return $res->today;
+	}
+
+	public function getCountNow(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) now
+									FROM visite
+									WHERE date_visite > :now');
+
+		$req->execute(array('now' => date('Y-m-d H:i', time() - (60 * 60))));
+		$res = $req->fetch();
+		return $res->now;
+	}
+
 }

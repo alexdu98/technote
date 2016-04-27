@@ -129,6 +129,7 @@ CREATE TABLE IF NOT EXISTS `technote`.`mot_cle` (
   `label` VARCHAR(31) NOT NULL,
   `actif` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id_mot_cle`),
+  UNIQUE INDEX `label_UNIQUE` (`label` ASC),
   INDEX `IDX_MOT_CLE_LABEL` (`label` ASC),
   INDEX `IDX_MOT_CLE_ACTIF` (`actif` ASC))
   ENGINE = InnoDB;

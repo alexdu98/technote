@@ -26,6 +26,18 @@ class Controleur{
 	public function chargerControleurPage($controleur, $page, $action, $id){
 		$vueCentrale = '';
 		if(method_exists($controleur, $page)){
+			if(get_class($controleur) == 'Admin'){
+				if($_SESSION['user']->groupe == 'Administrateur' || $_SESSION['user']->groupe == 'Modérateur'){
+					if(empty($_SESSION['admin'])){
+						$page = 'connexion';
+					}
+				}
+				else{
+					$vueCentrale = '403.twig';
+					$this->vue->display($vueCentrale, array());
+					return;
+				}
+			}
 			if($this->checkDroit($page, $action)){
 				$controleur->$page($action, $id, array());
 				return;
@@ -57,7 +69,6 @@ class Controleur{
 			if(in_array($page, $tab) && in_array($action, $tab))
 				$autoriser = $droitMembre->autoriser == 1;
 		}
-
 		return $autoriser;
 	}
 

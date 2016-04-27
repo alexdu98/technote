@@ -2,12 +2,18 @@
 
 class Commentaire extends TableObject{
 
+	static public function getStat(){
+		$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
+		$arr['total'] = $commentaireDAO->getCountTotal();
+		return $arr;
+	}
+
 	static public function dropCommentaire(&$param, $id_commentaire){
 		$std = (object) array('success' => false, 'msg' => array());
 
 		$commentaireDAO = new CommentaireDAO(BDD::getInstancePDO());
 		$commentaire = $commentaireDAO->getOne($id_commentaire);
-		if($commentaire->id_auteur == $_SESSION['user']->id_membre){
+		if($commentaire->id_auteur == $_SESSION['user']->id_membre || $_SESSION['user']->groupe == 'Administrateur' || $_SESSION['user']->groupe == 'Modérateur'){
 			if($commentaireDAO->desactiver($id_commentaire)){
 				$std->msg[] = 'Commentaire supprimé';
 				$std->success = true;
@@ -121,13 +127,11 @@ class Commentaire extends TableObject{
 	}
 
 	static private function checkCommentaire(&$commentaire){
+		$commentaire = htmlentities($commentaire);
 		if(!empty($commentaire)){
-			if(mb_strlen(strip_tags($commentaire)) == mb_strlen($commentaire)){
-				if(mb_strlen($commentaire) >= 1 && mb_strlen($commentaire) <= 2047)
-					return true;
-				return 'Le commentaire ne respecte pas les règles de longueur (1 à 2047 caractères)';
-			}
-			return 'Les balises HTML sont interdites dans les commentaires (un espace est nécessaire après un \'<\')';
+			if(mb_strlen($commentaire) >= 1 && mb_strlen($commentaire) <= 2047)
+				return true;
+			return 'Le commentaire ne respecte pas les règles de longueur (1 à 2047 caractères)';
 		}
 		return 'Le commentaire n\'est pas renseigné';
 	}

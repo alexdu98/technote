@@ -1,0 +1,16 @@
+{% extends "templates/base.twig" %}
+{% block contenu %}
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<p class="text-center text-danger text">* champs obligatoires</p>
+			{% include 'templates/messages.twig' %}
+			<form action="/admin/connexion" method="POST" class="form-inline" name="connexion">
+				<div class="form-group">
+					<label for="mdp">Mot de passe*</label>
+					<input type="password" class="form-control" name="mdp" id="mdp" placeholder="Mot de passe" required>
+				</div>
+				<button type="submit" class="btn btn-default">Connexion</button>
+			</form>
+		</div>
+	</div>
+{% endblock %}

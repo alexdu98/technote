@@ -2,6 +2,13 @@
 
 class Technote extends TableObject{
 
+	static public function getStat(){
+		$technoteDAO = new TechnoteDAO(BDD::getInstancePDO());
+		$arr['publie'] = $technoteDAO->getCountPublie();
+		$arr['nonPublie'] = $technoteDAO->getCountNonPublie();
+		return $arr;
+	}
+
 	static public function recherche(&$param, $page){
 		$std = (object) array('success' => false, 'msg' => array());
 		$cond = array();

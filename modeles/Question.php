@@ -2,6 +2,12 @@
 
 class Question extends TableObject{
 
+	static public function getStat(){
+		$questionDAO = new QuestionDAO(BDD::getInstancePDO());
+		$arr['total'] = $questionDAO->getCountTotal();
+		return $arr;
+	}
+
 	static public function addQuestion(&$param){
 		$resCheck = self::check($param);
 		$res = $resCheck;
@@ -135,7 +141,7 @@ class Question extends TableObject{
 		}
 
 		if($res->success)
-			$res->msg[] = 'La technote a bien été supprimée';
+			$res->msg[] = 'La question a bien été supprimée';
 		else
 			$res->msg[] = 'Erreur BDD';
 

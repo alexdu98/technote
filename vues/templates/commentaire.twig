@@ -10,7 +10,7 @@
 							<a class="repondreCommentaire">Répondre</a>
 							{% if session.user.pseudo == commentaire.auteur or session.user.groupe == 'Administrateur' or session.user.groupe == 'Modérateur' %}
 								• <a class="modifierCommentaire">Modifier</a> •
-								<a class="lienSendAjax" data-nameForm="dropCommentaire">Supprimer</a>
+								<a class="supprimerCommentaire" data-nameForm="dropCommentaire">Supprimer</a>
 								<form method="POST" action="/commentaires/drop/{{ commentaire.id_commentaire }}" class="form-horizontal" name="dropCommentaire">
 									<input type="hidden" name="jetonCSRF" value="{{ session.jetonCSRF }}">
 								</form>

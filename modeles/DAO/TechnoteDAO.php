@@ -106,7 +106,7 @@ class TechnoteDAO extends DAO{
 	public function getNbRedige($id_auteur, $publie = 1){
 		$req = $this->pdo->prepare('SELECT COUNT(*) nbRedige 
 									FROM technote 
-									WHERE id_auteur = :id_auteur AND publie = :publie');
+									WHERE id_auteur = :id_auteur AND publie = :publie AND visible = 1');
 		
 		$req->execute(array(
 			'id_auteur' => $id_auteur,
@@ -128,7 +128,7 @@ class TechnoteDAO extends DAO{
 									FROM technote t
 									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
-									WHERE publie = :publie
+									WHERE publie = :publie AND visible = 1
 									ORDER BY date_creation DESC
 									LIMIT :max OFFSET :debut');
 
@@ -215,7 +215,7 @@ class TechnoteDAO extends DAO{
 									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
 									' . $join . '
-									WHERE publie = 1
+									WHERE publie = 1 AND visible = 1
 									' . $where;
 			$req = $this->pdo->prepare($sql);
 			$req->execute($param);
@@ -228,7 +228,7 @@ class TechnoteDAO extends DAO{
 									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
 									' . $join . '
-									WHERE publie = 1
+									WHERE publie = 1 AND visible = 1
 									' . $where . '
 									ORDER BY date_creation DESC
 									LIMIT ' . $debut . ', ' . $max; // Ne peut pas etre preparé car échapé (LIMIT '9', '0' => FAIL)
@@ -254,7 +254,7 @@ class TechnoteDAO extends DAO{
 	public function getCount($publie = 1){
 		$req = $this->pdo->prepare('SELECT COUNT(*) AS nbTechnotes
 									FROM technote
-									WHERE publie = :publie');
+									WHERE publie = :publie AND visible = 1');
 		$req->execute(array(
 			'publie' => $publie
 		));
@@ -263,8 +263,28 @@ class TechnoteDAO extends DAO{
 		return $res->nbTechnotes;
 	}
 
+	public function getCountPublie(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) publie
+									FROM technote
+									WHERE publie = 1');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->publie;
+	}
+
+	public function getCountNonPublie(){
+		$req = $this->pdo->prepare('SELECT COUNT(*) nonPublie
+									FROM technote
+									WHERE publie = 0');
+
+		$req->execute();
+		$res = $req->fetch();
+		return $res->nonPublie;
+	}
+
 	public function getAllTitreComposedOf($exp){
-		$req = $this->pdo->prepare('SELECT titre FROM technote WHERE titre LIKE :exp');
+		$req = $this->pdo->prepare('SELECT titre FROM technote WHERE publie = 1 AND visible = 1 AND titre LIKE :exp');
 		$req->execute(array(
 			'exp' => '%' . $exp . '%'
 		));

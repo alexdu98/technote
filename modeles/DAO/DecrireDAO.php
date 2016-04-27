@@ -59,7 +59,7 @@ class DecrireDAO extends DAO{
 
 	public function getAllForOneTechnote($id_technote){
 		$res = array();
-		$req = $this->pdo->prepare('SELECT d.id_mot_cle, label FROM decrire d INNER JOIN mot_cle mc ON d.id_mot_cle=mc.id_mot_cle WHERE d.id_technote = :id_technote');
+		$req = $this->pdo->prepare('SELECT d.id_mot_cle, label FROM decrire d INNER JOIN mot_cle mc ON d.id_mot_cle=mc.id_mot_cle WHERE mc.actif = 1 AND d.id_technote = :id_technote');
 		$req->execute(array(
 			'id_technote' => $id_technote
 		));
