@@ -307,3 +307,9 @@ footer #copyright{
 .margeTop{
     margin-top: 15px;
 }
+#loading{
+    margin: 0 auto 10px;
+    display: block;
+    width: 32px;
+    height: 32px;
+}

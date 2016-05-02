@@ -13,6 +13,10 @@ $(document).ready(function(){
                 CKEDITOR.instances[instance].updateElement();
             }
         },
+        beforeSubmit : function(arr, form, opt){
+            // On affiche l'image laoder
+            $(form).before('<img src="/assets/images/loading.gif" id="loading">');
+        },
         // Quand la réponse Ajax sera reçu, on appelle ce callback
         'success' : treatResponse,
         // La réponse Ajax est de type JSON
@@ -374,6 +378,9 @@ $(document).ready(function(){
      * Traite le résultat d'un formulaire
      */
     function treatResponse(data, status, xhr, form){
+
+        // On supprime l'image loader
+        $('#loading').remove();
 
         // S'il y a un ordre de redirection, redirection après 3 secondes
         if(data.redirect){
