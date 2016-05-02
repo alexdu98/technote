@@ -34,6 +34,7 @@ INSERT INTO `technote`.`droit_groupe` (type, cible, id_groupe, autoriser) VALUES
 #Insertion pour la table membre
 INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Alex', 'alexdu98@gmx.fr', '$2y$12$baWf8sziCXcnYb875dCoKe708LxeQI7AQoO8fskrRcQiQO2jyquSC', '4', '0');
 INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('admindemo', 'admindemo@live.fr', '$2y$12$9cyqCXgeeGR7T2zj2SjkduK5bBtDfUehLjBUjO3mvRezcBuF4R3fq', '4', '0');
+INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Vincent', 'vincent.iampietro@outlook.fr', '$2y$12$feDaop7N5tsyTRzlO5Eopuqih3TMsq99hZm62vPwa6imp6.2VgVwu', '4', '0');
 INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('modo', 'modo@outlook.fr', 'mdp', '3', '0');
 INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('membre', 'membre@outlook.fr', 'mdp', '2', '0');
 INSERT IGNORE INTO `technote`.`membre` (pseudo, email, password, id_groupe, bloquer) VALUES ('Tinnarra', 'Tinnarra@live.fr', 'mdp', '2', '0');
