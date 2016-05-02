@@ -1,4 +1,15 @@
 <div class="container-fluid">
+	{% if getNonPublie and technotes is empty %}
+		<div class="alert alert-info">
+			<button type="button" class="close" data-hide="alert" aria-label="Hide"><span aria-hidden="true">&times;</span></button>
+			<div class="flex">
+				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+				<ul>
+					<li>Aucune technote</li>
+				</ul>
+			</div>
+		</div>
+	{% endif %}
 	{% for technote in technotes %}
 	    {% if loop.index0%3 == 0 %}
 	        <div class="row">

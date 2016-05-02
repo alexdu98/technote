@@ -121,20 +121,28 @@ class TechnoteDAO extends DAO{
 	 * @param int $limit Le nombre de technotes à récupérer
 	 * @return array Le tableau des $limit dernières Technote
 	 */
-	public function getLastNTechnotes($max, $debut = 0, $publie = 1){
+	public function getLastNTechnotes($max, $debut = 0, $publie = 1, $id_auteur = NULL){
 		$res = array();
+
+		$auteur = '';
+		if(!empty($id_auteur)){
+			$auteur = 'AND t.id_auteur = :id_auteur';
+		}
 
 		$req = $this->pdo->prepare('SELECT t.*, ma.pseudo auteur, mm.pseudo modificateur
 									FROM technote t
 									INNER JOIN membre ma ON ma.id_membre=t.id_auteur
 									LEFT JOIN membre mm ON mm.id_membre=t.id_modificateur
-									WHERE publie = :publie AND visible = 1
+									WHERE publie = :publie AND visible = 1 '. $auteur .'
 									ORDER BY date_creation DESC
 									LIMIT :max OFFSET :debut');
 
 		$req->bindParam(':debut', $debut, PDO::PARAM_INT);
 		$req->bindParam(':max', $max, PDO::PARAM_INT);
 		$req->bindParam(':publie', $publie, PDO::PARAM_INT);
+		if(!empty($id_auteur)){
+			$req->bindParam(':id_auteur', $id_auteur, PDO::PARAM_INT);
+		}
 
 		$req->execute();
 

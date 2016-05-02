@@ -178,7 +178,8 @@ class Main extends Controleur{
 						// On créé la pagination
 						$vars['pagination'] = new Pagination($page, $count, NB_TECHNOTES_PAGE, '/technotes/get?nonpublie&page=');
 						// On récupère les technotes
-						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTES_PAGE, $vars['pagination']->debut, 0);
+						$vars['technotes'] = $technoteDAO->getLastNTechnotes(NB_TECHNOTES_PAGE, $vars['pagination']->debut, 0, $_SESSION['user']->id_membre);
+						$vars['getNonPublie'] = true;
 					}
 					else{
 						$vars['titrePage'] = 'Toutes les technotes'; // <h1> de la page
