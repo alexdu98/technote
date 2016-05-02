@@ -41,7 +41,7 @@ class Contact{
 			$resMail = $mail->sendMail();
 			$res->success = $resCheck->success && $resMail->success;
 			$res->msg = array_merge($res->msg, $resMail->msg);
-			if($resMail->success === true){
+			if($resMail->success === true && !empty($_SESSION['user'])){
 				$actionDAO = new ActionDAO(BDD::getInstancePDO());
 				$action = new Action(array(
 					'id_action' => DAO::UNKNOWN_ID,
