@@ -72,10 +72,15 @@ class CommentaireDAO extends DAO{
 	}
 
 	public function delete($id){
-		$req = $this->pdo->prepare('DELETE FROM commentaire WHERE id_commentaire = :id_commentaire');
-		return $req->execute(array(
-			'id_commentaire' => $id
-		));
+		try{
+			$req = $this->pdo->prepare('DELETE FROM commentaire WHERE id_commentaire = :id_commentaire');
+			return $req->execute(array(
+				'id_commentaire' => $id
+			));
+		}
+		catch(PDOException $e){
+			return false;
+		}
 	}
 
 	// #######################################

@@ -71,12 +71,17 @@ class DroitGroupeDAO extends DAO{
 	}
 
 	public function delete($id){
-		$req = $this->pdo->prepare('DELETE FROM droit_groupe WHERE id_groupe = :id_groupe AND type = :type AND cible = :cible');
-		return $req->execute(array(
-			'id_groupe' => $id['id_groupe'],
-			'type' => $id['type'],
-			'cible' => $id['cible']
-		));
+		try{
+			$req = $this->pdo->prepare('DELETE FROM droit_groupe WHERE id_groupe = :id_groupe AND type = :type AND cible = :cible');
+			return $req->execute(array(
+				'id_groupe' => $id['id_groupe'],
+				'type' => $id['type'],
+				'cible' => $id['cible']
+			));
+		}
+		catch(PDOException $e){
+			return false;
+		}
 	}
 
 	// #######################################

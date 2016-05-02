@@ -46,11 +46,16 @@ class ClarifierDAO extends DAO{
 	}
 
 	public function delete($id){
-		$req = $this->pdo->prepare('DELETE FROM clarifier WHERE id_question = :id_question AND id_mot_cle = :id_mot_cle');
-		return $req->execute(array(
-			'id_question' => $id['id_question'],
-			'id_mot_cle' => $id['id_mot_cle']
-		));
+		try{
+			$req = $this->pdo->prepare('DELETE FROM clarifier WHERE id_question = :id_question AND id_mot_cle = :id_mot_cle');
+			return $req->execute(array(
+				'id_question' => $id['id_question'],
+				'id_mot_cle' => $id['id_mot_cle']
+			));
+		}
+		catch(PDOException $e){
+			return false;
+		}
 	}
 
 	// #######################################
@@ -69,9 +74,14 @@ class ClarifierDAO extends DAO{
 	}
 
 	public function deleteAllForOneQuestion($id_question){
-		$req = $this->pdo->prepare('DELETE FROM clarifier WHERE id_question = :id_question');
-		return $req->execute(array(
-			'id_question' => $id_question
-		));
+		try{
+			$req = $this->pdo->prepare('DELETE FROM clarifier WHERE id_question = :id_question');
+			return $req->execute(array(
+				'id_question' => $id_question
+			));
+		}
+		catch(PDOException $e){
+			return false;
+		}
 	}
 }

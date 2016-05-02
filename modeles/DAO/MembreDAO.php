@@ -76,10 +76,15 @@ class MembreDAO extends DAO{
 	}
 
 	public function delete($id){
-		$req = $this->pdo->prepare('DELETE FROM membre WHERE id_membre = :id_membre');
-		return $req->execute(array(
-			'id_membre' => $id
-		));
+		try{
+			$req = $this->pdo->prepare('DELETE FROM membre WHERE id_membre = :id_membre');
+			return $req->execute(array(
+				'id_membre' => $id
+			));
+		}
+		catch(PDOException $e){
+			return false;
+		}
 	}
 
 	// #######################################

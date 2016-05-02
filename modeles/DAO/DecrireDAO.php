@@ -46,11 +46,16 @@ class DecrireDAO extends DAO{
 	}
 
 	public function delete($id){
-		$req = $this->pdo->prepare('DELETE FROM decrire WHERE id_technote = :id_technote AND id_mot_cle = :id_mot_cle');
-		return $req->execute(array(
-			'id_technote' => $id['id_technote'],
-			'id_mot_cle' => $id['id_mot_cle']
-		));
+		try{
+			$req = $this->pdo->prepare('DELETE FROM decrire WHERE id_technote = :id_technote AND id_mot_cle = :id_mot_cle');
+			return $req->execute(array(
+				'id_technote' => $id['id_technote'],
+				'id_mot_cle' => $id['id_mot_cle']
+			));
+		}
+		catch(PDOException $e){
+			return false;
+		}
 	}
 
 	// #######################################
@@ -69,9 +74,14 @@ class DecrireDAO extends DAO{
 	}
 
 	public function deleteAllForOneTechnote($id_technote){
-		$req = $this->pdo->prepare('DELETE FROM decrire WHERE id_technote = :id_technote');
-		return $req->execute(array(
-			'id_technote' => $id_technote
-		));
+		try{
+			$req = $this->pdo->prepare('DELETE FROM decrire WHERE id_technote = :id_technote');
+			return $req->execute(array(
+				'id_technote' => $id_technote
+			));
+		}
+		catch(PDOException $e){
+			return false;
+		}
 	}
 }

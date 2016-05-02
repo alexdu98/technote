@@ -71,12 +71,17 @@ class DroitMembreDAO extends DAO{
 	}
 
 	public function delete($id){
-		$req = $this->pdo->prepare('DELETE FROM droit_membre WHERE id_membre = :id_membre AND type = :type AND cible = :cible');
-		return $req->execute(array(
-			'id_membre' => $id['id_membre'],
-			'type' => $id['type'],
-			'cible' => $id['cible']
-		));
+		try{
+			$req = $this->pdo->prepare('DELETE FROM droit_membre WHERE id_membre = :id_membre AND type = :type AND cible = :cible');
+			return $req->execute(array(
+				'id_membre' => $id['id_membre'],
+				'type' => $id['type'],
+				'cible' => $id['cible']
+			));
+		}
+		catch(PDOException $e){
+			return false;
+		}
 	}
 
 	// #######################################
