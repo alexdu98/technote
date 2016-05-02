@@ -116,7 +116,7 @@ class VisiteDAO extends DAO{
 									FROM visite
 									WHERE date_visite > :today');
 
-		$req->execute(array('today' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))));
+		$req->execute(array('today' => date('Y-m-d')));
 		$res = $req->fetch();
 		return $res->today;
 	}
