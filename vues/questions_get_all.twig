@@ -71,7 +71,7 @@
 							<a href="/questions/get/{{ question.id_question }}"><span class="titreQuestion">{{ question.titre }}</span></a><br>
 							{% if question.motsCles %}
 								{% for motCle in question.motsCles %}
-									<a href="/questions?recherche=&mots_cles={{ motCle.label }}" class="mots-cles">{{ motCle.label }}</a>{% if not loop.last %},{% endif %}
+									<a href="/questions?recherche=&mots_cles={{ motCle.label | url_encode }}" class="mots-cles">{{ motCle.label }}</a>{% if not loop.last %},{% endif %}
 								{% endfor %}
 								<br>
 							{% endif %}
