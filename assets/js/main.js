@@ -357,9 +357,7 @@ $(document).ready(function(){
     // ############################################
 
     function treatAddMotCle(data, form){
-        if(data.success){
-            $('#addMotCleModal').modal('hide');
-        }
+        $('#addMotCleModal').modal('hide');
     }
 
 

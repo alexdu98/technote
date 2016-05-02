@@ -130,8 +130,8 @@ $(document).ready(function(){
     // ############################################
 
     function treatDropMembre(data, form){
+        $('#dropMembreConfirmModal').modal('hide');
         if(data.success){
-            $('#dropMembreConfirmModal').modal('hide');
             //var id = $(form[0]).find('#idDrop').html();
             //tableMembres.row($('#idMembre' + id)).remove().draw();
             location.reload();
@@ -139,8 +139,8 @@ $(document).ready(function(){
     }
 
     function treatDropMotCle(data, form){
+        $('#dropMotCleConfirmModal').modal('hide');
         if(data.success){
-            $('#dropMotCleConfirmModal').modal('hide');
             //var id = $(form[0]).find('#idDrop').html();
             //tableMembres.row($('#idMembre' + id)).remove().draw();
             location.reload();
